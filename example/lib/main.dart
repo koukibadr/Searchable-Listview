@@ -38,39 +38,34 @@ class ExampleApp extends StatelessWidget {
       child: Column(
         children: [
           Expanded(
-            child: SearchableList(
-              children: _generateWidgets(users),
-              onSearch: () {
-                var searchResult = users
-                    .where((element) => element.name.contains(controller.text))
-                    .toList();
-                return _generateWidgets(searchResult);
+            child: SearchableList<User>(
+              initialList: users,
+              builder: (user) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      user.name,
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                );
               },
-              textEditingController: controller,
+              filter: (text) {
+                var searchResult = users
+                    .where((element) => element.name.contains(text))
+                    .toList();
+                return searchResult;
+              },
             ),
           )
         ],
-      ),
-    );
-  }
-
-  List<Widget> _generateWidgets(List<User> listUsers) {
-    return List.generate(
-      listUsers.length,
-      (index) => Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.red,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Text(
-            listUsers[index].name,
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ),
       ),
     );
   }

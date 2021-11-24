@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class SearchableList extends StatefulWidget {
-  final List<Widget> children;
-  final Function onSearch;
-  final TextEditingController textEditingController;
+class SearchableList<T> extends StatefulWidget {
+  final List<T> initialList;
+  final Function(String) filter;
+  final Function(T) builder;
 
   const SearchableList({
     Key? key,
-    required this.children,
-    required this.onSearch,
-    required this.textEditingController,
+    required this.initialList,
+    required this.filter,
+    required this.builder,
   }) : super(key: key);
 
   @override
@@ -18,7 +18,7 @@ class SearchableList extends StatefulWidget {
 
 class _SearchableListState extends State<SearchableList> {
 
-  late List displayedList = widget.children;
+  late List displayedList = widget.initialList;
 
   @override
   Widget build(BuildContext context) {
@@ -26,17 +26,16 @@ class _SearchableListState extends State<SearchableList> {
       child: Column(
         children: [
           TextField(
-            controller: widget.textEditingController,
             onChanged: (value){
               setState(() {
-                displayedList = widget.onSearch();
+                displayedList = widget.filter(value);
               });
             },
           ),
           Expanded(
             child: ListView.builder(
               itemCount: displayedList.length,
-              itemBuilder: (context, index) => displayedList[index],
+              itemBuilder: (context, index) => widget.builder(displayedList[index]),
             ),
           )
         ],
