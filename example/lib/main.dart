@@ -22,14 +22,14 @@ class MyApp extends StatelessWidget {
 }
 
 class ExampleApp extends StatelessWidget {
-  List<User> users = [
+  final List<User> users = [
     User(age: 24, name: 'Badr'),
     User(age: 27, name: 'Ali Mohamed'),
     User(age: 29, name: 'Fathi'),
     User(age: 50, name: 'Mohamed'),
   ];
 
-  TextEditingController controller = TextEditingController();
+  ExampleApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

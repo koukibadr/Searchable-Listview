@@ -22,24 +22,22 @@ class _SearchableListState extends State<SearchableList> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          TextField(
-            onChanged: (value){
-              setState(() {
-                displayedList = widget.filter(value);
-              });
-            },
+    return Column(
+      children: [
+        TextField(
+          onChanged: (value){
+            setState(() {
+              displayedList = widget.filter(value);
+            });
+          },
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemCount: displayedList.length,
+            itemBuilder: (context, index) => widget.builder(displayedList[index]),
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: displayedList.length,
-              itemBuilder: (context, index) => widget.builder(displayedList[index]),
-            ),
-          )
-        ],
-      ),
+        )
+      ],
     );
   }
 }
