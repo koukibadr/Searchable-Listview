@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class SearchableList<T> extends StatefulWidget {
   final List<T> initialList;
   final Function(String) filter;
-  final Widget Function(T) builder;
+  final Widget Function(int) builder;
   final Function(T)? onItemSelected;
 
   const SearchableList({
@@ -18,8 +18,8 @@ class SearchableList<T> extends StatefulWidget {
   State<SearchableList> createState() => _SearchableListState();
 }
 
-class _SearchableListState<T> extends State<SearchableList> {
-  late List<T> displayedList = widget.initialList as List<T>;
+class _SearchableListState extends State<SearchableList> {
+  late List displayedList = widget.initialList;
 
   @override
   Widget build(BuildContext context) {
@@ -37,18 +37,9 @@ class _SearchableListState<T> extends State<SearchableList> {
         Expanded(
           child: ListView.builder(
             itemCount: displayedList.length,
-            itemBuilder: (context, index) => widget.onItemSelected != null
-                ? InkWell(
-                    onTap: () => widget.onItemSelected!.call(
-                      displayedList[index],
-                    ),
-                    child: widget.builder(
-                      displayedList[index],
-                    ),
-                  )
-                : widget.builder(
-                    displayedList[index],
-                  ),
+            itemBuilder: (context, index) => widget.builder(
+              index,
+            ),
           ),
         )
       ],

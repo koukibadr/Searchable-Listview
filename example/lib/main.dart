@@ -40,10 +40,10 @@ class ExampleApp extends StatelessWidget {
           Expanded(
             child: SearchableList<User>(
               initialList: users,
-              onItemSelected: (User item){
-                print(item.name);
+              onItemSelected: (User user){
+                print(user.name);
               },
-              builder: (user) {
+              builder: (int index) {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
@@ -52,7 +52,7 @@ class ExampleApp extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
-                      user.name,
+                      users[index].name,
                       style: const TextStyle(
                         color: Colors.white,
                       ),
@@ -62,7 +62,7 @@ class ExampleApp extends StatelessWidget {
               },
               filter: (text) {
                 var searchResult = users
-                    .where((element) => element.name.contains(text))
+                    .where((element) => element.name.toLowerCase().contains(text))
                     .toList();
                 return searchResult;
               },
