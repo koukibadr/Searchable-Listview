@@ -40,6 +40,9 @@ class ExampleApp extends StatelessWidget {
           Expanded(
             child: SearchableList<User>(
               initialList: users,
+              onItemSelected: (User item){
+                print(item.name);
+              },
               builder: (user) {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
