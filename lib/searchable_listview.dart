@@ -4,22 +4,20 @@ class SearchableList<T> extends StatefulWidget {
   final List<T> initialList;
   final Function(String) filter;
   final Widget Function(int) builder;
-  final Function(T)? onItemSelected;
 
   const SearchableList({
     Key? key,
     required this.initialList,
     required this.filter,
     required this.builder,
-    this.onItemSelected,
   }) : super(key: key);
 
   @override
-  State<SearchableList> createState() => _SearchableListState();
+  State<SearchableList> createState() => _SearchableListState<T>();
 }
 
-class _SearchableListState extends State<SearchableList> {
-  late List displayedList = widget.initialList;
+class _SearchableListState<T> extends State<SearchableList> {
+  late List<T> displayedList = widget.initialList as List<T>;
 
   @override
   Widget build(BuildContext context) {
