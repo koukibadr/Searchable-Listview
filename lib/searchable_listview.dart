@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:searchable_listview/resources/arrays.dart';
 
 class SearchableList<T> extends StatefulWidget {
   final List<T> initialList;
   final Function(String) filter;
   final Widget Function(int) builder;
+  final TextEditingController? searchTextController;
+  final TextInputAction keyboardAction;
+  final InputDecoration? inputDecoration;
+  final Function(String?)? onSubmitSearch;
+  final SEARCH_TYPE searchType;
 
   const SearchableList({
     Key? key,
     required this.initialList,
     required this.filter,
     required this.builder,
+    this.searchTextController,
+    this.keyboardAction = TextInputAction.done,
+    this.inputDecoration,
+    this.onSubmitSearch,
+    this.searchType = SEARCH_TYPE.onEdit,
   }) : super(key: key);
 
   @override
@@ -24,12 +35,19 @@ class _SearchableListState<T> extends State<SearchableList> {
     return Column(
       children: [
         TextField(
+          decoration: widget.inputDecoration,
+          controller: widget.searchTextController,
+          textInputAction: widget.keyboardAction,
+          onSubmitted: (value) {
+            widget.onSubmitSearch?.call(value);
+            if (widget.searchType == SEARCH_TYPE.onSubmit) {
+              _filterList(value);
+            }
+          },
           onChanged: (value) {
-            setState(
-              () {
-                displayedList = widget.filter(value);
-              },
-            );
+            if (widget.searchType == SEARCH_TYPE.onEdit) {
+              _filterList(value);
+            }
           },
         ),
         Expanded(
@@ -41,6 +59,14 @@ class _SearchableListState<T> extends State<SearchableList> {
           ),
         )
       ],
+    );
+  }
+
+  void _filterList(String value) {
+    setState(
+      () {
+        displayedList = widget.filter(value);
+      },
     );
   }
 }

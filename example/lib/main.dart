@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:searchable_listview/resources/arrays.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 
 void main() {
@@ -40,6 +41,8 @@ class ExampleApp extends StatelessWidget {
           Expanded(
             child: SearchableList<User>(
               initialList: users,
+              searchType: SEARCH_TYPE.onSubmit,
+              keyboardAction: TextInputAction.search,
               builder: (int index) {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -59,7 +62,9 @@ class ExampleApp extends StatelessWidget {
               },
               filter: (text) {
                 var searchResult = users
-                    .where((element) => element.name.toLowerCase().contains(text))
+                    .where(
+                      (element) => element.name.toLowerCase().contains(text),
+                    )
                     .toList();
                 return searchResult;
               },
