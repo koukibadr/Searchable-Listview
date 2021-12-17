@@ -17,17 +17,33 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Scaffold(body: SafeArea(child: ExampleApp())),
+      home: Scaffold(
+        body: SafeArea(
+          child: ExampleApp(),
+        ),
+      ),
     );
   }
 }
 
 class ExampleApp extends StatelessWidget {
   final List<User> users = [
-    User(age: 24, name: 'Badr'),
-    User(age: 27, name: 'Ali Mohamed'),
-    User(age: 29, name: 'Fathi'),
-    User(age: 50, name: 'Mohamed'),
+    User(
+      age: 24,
+      name: 'Badr',
+    ),
+    User(
+      age: 27,
+      name: 'Ali Mohamed',
+    ),
+    User(
+      age: 29,
+      name: 'Fathi',
+    ),
+    User(
+      age: 50,
+      name: 'Mohamed',
+    ),
   ];
 
   ExampleApp({Key? key}) : super(key: key);
@@ -41,9 +57,8 @@ class ExampleApp extends StatelessWidget {
           Expanded(
             child: SearchableList<User>(
               initialList: users,
-              searchType: SEARCH_TYPE.onSubmit,
               keyboardAction: TextInputAction.search,
-              builder: (int index) {
+              builder: (List displayedList, int index) {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
@@ -52,7 +67,7 @@ class ExampleApp extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
-                      users[index].name,
+                      displayedList[index].name,
                       style: const TextStyle(
                         color: Colors.white,
                       ),
@@ -80,5 +95,8 @@ class User {
   int age;
   String name;
 
-  User({required this.age, required this.name});
+  User({
+    required this.age,
+    required this.name,
+  });
 }

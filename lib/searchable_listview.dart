@@ -4,7 +4,7 @@ import 'package:searchable_listview/resources/arrays.dart';
 class SearchableList<T> extends StatefulWidget {
   final List<T> initialList;
   final Function(String) filter;
-  final Widget Function(int) builder;
+  final Widget Function(List, int) builder;
   final TextEditingController? searchTextController;
   final TextInputAction keyboardAction;
   final InputDecoration? inputDecoration;
@@ -54,6 +54,7 @@ class _SearchableListState<T> extends State<SearchableList> {
           child: ListView.builder(
             itemCount: displayedList.length,
             itemBuilder: (context, index) => widget.builder(
+              displayedList,
               index,
             ),
           ),
