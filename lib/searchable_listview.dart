@@ -4,12 +4,13 @@ import 'package:searchable_listview/resources/arrays.dart';
 class SearchableList<T> extends StatefulWidget {
   final List<T> initialList;
   final Function(String) filter;
-  final Widget Function(List, int) builder;
+  final Widget Function(dynamic) builder;
   final TextEditingController? searchTextController;
   final TextInputAction keyboardAction;
   final InputDecoration? inputDecoration;
   final Function(String?)? onSubmitSearch;
   final SEARCH_TYPE searchType;
+  final Widget emptyWidget;
 
   const SearchableList({
     Key? key,
@@ -21,6 +22,7 @@ class SearchableList<T> extends StatefulWidget {
     this.inputDecoration,
     this.onSubmitSearch,
     this.searchType = SEARCH_TYPE.onEdit,
+    this.emptyWidget = const SizedBox.shrink(),
   }) : super(key: key);
 
   @override
@@ -50,15 +52,14 @@ class _SearchableListState<T> extends State<SearchableList> {
             }
           },
         ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: displayedList.length,
-            itemBuilder: (context, index) => widget.builder(
-              displayedList,
-              index,
-            ),
-          ),
-        )
+        displayedList.isEmpty
+            ? widget.emptyWidget
+            : Expanded(
+                child: ListView.builder(
+                  itemCount: displayedList.length,
+                  itemBuilder: (context, index) => widget.builder(displayedList[index]),
+                ),
+              ),
       ],
     );
   }

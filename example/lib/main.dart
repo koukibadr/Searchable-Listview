@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:searchable_listview/resources/arrays.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 
 void main() {
@@ -58,7 +57,7 @@ class ExampleApp extends StatelessWidget {
             child: SearchableList<User>(
               initialList: users,
               keyboardAction: TextInputAction.search,
-              builder: (List displayedList, int index) {
+              builder: (dynamic user) {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
@@ -67,7 +66,7 @@ class ExampleApp extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
-                      displayedList[index].name,
+                      user.name,
                       style: const TextStyle(
                         color: Colors.white,
                       ),
@@ -76,13 +75,21 @@ class ExampleApp extends StatelessWidget {
                 );
               },
               filter: (text) {
-                var searchResult = users
+                return users
                     .where(
                       (element) => element.name.toLowerCase().contains(text),
                     )
                     .toList();
-                return searchResult;
               },
+              emptyWidget: Column(
+                children: const [
+                  Icon(
+                    Icons.error,
+                    color: Colors.red,
+                  ),
+                  Text('No such user found'),
+                ],
+              ),
             ),
           )
         ],
