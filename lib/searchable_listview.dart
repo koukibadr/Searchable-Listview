@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:searchable_listview/resources/arrays.dart';
 
 class SearchableList<T> extends StatefulWidget {
+  
   final List<T> initialList;
   final Function(String) filter;
   final Widget Function(dynamic) builder;
@@ -51,6 +52,9 @@ class _SearchableListState<T> extends State<SearchableList> {
               _filterList(value);
             }
           },
+        ),
+        const SizedBox(
+          height: 20,
         ),
         displayedList.isEmpty
             ? widget.emptyWidget
