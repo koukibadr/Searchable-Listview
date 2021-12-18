@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:searchable_listview/resources/arrays.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 
 void main() {
@@ -13,6 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,

@@ -1,39 +1,136 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Searchable ListView
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+<p  align="center">
+<img  src="https://github.com/koukibadr/Searchable-Listview/blob/main/example/searchable_listview_logo.gif?raw=true"  width="300"/>
+<br>
+<b>An easy way to filter lists</b>
+</p>
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- Filter list view easily
+- Display custom widget when list is empty
+- Customize search text field
+- Change keyboard input type and keyboard submit button
+- Add focus on search text field
 
-## Getting started
+## Getting Started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+In order to add motion toast to your project add this line to your `pubspec.yaml` file
 
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
-
-```dart
-const like = 'sample';
+```yaml
+dependencies:
+	searchable_listview: 1.0.0
 ```
 
-## Additional information
+## Attributes
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+```dart
+///initial list to be displayed which contains all elements
+///required
+final  List<T> initialList;
+
+  
+
+///Callback filter the list based on the given search value
+///invoked on changing the text field search if ```searchType == SEARCH_TYPE.onEdit```
+///or invoked when submiting the text field if ```searchType == SEARCH_TYPE.onSubmit```
+///return List of dynamic objects
+///required
+final  List  Function(String) filter;
+
+  
+
+///builder function that generate the listview children widget
+///based on the given object
+///required
+final  Widget  Function(dynamic) builder;
+
+  
+
+///the widget that will be displayed when the filter return an empty list
+///by default it's `const SizedBox.shrink()`
+final  Widget  emptyWidget;
+
+  
+
+///text editing controller applied on the search field
+///by default it's null
+final  TextEditingController?  searchTextController;
+
+
+///the keyboard action key
+///by default `TextInputAction.done`
+final  TextInputAction  keyboardAction;
+
+
+///the text field input decoration
+///by default it's null
+final  InputDecoration?  inputDecoration;
+
+
+///the keyboard text input type
+///by default it's `TextInputType.text`
+final  TextInputType  textInputType;
+
+
+///callback function invoked when submiting the search text field
+final  Function(String?)?  onSubmitSearch;
+
+
+///the search type on submiting text field or when changing the text field value
+///SEARCH_TYPË.onEdit,
+///SEARCH_TYPË.onSubmit
+///by default it's onEdit
+final  SEARCH_TYPE  searchType;
+
+
+///indicate whether the text field input is obscure or not
+///by default `obscureText = false`
+final  bool  obscureText;
+
+
+///indicate if the search text field is enabled or not
+///by default `searchFieldEnabled = true`
+final  bool  searchFieldEnabled;
+
+
+///the focus node applied on the search text field
+final  FocusNode?  focusNode;
+```
+
+## Implementation
+
+```dart
+SearchableList<Actor>(
+	initialList:  actors,
+	builder: (dynamic  user) =>  UserItem(user:  user),
+	filter: (value) =>  actors.where((element) =>  element.name.toLowerCase().contains(value),).toList(),
+	emptyWidget:  const  EmptyView(),
+	inputDecoration:  InputDecoration(
+		labelText:  "Search Actor",
+		fillColor:  Colors.white,
+		focusedBorder:  OutlineInputBorder(
+			borderSide:  const  BorderSide(
+				color:  Colors.blue,
+				width:  1.0,
+			),
+			borderRadius:  BorderRadius.circular(10.0),
+		),
+	),
+),
+```
+
+<p  align="center">
+<img  src="https://github.com/koukibadr/Searchable-Listview/blob/main/example/searchable_listview_example.gif?raw=true"  width="300"/>
+</p>
+
+
+
+##  Contribution
+
+Of course the project is open source, and you can contribute to it [repository link](https://github.com/koukibadr/Searchable-Listview)
+
+-  If you **found a bug**, open an issue.
+-  If you **have a feature request**, open an issue.
+-  If you **want to contribute**, submit a pull request.
