@@ -15,6 +15,8 @@ class SearchableList<T> extends StatefulWidget {
     this.emptyWidget = const SizedBox.shrink(),
     this.textInputType = TextInputType.text,
     this.obscureText = false,
+    this.focusNode,
+    this.searchFieldEnabled = true,
   }) : super(key: key);
 
 
@@ -75,6 +77,13 @@ class SearchableList<T> extends StatefulWidget {
   ///by default  `obscureText = false`
   final bool obscureText;
 
+  ///indicate if the search text field is enabled or not
+  ///by default `searchFieldEnabled = true`
+  final bool searchFieldEnabled;
+
+  ///the focus node applied on the search text field 
+  final FocusNode? focusNode;
+
   @override
   State<SearchableList> createState() => _SearchableListState<T>();
 }
@@ -87,6 +96,8 @@ class _SearchableListState<T> extends State<SearchableList> {
     return Column(
       children: [
         TextField(
+          focusNode: widget.focusNode,
+          enabled: widget.searchFieldEnabled,
           decoration: widget.inputDecoration,
           controller: widget.searchTextController,
           textInputAction: widget.keyboardAction,
