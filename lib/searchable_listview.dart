@@ -17,16 +17,62 @@ class SearchableList<T> extends StatefulWidget {
     this.obscureText = false,
   }) : super(key: key);
 
+
+  ///initial list to be displayed which contains all elements
   final List<T> initialList;
-  final Function(String) filter;
+
+  ///Callback filter the list based  on the given search value
+  ///
+  ///invoked on changing the text field search if ```searchType == SEARCH_TYPE.onEdit```
+  ///or invoked when submiting the text field if ```searchType == SEARCH_TYPE.onSubmit```
+  ///
+  ///return List of dynamic objects
+  final List Function(String) filter;
+
+  ///builder function that generate the listview children widget 
+  ///based on the given object
   final Widget Function(dynamic) builder;
+
+  ///the widget that will be displayed when the filter return an empty list
+  ///
+  ///by default it's `const SizedBox.shrink()`
   final Widget emptyWidget;
+
+  ///text editing controller applied on the search field
+  ///
+  ///by default it's null
   final TextEditingController? searchTextController;
+
+  ///the keyboard action key
+  ///
+  ///by default `TextInputAction.done`
   final TextInputAction keyboardAction;
+
+  ///the text field input decoration 
+  ///
+  ///by default it's null
   final InputDecoration? inputDecoration;
+
+  ///the keyboard text input type
+  ///
+  ///by default it's `TextInputType.text`
   final TextInputType textInputType;
+
+  ///callback function invoked when submiting the search text field
   final Function(String?)? onSubmitSearch;
+
+  ///the search type on submiting text field or when changing the text field value 
+  ///```dart
+  ///SEARCH_TYPË.onEdit,
+  ///SEARCH_TYPË.onSubmit
+  ///```
+  ///
+  ///by default it's onEdit
   final SEARCH_TYPE searchType;
+
+
+  ///indicate whether the text field input is obscure or not
+  ///by default  `obscureText = false`
   final bool obscureText;
 
   @override
@@ -34,7 +80,7 @@ class SearchableList<T> extends StatefulWidget {
 }
 
 class _SearchableListState<T> extends State<SearchableList> {
-  late List<T> displayedList = widget.initialList as List<T>;
+  late List displayedList = widget.initialList;
 
   @override
   Widget build(BuildContext context) {
