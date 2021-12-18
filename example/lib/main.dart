@@ -26,22 +26,36 @@ class MyApp extends StatelessWidget {
 }
 
 class ExampleApp extends StatelessWidget {
-  final List<User> users = [
-    User(
-      age: 24,
-      name: 'Badr',
+  final List<Actor> actors = [
+    Actor(
+      age: 47,
+      name: 'Leonardo',
+      lastName: 'DiCaprio',
     ),
-    User(
-      age: 27,
-      name: 'Ali Mohamed',
+    Actor(
+      age: 58,
+      name: 'Johnny',
+      lastName: 'Depp',
     ),
-    User(
-      age: 29,
-      name: 'Fathi',
+    Actor(
+      age: 78,
+      name: 'Robert',
+      lastName: 'De Niro'
     ),
-    User(
-      age: 50,
-      name: 'Mohamed',
+    Actor(
+      age: 44,
+      name: 'Tom',
+      lastName: 'Hardy'
+    ),
+    Actor(
+      age: 66,
+      name: 'Denzel',
+      lastName: 'Washington'
+    ),
+    Actor(
+      age: 49,
+      name: 'Ben',
+      lastName: 'Affleck'
     ),
   ];
 
@@ -56,14 +70,14 @@ class ExampleApp extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: SearchableList<User>(
-                initialList: users,
+              child: SearchableList<Actor>(
+                initialList: actors,
                 keyboardAction: TextInputAction.search,
                 builder: (dynamic user) => UserItem(user: user),
                 filter: _filterUserList,
                 emptyWidget: const EmptyView(),
                 inputDecoration: InputDecoration(
-                  labelText: "Search",
+                  labelText: "Search Actor",
                   fillColor: Colors.white,
                   focusedBorder: OutlineInputBorder(
                     borderSide: const BorderSide(
@@ -82,7 +96,7 @@ class ExampleApp extends StatelessWidget {
   }
 
   _filterUserList(search) {
-    return users
+    return actors
         .where(
           (element) => element.name.toLowerCase().contains(search),
         )
@@ -91,7 +105,7 @@ class ExampleApp extends StatelessWidget {
 }
 
 class UserItem extends StatelessWidget {
-  final User user;
+  final Actor user;
 
   const UserItem({
     Key? key,
@@ -103,15 +117,47 @@ class UserItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
+        height: 60,
         decoration: BoxDecoration(
-          color: Colors.red,
+          color: Colors.grey[200],
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Text(
-          user.name,
-          style: const TextStyle(
-            color: Colors.white,
-          ),
+        child: Row(
+          children: [
+            const SizedBox(
+              width: 10,
+            ),
+            Icon(Icons.star, color: Colors.yellow[700],),
+            const SizedBox(
+              width: 10,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Firstname: ${user.name}',
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Lastname: ${user.lastName}',
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Age: ${user.age}',
+                  style: const TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -135,12 +181,14 @@ class EmptyView extends StatelessWidget {
   }
 }
 
-class User {
+class Actor {
   int age;
   String name;
+  String lastName;
 
-  User({
+  Actor({
     required this.age,
     required this.name,
+    required this.lastName,
   });
 }
