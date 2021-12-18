@@ -54,41 +54,52 @@ class ExampleApp extends StatelessWidget {
       child: Column(
         children: [
           Expanded(
-            child: SearchableList<User>(
-              initialList: users,
-              keyboardAction: TextInputAction.search,
-              builder: (dynamic user) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      user.name,
-                      style: const TextStyle(
-                        color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: SearchableList<User>(
+                initialList: users,
+                keyboardAction: TextInputAction.search,
+                builder: (dynamic user) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        user.name,
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
                     ),
+                  );
+                },
+                filter: (text) {
+                  return users
+                      .where(
+                        (element) => element.name.toLowerCase().contains(text),
+                      )
+                      .toList();
+                },
+                emptyWidget: Column(
+                  children: const [
+                    Icon(
+                      Icons.error,
+                      color: Colors.red,
+                    ),
+                    Text('No such user found'),
+                  ],
+                ),
+                inputDecoration: InputDecoration(
+                  labelText: "Search",
+                  fillColor: Colors.white,
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.blue, width: 1.0),
+                    borderRadius: BorderRadius.circular(10.0),
                   ),
-                );
-              },
-              filter: (text) {
-                return users
-                    .where(
-                      (element) => element.name.toLowerCase().contains(text),
-                    )
-                    .toList();
-              },
-              emptyWidget: Column(
-                children: const [
-                  Icon(
-                    Icons.error,
-                    color: Colors.red,
-                  ),
-                  Text('No such user found'),
-                ],
+                ),
               ),
             ),
           )
