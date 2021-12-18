@@ -19,7 +19,6 @@ class SearchableList<T> extends StatefulWidget {
     this.searchFieldEnabled = true,
   }) : super(key: key);
 
-
   ///initial list to be displayed which contains all elements
   final List<T> initialList;
 
@@ -31,7 +30,7 @@ class SearchableList<T> extends StatefulWidget {
   ///return List of dynamic objects
   final List Function(String) filter;
 
-  ///builder function that generate the listview children widget 
+  ///builder function that generate the listview children widget
   ///based on the given object
   final Widget Function(dynamic) builder;
 
@@ -50,7 +49,7 @@ class SearchableList<T> extends StatefulWidget {
   ///by default `TextInputAction.done`
   final TextInputAction keyboardAction;
 
-  ///the text field input decoration 
+  ///the text field input decoration
   ///
   ///by default it's null
   final InputDecoration? inputDecoration;
@@ -63,7 +62,7 @@ class SearchableList<T> extends StatefulWidget {
   ///callback function invoked when submiting the search text field
   final Function(String?)? onSubmitSearch;
 
-  ///the search type on submiting text field or when changing the text field value 
+  ///the search type on submiting text field or when changing the text field value
   ///```dart
   ///SEARCH_TYPË.onEdit,
   ///SEARCH_TYPË.onSubmit
@@ -71,7 +70,6 @@ class SearchableList<T> extends StatefulWidget {
   ///
   ///by default it's onEdit
   final SEARCH_TYPE searchType;
-
 
   ///indicate whether the text field input is obscure or not
   ///by default  `obscureText = false`
@@ -81,7 +79,7 @@ class SearchableList<T> extends StatefulWidget {
   ///by default `searchFieldEnabled = true`
   final bool searchFieldEnabled;
 
-  ///the focus node applied on the search text field 
+  ///the focus node applied on the search text field
   final FocusNode? focusNode;
 
   @override
