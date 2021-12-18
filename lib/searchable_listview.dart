@@ -2,17 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:searchable_listview/resources/arrays.dart';
 
 class SearchableList<T> extends StatefulWidget {
-  
-  final List<T> initialList;
-  final Function(String) filter;
-  final Widget Function(dynamic) builder;
-  final TextEditingController? searchTextController;
-  final TextInputAction keyboardAction;
-  final InputDecoration? inputDecoration;
-  final Function(String?)? onSubmitSearch;
-  final SEARCH_TYPE searchType;
-  final Widget emptyWidget;
-
   const SearchableList({
     Key? key,
     required this.initialList,
@@ -24,7 +13,21 @@ class SearchableList<T> extends StatefulWidget {
     this.onSubmitSearch,
     this.searchType = SEARCH_TYPE.onEdit,
     this.emptyWidget = const SizedBox.shrink(),
+    this.textInputType = TextInputType.text,
+    this.obscureText = false,
   }) : super(key: key);
+
+  final List<T> initialList;
+  final Function(String) filter;
+  final Widget Function(dynamic) builder;
+  final Widget emptyWidget;
+  final TextEditingController? searchTextController;
+  final TextInputAction keyboardAction;
+  final InputDecoration? inputDecoration;
+  final TextInputType textInputType;
+  final Function(String?)? onSubmitSearch;
+  final SEARCH_TYPE searchType;
+  final bool obscureText;
 
   @override
   State<SearchableList> createState() => _SearchableListState<T>();
@@ -41,6 +44,8 @@ class _SearchableListState<T> extends State<SearchableList> {
           decoration: widget.inputDecoration,
           controller: widget.searchTextController,
           textInputAction: widget.keyboardAction,
+          keyboardType: widget.textInputType,
+          obscureText: widget.obscureText,
           onSubmitted: (value) {
             widget.onSubmitSearch?.call(value);
             if (widget.searchType == SEARCH_TYPE.onSubmit) {
@@ -61,7 +66,9 @@ class _SearchableListState<T> extends State<SearchableList> {
             : Expanded(
                 child: ListView.builder(
                   itemCount: displayedList.length,
-                  itemBuilder: (context, index) => widget.builder(displayedList[index]),
+                  itemBuilder: (context, index) => widget.builder(
+                    displayedList[index],
+                  ),
                 ),
               ),
       ],
