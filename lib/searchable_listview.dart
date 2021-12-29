@@ -17,6 +17,7 @@ class SearchableList<T> extends StatefulWidget {
     this.obscureText = false,
     this.focusNode,
     this.searchFieldEnabled = true,
+    this.onItemSelected,
   }) : super(key: key);
 
   ///initial list to be displayed which contains all elements
@@ -82,6 +83,8 @@ class SearchableList<T> extends StatefulWidget {
   ///the focus node applied on the search text field
   final FocusNode? focusNode;
 
+  final void Function<T>(T)? onItemSelected;
+
   @override
   State<SearchableList> createState() => _SearchableListState<T>();
 }
@@ -121,9 +124,18 @@ class _SearchableListState<T> extends State<SearchableList> {
             : Expanded(
                 child: ListView.builder(
                   itemCount: displayedList.length,
-                  itemBuilder: (context, index) => widget.builder(
-                    displayedList[index],
-                  ),
+                  itemBuilder: (context, index) => widget.onItemSelected == null
+                      ? widget.builder(
+                          displayedList[index],
+                        )
+                      : InkWell(
+                          onTap: () {
+                            widget.onItemSelected!.call(displayedList[index]);
+                          },
+                          child: widget.builder(
+                            displayedList[index],
+                          ),
+                        ),
                 ),
               ),
       ],

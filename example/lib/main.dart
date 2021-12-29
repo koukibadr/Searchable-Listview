@@ -73,7 +73,7 @@ class ExampleApp extends StatelessWidget {
               padding: const EdgeInsets.all(15),
               child: SearchableList<Actor>(
                 initialList: actors,
-                builder: (dynamic user) => UserItem(user: user),
+                builder: (dynamic user) => ActorItem(user: user),
                 filter: _filterUserList,
                 emptyWidget: const EmptyView(),
                 inputDecoration: InputDecoration(
@@ -104,10 +104,10 @@ class ExampleApp extends StatelessWidget {
   }
 }
 
-class UserItem extends StatelessWidget {
+class ActorItem extends StatelessWidget {
   final Actor user;
 
-  const UserItem({
+  const ActorItem({
     Key? key,
     required this.user,
   }) : super(key: key);
