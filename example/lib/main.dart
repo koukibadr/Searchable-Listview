@@ -73,7 +73,7 @@ class ExampleApp extends StatelessWidget {
               padding: const EdgeInsets.all(15),
               child: SearchableList<Actor>(
                 initialList: actors,
-                builder: (dynamic user) => ActorItem(user: user),
+                builder: (dynamic actor) => ActorItem(actor: actor),
                 filter: _filterUserList,
                 emptyWidget: const EmptyView(),
                 inputDecoration: InputDecoration(
@@ -105,11 +105,11 @@ class ExampleApp extends StatelessWidget {
 }
 
 class ActorItem extends StatelessWidget {
-  final Actor user;
+  final Actor actor;
 
   const ActorItem({
     Key? key,
-    required this.user,
+    required this.actor,
   }) : super(key: key);
 
   @override
@@ -136,21 +136,21 @@ class ActorItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Firstname: ${user.name}',
+                  'Firstname: ${actor.name}',
                   style: const TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  'Lastname: ${user.lastName}',
+                  'Lastname: ${actor.lastName}',
                   style: const TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  'Age: ${user.age}',
+                  'Age: ${actor.age}',
                   style: const TextStyle(
                     color: Colors.black,
                   ),
