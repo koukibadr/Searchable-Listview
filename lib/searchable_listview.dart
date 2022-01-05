@@ -83,6 +83,7 @@ class SearchableList<T> extends StatefulWidget {
   ///the focus node applied on the search text field
   final FocusNode? focusNode;
 
+  //TODO add missing code documentation
   final void Function<T>(T)? onItemSelected;
 
   @override
