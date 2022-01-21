@@ -1,3 +1,8 @@
+## 1.2.0 - 21/01/2022
+
+* Enhanced widget parameters
+* bug fixes
+
 ## 1.1.0 - 05/01/2022
 
 * Add on item pressed callback parameter
