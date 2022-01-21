@@ -56,7 +56,7 @@ final List Function(String) filter;
 ///builder function that generate the listview children widget
 ///based on the given object
 ///required
-final Widget Function(dynamic) builder;
+final Widget Function(T) builder;
 
   
 ///the widget that will be displayed when the filter return an empty list
