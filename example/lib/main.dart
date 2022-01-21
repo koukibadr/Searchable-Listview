@@ -38,26 +38,10 @@ class ExampleApp extends StatelessWidget {
       name: 'Johnny',
       lastName: 'Depp',
     ),
-    Actor(
-      age: 78,
-      name: 'Robert',
-      lastName: 'De Niro'
-    ),
-    Actor(
-      age: 44,
-      name: 'Tom',
-      lastName: 'Hardy'
-    ),
-    Actor(
-      age: 66,
-      name: 'Denzel',
-      lastName: 'Washington'
-    ),
-    Actor(
-      age: 49,
-      name: 'Ben',
-      lastName: 'Affleck'
-    ),
+    Actor(age: 78, name: 'Robert', lastName: 'De Niro'),
+    Actor(age: 44, name: 'Tom', lastName: 'Hardy'),
+    Actor(age: 66, name: 'Denzel', lastName: 'Washington'),
+    Actor(age: 49, name: 'Ben', lastName: 'Affleck'),
   ];
 
   ExampleApp({Key? key}) : super(key: key);
@@ -98,7 +82,9 @@ class ExampleApp extends StatelessWidget {
   List<Actor> _filterUserList(search) {
     return actors
         .where(
-          (element) => element.name.toLowerCase().contains(search),
+          (element) =>
+              element.name.toLowerCase().contains(search) ||
+              element.lastName.contains(search),
         )
         .toList();
   }
@@ -127,7 +113,10 @@ class ActorItem extends StatelessWidget {
             const SizedBox(
               width: 10,
             ),
-            Icon(Icons.star, color: Colors.yellow[700],),
+            Icon(
+              Icons.star,
+              color: Colors.yellow[700],
+            ),
             const SizedBox(
               width: 10,
             ),
