@@ -33,7 +33,7 @@ class SearchableList<T> extends StatefulWidget {
 
   ///builder function that generate the listview children widget
   ///based on the given object
-  final Widget Function(dynamic) builder;
+  final Widget Function(T) builder;
 
   ///the widget that will be displayed when the filter return an empty list
   ///
@@ -132,7 +132,9 @@ class _SearchableListState<T> extends State<SearchableList> {
                         )
                       : InkWell(
                           onTap: () {
-                            widget.onItemSelected!.call(displayedList[index]);
+                            widget.onItemSelected!.call(
+                              displayedList[index],
+                            );
                           },
                           child: widget.builder(
                             displayedList[index],
