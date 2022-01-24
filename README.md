@@ -78,6 +78,9 @@ final TextInputAction keyboardAction;
 ///by default it's null
 final InputDecoration? inputDecoration;
 
+///the style for the input text field
+/// by default it's null
+final TextStyle? style;
 
 ///the keyboard text input type
 ///by default it's `TextInputType.text`
