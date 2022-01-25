@@ -1,3 +1,7 @@
+## 1.3.1 - 25/01/2022
+
+- Bug fixes
+
 ## 1.3.0 - 25/01/2022
 
 - Add customization to search field text style
