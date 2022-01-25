@@ -10,6 +10,7 @@ class SearchableList<T> extends StatefulWidget {
     this.searchTextController,
     this.keyboardAction = TextInputAction.done,
     this.inputDecoration,
+    this.style,
     this.onSubmitSearch,
     this.searchType = SEARCH_TYPE.onEdit,
     this.emptyWidget = const SizedBox.shrink(),
@@ -54,6 +55,11 @@ class SearchableList<T> extends StatefulWidget {
   ///
   ///by default it's null
   final InputDecoration? inputDecoration;
+
+  ///the style for the input text field
+  ///
+  /// by default it's null
+  final TextStyle? style;
 
   ///the keyboard text input type
   ///
@@ -106,6 +112,7 @@ class _SearchableListState<T> extends State<SearchableList> {
           textInputAction: widget.keyboardAction,
           keyboardType: widget.textInputType,
           obscureText: widget.obscureText,
+          style: widget.style,
           onSubmitted: (value) {
             widget.onSubmitSearch?.call(value);
             if (widget.searchType == SEARCH_TYPE.onSubmit) {
