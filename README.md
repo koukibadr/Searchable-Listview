@@ -14,6 +14,7 @@
 - Change keyboard input type and keyboard submit button
 - Add focus on search text field
 - Add on item pressed callback
+- Customize search text style
 
 ## Getting Started
 
