@@ -1,6 +1,4 @@
-#  Searchable ListView
-
-  
+# Searchable ListView
 
 <p  align="center">
 <img  src="https://github.com/koukibadr/Searchable-Listview/blob/main/example/searchable_listview_logo.gif?raw=true"  width="300"/>
@@ -8,37 +6,27 @@
 <b>An easy way to filter lists</b>
 </p>
 
-  
+## Features
 
-##  Features
+- Filter list view easily
+- Display custom widget when list is empty
+- Customize search text field
+- Change keyboard input type and keyboard submit button
+- Add focus on search text field
+- Add on item pressed callback
 
--  Filter list view easily
--  Display custom widget when list is empty
--  Customize search text field
--  Change keyboard input type and keyboard submit button
--  Add focus on search text field
--  Add on item pressed callback
-
-  
-
-##  Getting Started
-
-  
+## Getting Started
 
 In order to add motion toast to your project add this line to your `pubspec.yaml` file
 
 ```yaml
 dependencies:
-	searchable_listview:  1.2.0
+	searchable_listview:  1.3.0
 ```
 
-  
+## Attributes
 
-##  Attributes
-
-  
-
-```dart
+````dart
 
 ///initial list to be displayed which contains all elements
 ///required
@@ -52,18 +40,18 @@ final List<T> initialList;
 ///required
 final List Function(String) filter;
 
-  
+
 ///builder function that generate the listview children widget
 ///based on the given object
 ///required
 final Widget Function(T) builder;
 
-  
+
 ///the widget that will be displayed when the filter return an empty list
 ///by default it's `const SizedBox.shrink()`
 final Widget emptyWidget;
 
-  
+
 ///text editing controller applied on the search field
 ///by default it's null
 final TextEditingController? searchTextController;
@@ -112,9 +100,11 @@ final FocusNode? focusNode;
 ///by default it's null
 final  void  Function<T>(T)?  onItemSelected;
 
-```
 
-##  Implementation
+
+````
+
+## Implementation
 
 ```dart
 SearchableList<Actor>(
@@ -141,12 +131,16 @@ SearchableList<Actor>(
 <img  src="https://github.com/koukibadr/Searchable-Listview/blob/main/example/searchable_listview_example.gif?raw=true"  width="300"/>
 </p>
 
-  
-  
-##  Contribution
+## Contribution
 
 Of course the project is open source, and you can contribute to it [repository link](https://github.com/koukibadr/Searchable-Listview)
 
--  If you **found a bug**, open an issue.
--  If you **have a feature request**, open an issue.
--  If you **want to contribute**, submit a pull request.
+- If you **found a bug**, open an issue.
+- If you **have a feature request**, open an issue.
+- If you **want to contribute**, submit a pull request.
+
+## Contributors
+
+<a href="https://github.com/koukibadr/Searchable-Listview/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=koukibadr/Elegant-Notification" />
+</a>
