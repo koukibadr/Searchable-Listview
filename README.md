@@ -146,5 +146,5 @@ Of course the project is open source, and you can contribute to it [repository l
 ## Contributors
 
 <a href="https://github.com/koukibadr/Searchable-Listview/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=koukibadr/Elegant-Notification" />
+  <img src="https://contrib.rocks/image?repo=koukibadr/Searchable-Listview" />
 </a>
