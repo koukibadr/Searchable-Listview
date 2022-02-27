@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:searchable_listview/resources/arrays.dart';
 
 class SearchableList<T> extends StatefulWidget {
-  
   SearchableList({
     Key? key,
     required this.initialList,
@@ -111,13 +110,7 @@ class _SearchableListState<T> extends State<SearchableList> {
           focusNode: widget.focusNode,
           enabled: widget.searchFieldEnabled,
           decoration: widget.inputDecoration!.copyWith(
-            suffix: widget.searchTextController!.text.isNotEmpty ? InkWell(
-              onTap: (){
-                widget.searchTextController!.clear();
-                _filterList(widget.searchTextController!.text);
-              },
-              child: const Icon(Icons.clear),
-            ) : const Icon(Icons.search)
+            suffix: widget.inputDecoration?.suffix ?? _renderSuffixIcon(),
           ),
           controller: widget.searchTextController,
           textInputAction: widget.keyboardAction,
@@ -169,5 +162,17 @@ class _SearchableListState<T> extends State<SearchableList> {
         displayedList = widget.filter(value);
       },
     );
+  }
+
+  Widget _renderSuffixIcon() {
+    return widget.searchTextController!.text.isNotEmpty
+        ? InkWell(
+            onTap: () {
+              widget.searchTextController!.clear();
+              _filterList(widget.searchTextController!.text);
+            },
+            child: const Icon(Icons.clear),
+          )
+        : const Icon(Icons.search);
   }
 }
