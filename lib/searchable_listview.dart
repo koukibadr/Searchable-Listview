@@ -97,7 +97,9 @@ class SearchableList<T> extends StatefulWidget {
   ///by default it's null
   final void Function<T>(T)? onItemSelected;
 
-  //TODO add missing code documentation
+  ///indicate whether the clear icon will be displayed or not
+  ///by default it's true, to display the clear icon the inputDecoration should not contains suffix icon 
+  ///otherwise the initial suffix icon will be displayed
   final bool displayClearIcon;
 
   @override

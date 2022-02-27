@@ -22,7 +22,7 @@ In order to add motion toast to your project add this line to your `pubspec.yaml
 
 ```yaml
 dependencies:
-	searchable_listview:  1.3.1
+	searchable_listview:  1.3.2
 ```
 
 ## Attributes
@@ -105,7 +105,10 @@ final FocusNode? focusNode;
 final  void  Function<T>(T)?  onItemSelected;
 
 
-
+///indicate whether the clear icon will be displayed or not
+///by default it's true, to display the clear icon the inputDecoration should not contains suffix icon 
+///otherwise the initial suffix icon will be displayed
+final bool displayClearIcon;
 ````
 
 ## Implementation
