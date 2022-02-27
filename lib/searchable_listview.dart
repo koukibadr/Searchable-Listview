@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:searchable_listview/resources/arrays.dart';
 
 class SearchableList<T> extends StatefulWidget {
+
   SearchableList({
     Key? key,
     required this.initialList,
@@ -19,6 +20,7 @@ class SearchableList<T> extends StatefulWidget {
     this.focusNode,
     this.searchFieldEnabled = true,
     this.onItemSelected,
+    this.displayClearIcon = true,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
   }
@@ -95,6 +97,9 @@ class SearchableList<T> extends StatefulWidget {
   ///by default it's null
   final void Function<T>(T)? onItemSelected;
 
+  //TODO add missing code documentation
+  final bool displayClearIcon;
+
   @override
   State<SearchableList> createState() => _SearchableListState<T>();
 }
@@ -164,15 +169,17 @@ class _SearchableListState<T> extends State<SearchableList> {
     );
   }
 
-  Widget _renderSuffixIcon() {
-    return widget.searchTextController!.text.isNotEmpty
-        ? InkWell(
-            onTap: () {
-              widget.searchTextController!.clear();
-              _filterList(widget.searchTextController!.text);
-            },
-            child: const Icon(Icons.clear),
-          )
-        : const Icon(Icons.search);
+  Widget? _renderSuffixIcon() {
+    return widget.displayClearIcon
+        ? null
+        : widget.searchTextController!.text.isNotEmpty
+            ? InkWell(
+                onTap: () {
+                  widget.searchTextController!.clear();
+                  _filterList(widget.searchTextController!.text);
+                },
+                child: const Icon(Icons.clear),
+              )
+            : const Icon(Icons.search);
   }
 }
