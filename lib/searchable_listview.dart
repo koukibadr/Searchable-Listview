@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:searchable_listview/resources/arrays.dart';
 
 class SearchableList<T> extends StatefulWidget {
-  const SearchableList({
+  
+  SearchableList({
     Key? key,
     required this.initialList,
     required this.filter,
@@ -19,7 +20,9 @@ class SearchableList<T> extends StatefulWidget {
     this.focusNode,
     this.searchFieldEnabled = true,
     this.onItemSelected,
-  }) : super(key: key);
+  }) : super(key: key) {
+    searchTextController ??= TextEditingController();
+  }
 
   ///initial list to be displayed which contains all elements
   final List<T> initialList;
@@ -44,7 +47,7 @@ class SearchableList<T> extends StatefulWidget {
   ///text editing controller applied on the search field
   ///
   ///by default it's null
-  final TextEditingController? searchTextController;
+  late TextEditingController? searchTextController;
 
   ///the keyboard action key
   ///
@@ -107,12 +110,19 @@ class _SearchableListState<T> extends State<SearchableList> {
         TextField(
           focusNode: widget.focusNode,
           enabled: widget.searchFieldEnabled,
-          decoration: widget.inputDecoration,
+          decoration: widget.inputDecoration!.copyWith(
+            suffix: InkWell(
+              onTap: (){
+                widget.searchTextController!.clear();
+                _filterList(widget.searchTextController!.text);
+              },
+              child: const Icon(Icons.clear),
+            )
+          ),
           controller: widget.searchTextController,
           textInputAction: widget.keyboardAction,
           keyboardType: widget.textInputType,
           obscureText: widget.obscureText,
-          style: widget.style,
           onSubmitted: (value) {
             widget.onSubmitSearch?.call(value);
             if (widget.searchType == SEARCH_TYPE.onSubmit) {
