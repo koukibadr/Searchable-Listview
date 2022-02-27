@@ -1,3 +1,7 @@
+## 1.3.2 - 27/02/2022
+
+- Add clear button suffix icon
+
 ## 1.3.1 - 25/01/2022
 
 - Bug fixes

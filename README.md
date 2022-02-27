@@ -15,6 +15,7 @@
 - Add focus on search text field
 - Add on item pressed callback
 - Customize search text style
+- Clear icon button in search to easily clear text
 
 ## Getting Started
 
@@ -106,9 +107,13 @@ final  void  Function<T>(T)?  onItemSelected;
 
 
 ///indicate whether the clear icon will be displayed or not
-///by default it's true, to display the clear icon the inputDecoration should not contains suffix icon 
+///by default it's true, to display the clear icon the inputDecoration should not contains suffix icon
 ///otherwise the initial suffix icon will be displayed
 final bool displayClearIcon;
+
+///the color applied on the suffix icon (if displayClearIcon = true)
+///by default the color is grey
+final Color defaultSuffixIconColor;
 ````
 
 ## Implementation
