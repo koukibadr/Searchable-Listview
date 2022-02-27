@@ -111,13 +111,13 @@ class _SearchableListState<T> extends State<SearchableList> {
           focusNode: widget.focusNode,
           enabled: widget.searchFieldEnabled,
           decoration: widget.inputDecoration!.copyWith(
-            suffix: InkWell(
+            suffix: widget.searchTextController!.text.isNotEmpty ? InkWell(
               onTap: (){
                 widget.searchTextController!.clear();
                 _filterList(widget.searchTextController!.text);
               },
               child: const Icon(Icons.clear),
-            )
+            ) : const Icon(Icons.search)
           ),
           controller: widget.searchTextController,
           textInputAction: widget.keyboardAction,
