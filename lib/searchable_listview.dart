@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:searchable_listview/resources/arrays.dart';
 
 class SearchableList<T> extends StatefulWidget {
-
   SearchableList({
     Key? key,
     required this.initialList,
@@ -21,6 +20,7 @@ class SearchableList<T> extends StatefulWidget {
     this.searchFieldEnabled = true,
     this.onItemSelected,
     this.displayClearIcon = true,
+    this.defaultSuffixIconColor = Colors.grey,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
   }
@@ -98,9 +98,13 @@ class SearchableList<T> extends StatefulWidget {
   final void Function<T>(T)? onItemSelected;
 
   ///indicate whether the clear icon will be displayed or not
-  ///by default it's true, to display the clear icon the inputDecoration should not contains suffix icon 
+  ///by default it's true, to display the clear icon the inputDecoration should not contains suffix icon
   ///otherwise the initial suffix icon will be displayed
   final bool displayClearIcon;
+
+  ///the color applied on the suffix icon (if displayClearIcon = true)
+  ///by default the color is grey
+  final Color defaultSuffixIconColor;
 
   @override
   State<SearchableList> createState() => _SearchableListState<T>();
@@ -172,7 +176,7 @@ class _SearchableListState<T> extends State<SearchableList> {
   }
 
   Widget? _renderSuffixIcon() {
-    return widget.displayClearIcon
+    return !widget.displayClearIcon
         ? null
         : widget.searchTextController!.text.isNotEmpty
             ? InkWell(
@@ -180,8 +184,14 @@ class _SearchableListState<T> extends State<SearchableList> {
                   widget.searchTextController!.clear();
                   _filterList(widget.searchTextController!.text);
                 },
-                child: const Icon(Icons.clear),
+                child: Icon(
+                  Icons.clear,
+                  color: widget.defaultSuffixIconColor,
+                ),
               )
-            : const Icon(Icons.search);
+            : Icon(
+                Icons.search,
+                color: widget.defaultSuffixIconColor,
+              );
   }
 }

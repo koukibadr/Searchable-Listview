@@ -63,7 +63,6 @@ class ExampleApp extends StatelessWidget {
                 inputDecoration: InputDecoration(
                   labelText: "Search Actor",
                   fillColor: Colors.white,
-                  suffix: Icon(Icons.wallet_giftcard),
                   focusedBorder: OutlineInputBorder(
                     borderSide: const BorderSide(
                       color: Colors.blue,
