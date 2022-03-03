@@ -1,7 +1,10 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:searchable_listview/resources/arrays.dart';
 
 class SearchableList<T> extends StatefulWidget {
+  
   SearchableList({
     Key? key,
     required this.initialList,
@@ -120,7 +123,7 @@ class _SearchableListState<T> extends State<SearchableList> {
         TextField(
           focusNode: widget.focusNode,
           enabled: widget.searchFieldEnabled,
-          decoration: widget.inputDecoration!.copyWith(
+          decoration: widget.inputDecoration?.copyWith(
             suffix: widget.inputDecoration?.suffix ?? _renderSuffixIcon(),
           ),
           controller: widget.searchTextController,
