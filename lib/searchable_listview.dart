@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:searchable_listview/resources/arrays.dart';
 
 class SearchableList<T> extends StatefulWidget {
-  
   SearchableList({
     Key? key,
     required this.initialList,
