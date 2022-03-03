@@ -1,3 +1,6 @@
+## 1.3.3 - 03/03/2022
+
+- Fix input decoration bug
 ## 1.3.2 - 27/02/2022
 
 - Add clear button suffix icon
