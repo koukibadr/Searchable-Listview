@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Scaffold(
+      home: const Scaffold(
         body: SafeArea(
           child: ExampleApp(),
         ),
@@ -26,7 +26,14 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class ExampleApp extends StatelessWidget {
+class ExampleApp extends StatefulWidget {
+  const ExampleApp({Key? key}) : super(key: key);
+
+  @override
+  State<ExampleApp> createState() => _ExampleAppState();
+}
+
+class _ExampleAppState extends State<ExampleApp> {
   final List<Actor> actors = [
     Actor(
       age: 47,
@@ -43,8 +50,6 @@ class ExampleApp extends StatelessWidget {
     Actor(age: 66, name: 'Denzel', lastName: 'Washington'),
     Actor(age: 49, name: 'Ben', lastName: 'Affleck'),
   ];
-
-  ExampleApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +78,15 @@ class ExampleApp extends StatelessWidget {
                 ),
               ),
             ),
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: ElevatedButton(
+              onPressed: () {
+                addActor();
+              },
+              child: Text('Add actor'),
+            ),
           )
         ],
       ),
@@ -87,6 +101,15 @@ class ExampleApp extends StatelessWidget {
               element.lastName.contains(search),
         )
         .toList();
+  }
+
+  addActor() {
+    actors.add(Actor(
+      age: 10,
+      lastName: 'Ali',
+      name: 'ALi',
+    ));
+    setState(() {});
   }
 }
 
