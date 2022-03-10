@@ -28,7 +28,7 @@ class SearchableList<T> extends StatefulWidget {
   }
 
   ///initial list to be displayed which contains all elements
-  final List<T> initialList;
+  late List<T> initialList;
 
   ///Callback filter the list based  on the given search value
   ///
@@ -113,8 +113,6 @@ class SearchableList<T> extends StatefulWidget {
 }
 
 class _SearchableListState<T> extends State<SearchableList> {
-  late List displayedList = widget.initialList;
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -144,23 +142,23 @@ class _SearchableListState<T> extends State<SearchableList> {
         const SizedBox(
           height: 20,
         ),
-        displayedList.isEmpty
+        widget.initialList.isEmpty
             ? widget.emptyWidget
             : Expanded(
                 child: ListView.builder(
-                  itemCount: displayedList.length,
+                  itemCount: widget.initialList.length,
                   itemBuilder: (context, index) => widget.onItemSelected == null
                       ? widget.builder(
-                          displayedList[index],
+                          widget.initialList[index],
                         )
                       : InkWell(
                           onTap: () {
                             widget.onItemSelected!.call(
-                              displayedList[index],
+                              widget.initialList[index],
                             );
                           },
                           child: widget.builder(
-                            displayedList[index],
+                            widget.initialList[index],
                           ),
                         ),
                 ),
@@ -172,7 +170,7 @@ class _SearchableListState<T> extends State<SearchableList> {
   void _filterList(String value) {
     setState(
       () {
-        displayedList = widget.filter(value);
+        widget.initialList = widget.filter(value);
       },
     );
   }
