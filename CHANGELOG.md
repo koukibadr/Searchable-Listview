@@ -1,3 +1,7 @@
+## 1.3.4 - 10/03/2022
+
+- Fix list state issue on update list
+
 ## 1.3.3 - 03/03/2022
 
 - Fix input decoration bug
