@@ -36,7 +36,7 @@ class SearchableList<T> extends StatefulWidget {
   ///or invoked when submiting the text field if ```searchType == SEARCH_TYPE.onSubmit```
   ///
   ///return List of dynamic objects
-  final List Function(String) filter;
+  final List<T> Function(String) filter;
 
   ///builder function that generate the listview children widget
   ///based on the given object
@@ -112,7 +112,7 @@ class SearchableList<T> extends StatefulWidget {
   State<SearchableList> createState() => _SearchableListState<T>();
 }
 
-class _SearchableListState<T> extends State<SearchableList> {
+class _SearchableListState<T> extends State<SearchableList<T>> {
   @override
   Widget build(BuildContext context) {
     return Column(
