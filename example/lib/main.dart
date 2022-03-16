@@ -8,7 +8,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -62,7 +61,7 @@ class _ExampleAppState extends State<ExampleApp> {
               padding: const EdgeInsets.all(15),
               child: SearchableList<Actor>(
                 initialList: actors,
-                builder: (dynamic actor) => ActorItem(actor: actor),
+                builder: (Actor actor) => ActorItem(actor: actor),
                 filter: _filterUserList,
                 emptyWidget: const EmptyView(),
                 inputDecoration: InputDecoration(
@@ -82,10 +81,8 @@ class _ExampleAppState extends State<ExampleApp> {
           Align(
             alignment: Alignment.center,
             child: ElevatedButton(
-              onPressed: () {
-                addActor();
-              },
-              child: Text('Add actor'),
+              onPressed: addActor,
+              child: const Text('Add actor'),
             ),
           )
         ],
@@ -93,17 +90,17 @@ class _ExampleAppState extends State<ExampleApp> {
     );
   }
 
-  List<Actor> _filterUserList(search) {
+  List<Actor> _filterUserList(String searchTerm) {
     return actors
         .where(
           (element) =>
-              element.name.toLowerCase().contains(search) ||
-              element.lastName.contains(search),
+              element.name.toLowerCase().contains(searchTerm) ||
+              element.lastName.contains(searchTerm),
         )
         .toList();
   }
 
-  addActor() {
+  void addActor() {
     actors.add(Actor(
       age: 10,
       lastName: 'Ali',
