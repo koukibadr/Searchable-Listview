@@ -27,85 +27,85 @@ class SearchableList<T> extends StatefulWidget {
     searchTextController ??= TextEditingController();
   }
 
-  ///initial list to be displayed which contains all elements
+  /// Initial list of all elements that will be displayed.
   late List<T> initialList;
 
-  ///Callback filter the list based  on the given search value
+  /// Callback to filter the list based on the given search value.
   ///
-  ///invoked on changing the text field search if ```searchType == SEARCH_TYPE.onEdit```
-  ///or invoked when submiting the text field if ```searchType == SEARCH_TYPE.onSubmit```
+  /// Invoked on changing the text field search if ```searchType == SEARCH_TYPE.onEdit```
+  /// or invoked when submiting the text field if ```searchType == SEARCH_TYPE.onSubmit```.
   ///
-  ///return List of dynamic objects
+  /// You should return a list of filtered elements.
   final List<T> Function(String) filter;
 
-  ///builder function that generate the listview children widget
-  ///based on the given object
+  /// Builder function that generates the ListView items
+  /// based on the given element.
   final Widget Function(T) builder;
 
-  ///the widget that will be displayed when the filter return an empty list
+  /// The widget to be displayed when the filter returns an empty list.
   ///
-  ///by default it's `const SizedBox.shrink()`
+  /// Defaults to `const SizedBox.shrink()`.
   final Widget emptyWidget;
 
-  ///text editing controller applied on the search field
+  /// Text editing controller applied on the search field.
   ///
-  ///by default it's null
+  /// Defaults to null.
   late TextEditingController? searchTextController;
 
-  ///the keyboard action key
+  /// The keyboard action key
   ///
-  ///by default `TextInputAction.done`
+  /// Defaults to [TextInputAction.done].
   final TextInputAction keyboardAction;
 
-  ///the text field input decoration
+  /// The text field input decoration
   ///
-  ///by default it's null
+  /// Defaults to null.
   final InputDecoration? inputDecoration;
 
-  ///the style for the input text field
+  /// The style for the input text field
   ///
-  /// by default it's null
+  /// Defaults to null.
   final TextStyle? style;
 
-  ///the keyboard text input type
+  /// The keyboard text input type
   ///
-  ///by default it's `TextInputType.text`
+  /// Defaults to [TextInputType.text]
   final TextInputType textInputType;
 
-  ///callback function invoked when submiting the search text field
+  /// Callback function invoked when submiting the search text field
   final Function(String?)? onSubmitSearch;
 
-  ///the search type on submiting text field or when changing the text field value
+  /// The search type on submiting text field or when changing the text field value
   ///```dart
-  ///SEARCH_TYPË.onEdit,
-  ///SEARCH_TYPË.onSubmit
+  ///SEARCH_TYPE.onEdit,
+  ///SEARCH_TYPE.onSubmit
   ///```
   ///
-  ///by default it's onEdit
+  /// Defaults to [SEARCH_TYPE.onEdit].
   final SEARCH_TYPE searchType;
 
-  ///indicate whether the text field input is obscure or not
-  ///by default  `obscureText = false`
+  /// Indicate whether the text field input should be obscured or not.
+  /// Defaults to `false`.
   final bool obscureText;
 
-  ///indicate if the search text field is enabled or not
-  ///by default `searchFieldEnabled = true`
+  /// Indicate if the search text field is enabled or not.
+  /// Defaults to `true`.
   final bool searchFieldEnabled;
 
-  ///the focus node applied on the search text field
+  /// The focus node applied on the search text field
   final FocusNode? focusNode;
 
-  ///function invoked when pressing on item
-  ///by default it's null
+  /// Function invoked when pressing on item
+  /// Defaults to null
   final void Function<T>(T)? onItemSelected;
 
-  ///indicate whether the clear icon will be displayed or not
-  ///by default it's true, to display the clear icon the inputDecoration should not contains suffix icon
-  ///otherwise the initial suffix icon will be displayed
+  /// Indicate whether the clear icon will be displayed or not
+  /// by default it's true, to display the clear icon the inputDecoration should not contains suffix icon
+  /// otherwise the initial suffix icon will be displayed
   final bool displayClearIcon;
 
-  ///the color applied on the suffix icon (if displayClearIcon = true)
-  ///by default the color is grey
+  /// The color applied on the suffix icon (if `displayClearIcon = true`).
+  /// Defaults to [Colors.grey].
   final Color defaultSuffixIconColor;
 
   @override
