@@ -40,7 +40,7 @@ final List<T> initialList;
 ///or invoked when submiting the text field if ```searchType == SEARCH_TYPE.onSubmit```
 ///return List of dynamic objects
 ///required
-final List Function(String) filter;
+final List<T> Function(String) filter;
 
 
 ///builder function that generate the listview children widget
@@ -103,7 +103,7 @@ final FocusNode? focusNode;
 
 ///function invoked when pressing on item
 ///by default it's null
-final  void  Function<T>(T)?  onItemSelected;
+final void Function<T>(T)? onItemSelected;
 
 
 ///indicate whether the clear icon will be displayed or not
@@ -121,7 +121,7 @@ final Color defaultSuffixIconColor;
 ```dart
 SearchableList<Actor>(
 	initialList: actors,
-	builder: (dynamic user) => UserItem(user: user),
+	builder: (Actor user) => UserItem(user: user),
 	filter: (value) => actors.where((element) => element.name.toLowerCase().contains(value),).toList(),
 	emptyWidget:  const EmptyView(),
 	inputDecoration: InputDecoration(
@@ -139,8 +139,8 @@ SearchableList<Actor>(
 
 ```
 
-<p  align="center">
-<img  src="https://github.com/koukibadr/Searchable-Listview/blob/main/example/searchable_listview_example.gif?raw=true"  width="300"/>
+<p align="center">
+<img src="https://github.com/koukibadr/Searchable-Listview/blob/main/example/searchable_listview_example.gif?raw=true" width="300"/>
 </p>
 
 ## Contribution
