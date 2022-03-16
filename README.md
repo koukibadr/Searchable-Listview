@@ -116,21 +116,21 @@ dependencies:
 
 ```dart
 SearchableList<Actor>(
-	initialList: actors,
-	builder: (Actor user) => UserItem(user: user),
-	filter: (value) => actors.where((element) => element.name.toLowerCase().contains(value),).toList(),
-	emptyWidget:  const EmptyView(),
-	inputDecoration: InputDecoration(
-		labelText:  "Search Actor",
-		fillColor: Colors.white,
-		focusedBorder: OutlineInputBorder(
-			borderSide:  const BorderSide(
-				color: Colors.blue,
-				width:  1.0,
-			),
-		borderRadius: BorderRadius.circular(10.0),
+  initialList: actors,
+  builder: (Actor user) => UserItem(user: user),
+  filter: (value) => actors.where((element) => element.name.toLowerCase().contains(value),).toList(),
+  emptyWidget:  const EmptyView(),
+  inputDecoration: InputDecoration(
+    labelText: "Search Actor",
+	fillColor: Colors.white,
+	focusedBorder: OutlineInputBorder(
+	  borderSide: const BorderSide(
+	    color: Colors.blue,
+		width: 1.0,
+	  ),
+	  borderRadius: BorderRadius.circular(10.0),
 	),
-),
+  ),
 ),
 
 ```
