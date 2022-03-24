@@ -28,119 +28,115 @@ dependencies:
 
 ## Attributes
 
-````dart
+```dart
 
-///initial list to be displayed which contains all elements
-///required
-final List<T> initialList;
+/// Initial list of all elements that will be displayed.
+  late List<T> initialList;
 
+  /// Callback to filter the list based on the given search value.
+  ///
+  /// Invoked on changing the text field search if ```searchType == SEARCH_TYPE.onEdit```
+  /// or invoked when submiting the text field if ```searchType == SEARCH_TYPE.onSubmit```.
+  ///
+  /// You should return a list of filtered elements.
+  final List<T> Function(String) filter;
 
-///Callback filter the list based on the given search value
-///invoked on changing the text field search if ```searchType == SEARCH_TYPE.onEdit```
-///or invoked when submiting the text field if ```searchType == SEARCH_TYPE.onSubmit```
-///return List of dynamic objects
-///required
-final List Function(String) filter;
+  /// Builder function that generates the ListView items
+  /// based on the given element.
+  final Widget Function(T) builder;
 
+  /// The widget to be displayed when the filter returns an empty list.
+  ///
+  /// Defaults to `const SizedBox.shrink()`.
+  final Widget emptyWidget;
 
-///builder function that generate the listview children widget
-///based on the given object
-///required
-final Widget Function(T) builder;
+  /// Text editing controller applied on the search field.
+  ///
+  /// Defaults to null.
+  late TextEditingController? searchTextController;
 
+  /// The keyboard action key
+  ///
+  /// Defaults to [TextInputAction.done].
+  final TextInputAction keyboardAction;
 
-///the widget that will be displayed when the filter return an empty list
-///by default it's `const SizedBox.shrink()`
-final Widget emptyWidget;
+  /// The text field input decoration
+  ///
+  /// Defaults to null.
+  final InputDecoration? inputDecoration;
 
+  /// The style for the input text field
+  ///
+  /// Defaults to null.
+  final TextStyle? style;
 
-///text editing controller applied on the search field
-///by default it's null
-final TextEditingController? searchTextController;
+  /// The keyboard text input type
+  ///
+  /// Defaults to [TextInputType.text]
+  final TextInputType textInputType;
 
+  /// Callback function invoked when submiting the search text field
+  final Function(String?)? onSubmitSearch;
 
-///the keyboard action key
-///by default `TextInputAction.done`
-final TextInputAction keyboardAction;
+  /// The search type on submiting text field or when changing the text field value
+  ///```dart
+  ///SEARCH_TYPE.onEdit,
+  ///SEARCH_TYPE.onSubmit
+  ///```
+  ///
+  /// Defaults to [SEARCH_TYPE.onEdit].
+  final SEARCH_TYPE searchType;
 
+  /// Indicate whether the text field input should be obscured or not.
+  /// Defaults to `false`.
+  final bool obscureText;
 
-///the text field input decoration
-///by default it's null
-final InputDecoration? inputDecoration;
+  /// Indicate if the search text field is enabled or not.
+  /// Defaults to `true`.
+  final bool searchFieldEnabled;
 
-///the style for the input text field
-/// by default it's null
-final TextStyle? style;
+  /// The focus node applied on the search text field
+  final FocusNode? focusNode;
 
-///the keyboard text input type
-///by default it's `TextInputType.text`
-final TextInputType textInputType;
+  /// Function invoked when pressing on item
+  /// Defaults to null
+  final void Function<T>(T)? onItemSelected;
 
+  /// Indicate whether the clear icon will be displayed or not
+  /// by default it's true, to display the clear icon the inputDecoration should not contains suffix icon
+  /// otherwise the initial suffix icon will be displayed
+  final bool displayClearIcon;
 
-///callback function invoked when submiting the search text field
-final Function(String?)? onSubmitSearch;
-
-
-///the search type on submiting text field or when changing the text field value
-///SEARCH_TYPË.onEdit,
-///SEARCH_TYPË.onSubmit
-///by default it's onEdit
-final SEARCH_TYPE searchType;
-
-
-///indicate whether the text field input is obscure or not
-///by default `obscureText = false`
-final bool obscureText;
-
-
-///indicate if the search text field is enabled or not
-///by default `searchFieldEnabled = true`
-final bool searchFieldEnabled;
-
-
-///the focus node applied on the search text field
-final FocusNode? focusNode;
-
-///function invoked when pressing on item
-///by default it's null
-final  void  Function<T>(T)?  onItemSelected;
-
-
-///indicate whether the clear icon will be displayed or not
-///by default it's true, to display the clear icon the inputDecoration should not contains suffix icon
-///otherwise the initial suffix icon will be displayed
-final bool displayClearIcon;
-
-///the color applied on the suffix icon (if displayClearIcon = true)
-///by default the color is grey
-final Color defaultSuffixIconColor;
-````
+  /// The color applied on the suffix icon (if `displayClearIcon = true`).
+  /// Defaults to [Colors.grey].
+  final Color defaultSuffixIconColor;
+```
 
 ## Implementation
 
 ```dart
 SearchableList<Actor>(
-	initialList: actors,
-	builder: (dynamic user) => UserItem(user: user),
-	filter: (value) => actors.where((element) => element.name.toLowerCase().contains(value),).toList(),
-	emptyWidget:  const EmptyView(),
-	inputDecoration: InputDecoration(
-		labelText:  "Search Actor",
-		fillColor: Colors.white,
-		focusedBorder: OutlineInputBorder(
-			borderSide:  const BorderSide(
-				color: Colors.blue,
-				width:  1.0,
-			),
-		borderRadius: BorderRadius.circular(10.0),
+  initialList: actors,
+  builder: (Actor user) => UserItem(user: user),
+  filter: (value) => actors.where((element) => element.name.toLowerCase().contains(value),).toList(),
+  emptyWidget:  const EmptyView(),
+  inputDecoration: InputDecoration(
+    labelText: "Search Actor",
+	fillColor: Colors.white,
+	focusedBorder: OutlineInputBorder(
+	  borderSide: const BorderSide(
+	    color: Colors.blue,
+		width: 1.0,
+	  ),
+	  borderRadius: BorderRadius.circular(10.0),
 	),
-),
+  ),
 ),
 
 ```
 
-<p  align="center">
-<img  src="https://github.com/koukibadr/Searchable-Listview/blob/main/example/searchable_listview_example.gif?raw=true"  width="300"/>
+<p align="center">
+<img src="https://github.com/koukibadr/Searchable-Listview/blob/main/example/searchable_listview_example.gif?raw=true" width="300"/>
 </p>
 
 ## Contribution
