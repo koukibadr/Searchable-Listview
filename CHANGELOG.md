@@ -1,3 +1,8 @@
+## 1.3.5 - 25/03/2022
+
+- Enhance package coding style (remove dynamic)
+- Bug fixes
+
 ## 1.3.4 - 10/03/2022
 
 - Fix list state issue on update list
