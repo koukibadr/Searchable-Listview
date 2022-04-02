@@ -76,7 +76,7 @@ class _ExampleAppState extends State<ExampleApp> {
                   ),
                 ),
                 onRefresh: () async{
-                  print('hello');
+                  addActor();
                 },
               ),
             ),
