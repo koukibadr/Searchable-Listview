@@ -23,6 +23,7 @@ class SearchableList<T> extends StatefulWidget {
     this.onItemSelected,
     this.displayClearIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
+    this.onRefresh,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
   }
@@ -108,6 +109,8 @@ class SearchableList<T> extends StatefulWidget {
   /// Defaults to [Colors.grey].
   final Color defaultSuffixIconColor;
 
+  final Future<void> Function()? onRefresh;
+
   @override
   State<SearchableList> createState() => _SearchableListState<T>();
 }
@@ -142,28 +145,38 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         const SizedBox(
           height: 20,
         ),
-        widget.initialList.isEmpty
-            ? widget.emptyWidget
-            : Expanded(
-                child: ListView.builder(
-                  itemCount: widget.initialList.length,
-                  itemBuilder: (context, index) => widget.onItemSelected == null
-                      ? widget.builder(
-                          widget.initialList[index],
-                        )
-                      : InkWell(
-                          onTap: () {
-                            widget.onItemSelected!.call(
-                              widget.initialList[index],
-                            );
-                          },
-                          child: widget.builder(
-                            widget.initialList[index],
-                          ),
-                        ),
-                ),
-              ),
+        if (widget.initialList.isEmpty)
+          widget.emptyWidget
+        else
+          Expanded(
+            child: widget.onRefresh != null
+                ? RefreshIndicator(
+                    onRefresh: widget.onRefresh!,
+                    child: _renderListView(),
+                  )
+                : _renderListView(),
+          ),
       ],
+    );
+  }
+
+  _renderListView() {
+    return ListView.builder(
+      itemCount: widget.initialList.length,
+      itemBuilder: (context, index) => widget.onItemSelected == null
+          ? widget.builder(
+              widget.initialList[index],
+            )
+          : InkWell(
+              onTap: () {
+                widget.onItemSelected!.call(
+                  widget.initialList[index],
+                );
+              },
+              child: widget.builder(
+                widget.initialList[index],
+              ),
+            ),
     );
   }
 
