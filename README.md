@@ -80,11 +80,8 @@ dependencies:
   final Function(String?)? onSubmitSearch;
 
   /// The search type on submiting text field or when changing the text field value
-  ///```dart
   ///SEARCH_TYPE.onEdit,
   ///SEARCH_TYPE.onSubmit
-  ///```
-  ///
   /// Defaults to [SEARCH_TYPE.onEdit].
   final SEARCH_TYPE searchType;
 
