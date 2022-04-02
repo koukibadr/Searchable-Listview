@@ -109,7 +109,6 @@ class SearchableList<T> extends StatefulWidget {
   /// Defaults to [Colors.grey].
   final Color defaultSuffixIconColor;
 
-
   ///An async callback invoked when dragging down the list
   ///if onRefresh is nullable the drag to refresh is not applied
   final Future<void> Function()? onRefresh;
