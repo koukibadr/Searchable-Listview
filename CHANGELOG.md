@@ -1,3 +1,8 @@
+## 1.4.0 - 02/04/2022
+
+- Add pull to refresh behaviour to the list
+- Bug fixes
+
 ## 1.3.5 - 25/03/2022
 
 - Enhance package coding style (remove dynamic)
