@@ -9,6 +9,7 @@
 ## Features
 
 - Filter list view easily
+- Pull to refresh list
 - Display custom widget when list is empty
 - Customize search text field
 - Change keyboard input type and keyboard submit button
@@ -23,7 +24,7 @@ In order to add motion toast to your project add this line to your `pubspec.yaml
 
 ```yaml
 dependencies:
-	searchable_listview:  1.3.5
+	searchable_listview:  1.4.0
 ```
 
 ## Attributes
@@ -110,6 +111,10 @@ dependencies:
   /// The color applied on the suffix icon (if `displayClearIcon = true`).
   /// Defaults to [Colors.grey].
   final Color defaultSuffixIconColor;
+
+  ///An async callback invoked when dragging down the list
+  ///if onRefresh is nullable the drag to refresh is not applied
+  final Future<void> Function()? onRefresh;
 ```
 
 ## Implementation
