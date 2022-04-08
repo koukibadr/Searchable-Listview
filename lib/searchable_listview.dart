@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:searchable_listview/resources/arrays.dart';
 
 class SearchableList<T> extends StatefulWidget {
@@ -118,31 +119,54 @@ class SearchableList<T> extends StatefulWidget {
 }
 
 class _SearchableListState<T> extends State<SearchableList<T>> {
+  late ScrollController scrollController;
+  bool textFieldVisibility = true;
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController = ScrollController();
+    scrollController.addListener(() {
+      var scrollUp = scrollController.position.userScrollDirection ==
+          ScrollDirection.forward;
+      setState(() {
+        {
+          if (textFieldVisibility != scrollUp) {
+            textFieldVisibility = scrollUp;
+          }
+        }
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TextField(
-          focusNode: widget.focusNode,
-          enabled: widget.searchFieldEnabled,
-          decoration: widget.inputDecoration?.copyWith(
-            suffix: widget.inputDecoration?.suffix ?? _renderSuffixIcon(),
+        Visibility(
+          visible: textFieldVisibility,
+          child: TextField(
+            focusNode: widget.focusNode,
+            enabled: widget.searchFieldEnabled,
+            decoration: widget.inputDecoration?.copyWith(
+              suffix: widget.inputDecoration?.suffix ?? _renderSuffixIcon(),
+            ),
+            controller: widget.searchTextController,
+            textInputAction: widget.keyboardAction,
+            keyboardType: widget.textInputType,
+            obscureText: widget.obscureText,
+            onSubmitted: (value) {
+              widget.onSubmitSearch?.call(value);
+              if (widget.searchType == SEARCH_TYPE.onSubmit) {
+                _filterList(value);
+              }
+            },
+            onChanged: (value) {
+              if (widget.searchType == SEARCH_TYPE.onEdit) {
+                _filterList(value);
+              }
+            },
           ),
-          controller: widget.searchTextController,
-          textInputAction: widget.keyboardAction,
-          keyboardType: widget.textInputType,
-          obscureText: widget.obscureText,
-          onSubmitted: (value) {
-            widget.onSubmitSearch?.call(value);
-            if (widget.searchType == SEARCH_TYPE.onSubmit) {
-              _filterList(value);
-            }
-          },
-          onChanged: (value) {
-            if (widget.searchType == SEARCH_TYPE.onEdit) {
-              _filterList(value);
-            }
-          },
         ),
         const SizedBox(
           height: 20,
@@ -164,6 +188,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
 
   _renderListView() {
     return ListView.builder(
+      controller: scrollController,
       itemCount: widget.initialList.length,
       itemBuilder: (context, index) => widget.onItemSelected == null
           ? widget.builder(
