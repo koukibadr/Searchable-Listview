@@ -121,6 +121,7 @@ class SearchableList<T> extends StatefulWidget {
 class _SearchableListState<T> extends State<SearchableList<T>> {
   late ScrollController scrollController;
   bool textFieldVisibility = true;
+  double _opacity = 1;
 
   @override
   void initState() {
@@ -129,13 +130,15 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     scrollController.addListener(() {
       var scrollUp = scrollController.position.userScrollDirection ==
           ScrollDirection.forward;
-      setState(() {
-        {
-          if (textFieldVisibility != scrollUp) {
-            textFieldVisibility = scrollUp;
-          }
-        }
-      });
+      if (!scrollUp && _opacity != 0) {
+        setState(() {
+          _opacity = 0;
+        });
+      } else if (scrollUp && _opacity == 0) {
+        setState(() {
+          _opacity = 1;
+        });
+      }
     });
   }
 
@@ -143,8 +146,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Visibility(
-          visible: textFieldVisibility,
+        AnimatedOpacity(
+          opacity: _opacity,
+          duration: const Duration(milliseconds: 300),
           child: TextField(
             focusNode: widget.focusNode,
             enabled: widget.searchFieldEnabled,
