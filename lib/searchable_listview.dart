@@ -119,9 +119,9 @@ class SearchableList<T> extends StatefulWidget {
 }
 
 class _SearchableListState<T> extends State<SearchableList<T>> {
+  
   late ScrollController scrollController;
   bool textFieldVisibility = true;
-  double _opacity = 1;
 
   @override
   void initState() {
@@ -130,13 +130,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     scrollController.addListener(() {
       var scrollUp = scrollController.position.userScrollDirection ==
           ScrollDirection.forward;
-      if (!scrollUp && _opacity != 0) {
+      
+      if (textFieldVisibility != scrollUp) {
         setState(() {
-          _opacity = 0;
-        });
-      } else if (scrollUp && _opacity == 0) {
-        setState(() {
-          _opacity = 1;
+          textFieldVisibility = scrollUp;
         });
       }
     });
@@ -146,9 +143,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        AnimatedOpacity(
-          opacity: _opacity,
-          duration: const Duration(milliseconds: 300),
+        Visibility(
+          visible: textFieldVisibility,
           child: TextField(
             focusNode: widget.focusNode,
             enabled: widget.searchFieldEnabled,
@@ -191,23 +187,26 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   }
 
   _renderListView() {
-    return ListView.builder(
-      controller: scrollController,
-      itemCount: widget.initialList.length,
-      itemBuilder: (context, index) => widget.onItemSelected == null
-          ? widget.builder(
-              widget.initialList[index],
-            )
-          : InkWell(
-              onTap: () {
-                widget.onItemSelected!.call(
-                  widget.initialList[index],
-                );
-              },
-              child: widget.builder(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 1000),
+      child: ListView.builder(
+        controller: scrollController,
+        itemCount: widget.initialList.length,
+        itemBuilder: (context, index) => widget.onItemSelected == null
+            ? widget.builder(
                 widget.initialList[index],
+              )
+            : InkWell(
+                onTap: () {
+                  widget.onItemSelected!.call(
+                    widget.initialList[index],
+                  );
+                },
+                child: widget.builder(
+                  widget.initialList[index],
+                ),
               ),
-            ),
+      ),
     );
   }
 
