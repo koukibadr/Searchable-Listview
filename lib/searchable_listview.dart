@@ -25,6 +25,7 @@ class SearchableList<T> extends StatefulWidget {
     this.displayClearIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
     this.onRefresh,
+    this.sliverScrollEffect = false,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
   }
@@ -114,12 +115,13 @@ class SearchableList<T> extends StatefulWidget {
   ///if onRefresh is nullable the drag to refresh is not applied
   final Future<void> Function()? onRefresh;
 
+  final bool sliverScrollEffect;
+
   @override
   State<SearchableList> createState() => _SearchableListState<T>();
 }
 
 class _SearchableListState<T> extends State<SearchableList<T>> {
-  
   late ScrollController scrollController;
   bool textFieldVisibility = true;
 
@@ -130,7 +132,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     scrollController.addListener(() {
       var scrollUp = scrollController.position.userScrollDirection ==
           ScrollDirection.forward;
-      
+
       if (textFieldVisibility != scrollUp) {
         setState(() {
           textFieldVisibility = scrollUp;
@@ -141,49 +143,52 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Visibility(
-          visible: textFieldVisibility,
-          child: TextField(
-            focusNode: widget.focusNode,
-            enabled: widget.searchFieldEnabled,
-            decoration: widget.inputDecoration?.copyWith(
-              suffix: widget.inputDecoration?.suffix ?? _renderSuffixIcon(),
-            ),
-            controller: widget.searchTextController,
-            textInputAction: widget.keyboardAction,
-            keyboardType: widget.textInputType,
-            obscureText: widget.obscureText,
-            onSubmitted: (value) {
-              widget.onSubmitSearch?.call(value);
-              if (widget.searchType == SEARCH_TYPE.onSubmit) {
-                _filterList(value);
-              }
-            },
-            onChanged: (value) {
-              if (widget.searchType == SEARCH_TYPE.onEdit) {
-                _filterList(value);
-              }
-            },
-          ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        if (widget.initialList.isEmpty)
-          widget.emptyWidget
-        else
-          Expanded(
-            child: widget.onRefresh != null
-                ? RefreshIndicator(
-                    onRefresh: widget.onRefresh!,
-                    child: _renderListView(),
-                  )
-                : _renderListView(),
-          ),
-      ],
-    );
+    return widget.sliverScrollEffect
+        ? _renderSliverEffect()
+        : Column(
+            children: [
+              Visibility(
+                visible: textFieldVisibility,
+                child: TextField(
+                  focusNode: widget.focusNode,
+                  enabled: widget.searchFieldEnabled,
+                  decoration: widget.inputDecoration?.copyWith(
+                    suffix:
+                        widget.inputDecoration?.suffix ?? _renderSuffixIcon(),
+                  ),
+                  controller: widget.searchTextController,
+                  textInputAction: widget.keyboardAction,
+                  keyboardType: widget.textInputType,
+                  obscureText: widget.obscureText,
+                  onSubmitted: (value) {
+                    widget.onSubmitSearch?.call(value);
+                    if (widget.searchType == SEARCH_TYPE.onSubmit) {
+                      _filterList(value);
+                    }
+                  },
+                  onChanged: (value) {
+                    if (widget.searchType == SEARCH_TYPE.onEdit) {
+                      _filterList(value);
+                    }
+                  },
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              if (widget.initialList.isEmpty)
+                widget.emptyWidget
+              else
+                Expanded(
+                  child: widget.onRefresh != null
+                      ? RefreshIndicator(
+                          onRefresh: widget.onRefresh!,
+                          child: _renderListView(),
+                        )
+                      : _renderListView(),
+                ),
+            ],
+          );
   }
 
   _renderListView() {
@@ -236,5 +241,60 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 Icons.search,
                 color: widget.defaultSuffixIconColor,
               );
+  }
+
+  Widget _renderSliverEffect() {
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          backgroundColor: Colors.transparent,
+          flexibleSpace: TextField(
+            focusNode: widget.focusNode,
+            enabled: widget.searchFieldEnabled,
+            decoration: widget.inputDecoration?.copyWith(
+              suffix: widget.inputDecoration?.suffix ?? _renderSuffixIcon(),
+            ),
+            controller: widget.searchTextController,
+            textInputAction: widget.keyboardAction,
+            keyboardType: widget.textInputType,
+            obscureText: widget.obscureText,
+            onSubmitted: (value) {
+              widget.onSubmitSearch?.call(value);
+              if (widget.searchType == SEARCH_TYPE.onSubmit) {
+                _filterList(value);
+              }
+            },
+            onChanged: (value) {
+              if (widget.searchType == SEARCH_TYPE.onEdit) {
+                _filterList(value);
+              }
+            },
+          ),
+        ),
+        SliverList(
+          // Use a delegate to build items as they're scrolled on screen.
+          delegate: SliverChildBuilderDelegate(
+            // The builder function returns a ListTile with a title that
+            // displays the index of the current item.
+            (context, index) => widget.onItemSelected == null
+                ? widget.builder(
+                    widget.initialList[index],
+                  )
+                : InkWell(
+                    onTap: () {
+                      widget.onItemSelected!.call(
+                        widget.initialList[index],
+                      );
+                    },
+                    child: widget.builder(
+                      widget.initialList[index],
+                    ),
+                  ),
+            // Builds 1000 ListTiles
+            childCount: widget.initialList.length,
+          ),
+        )
+      ],
+    );
   }
 }
