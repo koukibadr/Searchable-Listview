@@ -10,6 +10,7 @@
 
 - Filter list view easily
 - Pull to refresh list
+- Sliver scroll animation effect
 - Display custom widget when list is empty
 - Customize search text field
 - Change keyboard input type and keyboard submit button
@@ -24,7 +25,7 @@ In order to add motion toast to your project add this line to your `pubspec.yaml
 
 ```yaml
 dependencies:
-	searchable_listview:  1.4.0
+	searchable_listview:  1.5.0
 ```
 
 ## Attributes
@@ -113,13 +114,15 @@ dependencies:
   ///if onRefresh is nullable the drag to refresh is not applied
   final Future<void> Function()? onRefresh;
 
-
-  /// The color applied on the suffix icon (if `displayClearIcon = true`).
-  /// Defaults to [Colors.grey].
-  final Color sliverScrollEffect;
+  ///indicates whether the ssliver scroll effect will be applied 
+  ///on the listview and search field or not
+  ///by default sliverScrollEffect == [false]
+  final bool sliverScrollEffect;
 ```
 
 ## Implementation
+
+### Simple implementation
 
 ```dart
 SearchableList<Actor>(
@@ -145,6 +148,31 @@ SearchableList<Actor>(
 <p align="center">
 <img src="https://github.com/koukibadr/Searchable-Listview/blob/main/example/searchable_listview_example.gif?raw=true" width="300"/>
 </p>
+
+### Sliver scroll example
+
+```dart
+SearchableList<Actor>(
+  initialList: actors,
+  builder: (Actor user) => UserItem(user: user),
+  filter: (value) => actors.where((element) => element.name.toLowerCase().contains(value),).toList(),
+  emptyWidget:  const EmptyView(),
+  inputDecoration: InputDecoration(
+    labelText: "Search Actor",
+	fillColor: Colors.white,
+	focusedBorder: OutlineInputBorder(
+	  borderSide: const BorderSide(
+	    color: Colors.blue,
+		width: 1.0,
+	  ),
+	  borderRadius: BorderRadius.circular(10.0),
+	),
+  ),
+  sliverScrollEffect: true
+),
+
+```
+
 
 ## Contribution
 
