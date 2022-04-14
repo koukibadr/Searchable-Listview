@@ -115,8 +115,7 @@ class SearchableList<T> extends StatefulWidget {
   ///if onRefresh is nullable the drag to refresh is not applied
   final Future<void> Function()? onRefresh;
 
-
-  ///indicates whether the ssliver scroll effect will be applied 
+  ///indicates whether the ssliver scroll effect will be applied
   ///on the listview and search field or not
   ///by default sliverScrollEffect == [false]
   final bool sliverScrollEffect;
@@ -170,14 +169,16 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
           flexibleSpace: _renderSearchField(),
         ),
         SliverList(
-                delegate: widget.initialList.isEmpty ? SliverChildBuilderDelegate(
+          delegate: widget.initialList.isEmpty
+              ? SliverChildBuilderDelegate(
                   (context, index) => widget.emptyWidget,
                   childCount: 1,
-                ) : SliverChildBuilderDelegate(
+                )
+              : SliverChildBuilderDelegate(
                   (context, index) => _renderListItem(index),
                   childCount: widget.initialList.length,
                 ),
-              )
+        )
       ],
     );
   }
