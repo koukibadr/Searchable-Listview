@@ -122,25 +122,6 @@ class SearchableList<T> extends StatefulWidget {
 }
 
 class _SearchableListState<T> extends State<SearchableList<T>> {
-  late ScrollController scrollController;
-  bool textFieldVisibility = true;
-
-  @override
-  void initState() {
-    super.initState();
-    scrollController = ScrollController();
-    scrollController.addListener(() {
-      var scrollUp = scrollController.position.userScrollDirection ==
-          ScrollDirection.forward;
-
-      if (textFieldVisibility != scrollUp) {
-        setState(() {
-          textFieldVisibility = scrollUp;
-        });
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return widget.sliverScrollEffect
@@ -165,13 +146,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
             ? RefreshIndicator(
                 onRefresh: widget.onRefresh!,
                 child: ListView.builder(
-                  controller: scrollController,
                   itemCount: widget.initialList.length,
                   itemBuilder: (context, index) => _renderListItem(index),
                 ),
               )
             : ListView.builder(
-                controller: scrollController,
                 itemCount: widget.initialList.length,
                 itemBuilder: (context, index) => _renderListItem(index),
               ),
