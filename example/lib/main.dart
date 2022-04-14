@@ -60,6 +60,7 @@ class _ExampleAppState extends State<ExampleApp> {
             child: Padding(
               padding: const EdgeInsets.all(15),
               child: SearchableList<Actor>(
+                sliverScrollEffect: true,
                 initialList: actors,
                 builder: (Actor actor) => ActorItem(actor: actor),
                 filter: _filterUserList,

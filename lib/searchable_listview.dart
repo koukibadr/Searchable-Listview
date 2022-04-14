@@ -147,72 +147,53 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         ? _renderSliverEffect()
         : Column(
             children: [
-              Visibility(
-                visible: textFieldVisibility,
-                child: TextField(
-                  focusNode: widget.focusNode,
-                  enabled: widget.searchFieldEnabled,
-                  decoration: widget.inputDecoration?.copyWith(
-                    suffix:
-                        widget.inputDecoration?.suffix ?? _renderSuffixIcon(),
-                  ),
-                  controller: widget.searchTextController,
-                  textInputAction: widget.keyboardAction,
-                  keyboardType: widget.textInputType,
-                  obscureText: widget.obscureText,
-                  onSubmitted: (value) {
-                    widget.onSubmitSearch?.call(value);
-                    if (widget.searchType == SEARCH_TYPE.onSubmit) {
-                      _filterList(value);
-                    }
-                  },
-                  onChanged: (value) {
-                    if (widget.searchType == SEARCH_TYPE.onEdit) {
-                      _filterList(value);
-                    }
-                  },
-                ),
-              ),
+              _renderSearchField(),
               const SizedBox(
                 height: 20,
               ),
-              if (widget.initialList.isEmpty)
-                widget.emptyWidget
-              else
-                Expanded(
-                  child: widget.onRefresh != null
-                      ? RefreshIndicator(
-                          onRefresh: widget.onRefresh!,
-                          child: _renderListView(),
-                        )
-                      : _renderListView(),
-                ),
+              _renderListView()
             ],
           );
   }
 
-  _renderListView() {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 1000),
-      child: ListView.builder(
-        controller: scrollController,
-        itemCount: widget.initialList.length,
-        itemBuilder: (context, index) => widget.onItemSelected == null
-            ? widget.builder(
-                widget.initialList[index],
-              )
-            : InkWell(
-                onTap: () {
-                  widget.onItemSelected!.call(
-                    widget.initialList[index],
-                  );
-                },
-                child: widget.builder(
-                  widget.initialList[index],
+  Widget _renderListView() {
+    if (widget.initialList.isEmpty) {
+      return widget.emptyWidget;
+    } else {
+      return Expanded(
+        child: widget.onRefresh != null
+            ? RefreshIndicator(
+                onRefresh: widget.onRefresh!,
+                child: ListView.builder(
+                  controller: scrollController,
+                  itemCount: widget.initialList.length,
+                  itemBuilder: (context, index) => _renderListItem(index),
                 ),
+              )
+            : ListView.builder(
+                controller: scrollController,
+                itemCount: widget.initialList.length,
+                itemBuilder: (context, index) => _renderListItem(index),
               ),
-      ),
-    );
+      );
+    }
+  }
+
+  Widget _renderListItem(index) {
+    return widget.onItemSelected == null
+        ? widget.builder(
+            widget.initialList[index],
+          )
+        : InkWell(
+            onTap: () {
+              widget.onItemSelected!.call(
+                widget.initialList[index],
+              );
+            },
+            child: widget.builder(
+              widget.initialList[index],
+            ),
+          );
   }
 
   void _filterList(String value) {
@@ -220,6 +201,25 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       () {
         widget.initialList = widget.filter(value);
       },
+    );
+  }
+
+  Widget _renderSliverEffect() {
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          backgroundColor: Colors.transparent,
+          flexibleSpace: _renderSearchField(),
+        ),
+        widget.initialList.isEmpty
+            ? widget.emptyWidget
+            : SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => _renderListItem(index),
+                  childCount: widget.initialList.length,
+                ),
+              )
+      ],
     );
   }
 
@@ -243,58 +243,28 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
               );
   }
 
-  Widget _renderSliverEffect() {
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          backgroundColor: Colors.transparent,
-          flexibleSpace: TextField(
-            focusNode: widget.focusNode,
-            enabled: widget.searchFieldEnabled,
-            decoration: widget.inputDecoration?.copyWith(
-              suffix: widget.inputDecoration?.suffix ?? _renderSuffixIcon(),
-            ),
-            controller: widget.searchTextController,
-            textInputAction: widget.keyboardAction,
-            keyboardType: widget.textInputType,
-            obscureText: widget.obscureText,
-            onSubmitted: (value) {
-              widget.onSubmitSearch?.call(value);
-              if (widget.searchType == SEARCH_TYPE.onSubmit) {
-                _filterList(value);
-              }
-            },
-            onChanged: (value) {
-              if (widget.searchType == SEARCH_TYPE.onEdit) {
-                _filterList(value);
-              }
-            },
-          ),
-        ),
-        SliverList(
-          // Use a delegate to build items as they're scrolled on screen.
-          delegate: SliverChildBuilderDelegate(
-            // The builder function returns a ListTile with a title that
-            // displays the index of the current item.
-            (context, index) => widget.onItemSelected == null
-                ? widget.builder(
-                    widget.initialList[index],
-                  )
-                : InkWell(
-                    onTap: () {
-                      widget.onItemSelected!.call(
-                        widget.initialList[index],
-                      );
-                    },
-                    child: widget.builder(
-                      widget.initialList[index],
-                    ),
-                  ),
-            // Builds 1000 ListTiles
-            childCount: widget.initialList.length,
-          ),
-        )
-      ],
+  Widget _renderSearchField() {
+    return TextField(
+      focusNode: widget.focusNode,
+      enabled: widget.searchFieldEnabled,
+      decoration: widget.inputDecoration?.copyWith(
+        suffix: widget.inputDecoration?.suffix ?? _renderSuffixIcon(),
+      ),
+      controller: widget.searchTextController,
+      textInputAction: widget.keyboardAction,
+      keyboardType: widget.textInputType,
+      obscureText: widget.obscureText,
+      onSubmitted: (value) {
+        widget.onSubmitSearch?.call(value);
+        if (widget.searchType == SEARCH_TYPE.onSubmit) {
+          _filterList(value);
+        }
+      },
+      onChanged: (value) {
+        if (widget.searchType == SEARCH_TYPE.onEdit) {
+          _filterList(value);
+        }
+      },
     );
   }
 }
