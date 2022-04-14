@@ -158,31 +158,6 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     }
   }
 
-  Widget _renderListItem(index) {
-    return widget.onItemSelected == null
-        ? widget.builder(
-            widget.initialList[index],
-          )
-        : InkWell(
-            onTap: () {
-              widget.onItemSelected!.call(
-                widget.initialList[index],
-              );
-            },
-            child: widget.builder(
-              widget.initialList[index],
-            ),
-          );
-  }
-
-  void _filterList(String value) {
-    setState(
-      () {
-        widget.initialList = widget.filter(value);
-      },
-    );
-  }
-
   Widget _renderSliverEffect() {
     return CustomScrollView(
       slivers: [
@@ -190,10 +165,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
           backgroundColor: Colors.transparent,
           flexibleSpace: _renderSearchField(),
         ),
-        widget.initialList.isEmpty
-            ? widget.emptyWidget
-            : SliverList(
-                delegate: SliverChildBuilderDelegate(
+        SliverList(
+                delegate: widget.initialList.isEmpty ? SliverChildBuilderDelegate(
+                  (context, index) => widget.emptyWidget,
+                  childCount: 1,
+                ) : SliverChildBuilderDelegate(
                   (context, index) => _renderListItem(index),
                   childCount: widget.initialList.length,
                 ),
@@ -243,6 +219,31 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         if (widget.searchType == SEARCH_TYPE.onEdit) {
           _filterList(value);
         }
+      },
+    );
+  }
+
+  Widget _renderListItem(index) {
+    return widget.onItemSelected == null
+        ? widget.builder(
+            widget.initialList[index],
+          )
+        : InkWell(
+            onTap: () {
+              widget.onItemSelected!.call(
+                widget.initialList[index],
+              );
+            },
+            child: widget.builder(
+              widget.initialList[index],
+            ),
+          );
+  }
+
+  void _filterList(String value) {
+    setState(
+      () {
+        widget.initialList = widget.filter(value);
       },
     );
   }
