@@ -112,6 +112,11 @@ dependencies:
   ///An async callback invoked when dragging down the list
   ///if onRefresh is nullable the drag to refresh is not applied
   final Future<void> Function()? onRefresh;
+
+
+  /// The color applied on the suffix icon (if `displayClearIcon = true`).
+  /// Defaults to [Colors.grey].
+  final Color sliverScrollEffect;
 ```
 
 ## Implementation

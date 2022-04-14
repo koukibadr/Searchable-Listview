@@ -115,6 +115,10 @@ class SearchableList<T> extends StatefulWidget {
   ///if onRefresh is nullable the drag to refresh is not applied
   final Future<void> Function()? onRefresh;
 
+
+  ///indicates whether the ssliver scroll effect will be applied 
+  ///on the listview and search field or not
+  ///by default sliverScrollEffect == [false]
   final bool sliverScrollEffect;
 
   @override
