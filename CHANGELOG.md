@@ -1,4 +1,4 @@
-## 1.4.0 - 14/04/2022
+## 1.5.0 - 14/04/2022
 
 - Add sliver scroll effect
 - Bug fixes
