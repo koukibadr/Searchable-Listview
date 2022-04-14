@@ -1,3 +1,8 @@
+## 1.4.0 - 14/04/2022
+
+- Add sliver scroll effect
+- Bug fixes
+
 ## 1.4.0 - 02/04/2022
 
 - Add pull to refresh behaviour to the list
