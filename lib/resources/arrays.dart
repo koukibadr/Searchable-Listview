@@ -1,4 +1,4 @@
-enum SEARCH_TYPE {
+enum SearchMode {
   onEdit,
   onSubmit,
 }

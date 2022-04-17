@@ -14,7 +14,7 @@ class SearchableList<T> extends StatefulWidget {
     this.inputDecoration,
     this.style,
     this.onSubmitSearch,
-    this.searchType = SEARCH_TYPE.onEdit,
+    this.searchMode = SearchMode.onEdit,
     this.emptyWidget = const SizedBox.shrink(),
     this.textInputType = TextInputType.text,
     this.obscureText = false,
@@ -83,8 +83,8 @@ class SearchableList<T> extends StatefulWidget {
   ///SEARCH_TYPE.onSubmit
   ///```
   ///
-  /// Defaults to [SEARCH_TYPE.onEdit].
-  final SEARCH_TYPE searchType;
+  /// Defaults to [SearchMode.onEdit].
+  final SearchMode searchMode;
 
   /// Indicate whether the text field input should be obscured or not.
   /// Defaults to `false`.
@@ -215,12 +215,12 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       obscureText: widget.obscureText,
       onSubmitted: (value) {
         widget.onSubmitSearch?.call(value);
-        if (widget.searchType == SEARCH_TYPE.onSubmit) {
+        if (widget.searchMode == SearchMode.onSubmit) {
           _filterList(value);
         }
       },
       onChanged: (value) {
-        if (widget.searchType == SEARCH_TYPE.onEdit) {
+        if (widget.searchMode == SearchMode.onEdit) {
           _filterList(value);
         }
       },
