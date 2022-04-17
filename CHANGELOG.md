@@ -1,3 +1,8 @@
+## 1.5.1 - 17/04/2022
+
+- Update search type enum name
+- Perform iOS upgrade check
+- Bug fixes
 ## 1.5.0 - 14/04/2022
 
 - Add sliver scroll effect

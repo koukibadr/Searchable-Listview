@@ -25,7 +25,7 @@ In order to add motion toast to your project add this line to your `pubspec.yaml
 
 ```yaml
 dependencies:
-	searchable_listview:  1.5.0
+	searchable_listview:  1.5.1
 ```
 
 ## Attributes
