@@ -27,6 +27,9 @@ class SearchableList<T> extends StatefulWidget {
     this.sliverScrollEffect = false,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
+    if(sliverScrollEffect &&  onRefresh != null){
+      throw("sliverScrollEffect will disable the pull-to-refresh effect, remove sliverScrollEffect or pulltToRefresh");
+    }
   }
 
   /// Initial list of all elements that will be displayed.
