@@ -1,3 +1,7 @@
+## 1.5.2 - 27/04/2022
+
+- Enhanced attributes checking
+
 ## 1.5.1 - 17/04/2022
 
 - Update search type enum name
