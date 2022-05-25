@@ -1,3 +1,8 @@
+## 1.5.3 - 25/05/2022
+
+- Fix onItemPressed attibute
+- Fix bugs
+
 ## 1.5.2 - 27/04/2022
 
 - Enhanced attributes checking
@@ -7,6 +12,7 @@
 - Update search type enum name
 - Perform iOS upgrade check
 - Bug fixes
+
 ## 1.5.0 - 14/04/2022
 
 - Add sliver scroll effect
@@ -29,6 +35,7 @@
 ## 1.3.3 - 03/03/2022
 
 - Fix input decoration bug
+
 ## 1.3.2 - 27/02/2022
 
 - Add clear button suffix icon
