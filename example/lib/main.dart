@@ -64,6 +64,9 @@ class _ExampleAppState extends State<ExampleApp> {
                 builder: (Actor actor) => ActorItem(actor: actor),
                 filter: _filterUserList,
                 emptyWidget: const EmptyView(),
+                onItemSelected: (Actor item){
+                  print(item.age);
+                },
                 inputDecoration: InputDecoration(
                   labelText: "Search Actor",
                   fillColor: Colors.white,

@@ -102,7 +102,7 @@ class SearchableList<T> extends StatefulWidget {
 
   /// Function invoked when pressing on item
   /// Defaults to null
-  final void Function<T>(T)? onItemSelected;
+  final void Function(T)? onItemSelected;
 
   /// Indicate whether the clear icon will be displayed or not
   /// by default it's true, to display the clear icon the inputDecoration should not contains suffix icon
