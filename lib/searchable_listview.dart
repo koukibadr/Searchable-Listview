@@ -25,6 +25,7 @@ class SearchableList<T> extends StatefulWidget {
     this.defaultSuffixIconColor = Colors.grey,
     this.onRefresh,
     this.sliverScrollEffect = false,
+    this.displayDividder = false,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     if (sliverScrollEffect && onRefresh != null) {
@@ -122,6 +123,8 @@ class SearchableList<T> extends StatefulWidget {
   ///by default sliverScrollEffect == [false]
   final bool sliverScrollEffect;
 
+  final bool displayDividder;
+
   @override
   State<SearchableList> createState() => _SearchableListState<T>();
 }
@@ -150,14 +153,24 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         child: widget.onRefresh != null
             ? RefreshIndicator(
                 onRefresh: widget.onRefresh!,
-                child: ListView.builder(
+                child: ListView.separated(
                   itemCount: widget.initialList.length,
                   itemBuilder: (context, index) => _renderListItem(index),
+                  separatorBuilder: (ctx, index) {
+                    return widget.displayDividder
+                        ? const SizedBox()
+                        : const Divider();
+                  },
                 ),
               )
-            : ListView.builder(
+            : ListView.separated(
                 itemCount: widget.initialList.length,
                 itemBuilder: (context, index) => _renderListItem(index),
+                separatorBuilder: (ctx, index) {
+                  return widget.displayDividder
+                      ? const SizedBox()
+                      : const Divider();
+                },
               ),
       );
     }
