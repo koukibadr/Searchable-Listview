@@ -28,9 +28,39 @@ class SearchableList<T> extends StatefulWidget {
     this.displayDividder = false,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
+    seperatorBuilder = null;
+    displayDividder = false;
     if (sliverScrollEffect && onRefresh != null) {
       throw ("sliverScrollEffect will disable the pull-to-refresh effect, remove sliverScrollEffect or pulltToRefresh");
     }
+  }
+
+  SearchableList.seperated({
+    Key? key,
+    required this.initialList,
+    required this.filter,
+    required this.builder,
+    required this.seperatorBuilder,
+    this.searchTextController,
+    this.keyboardAction = TextInputAction.done,
+    this.inputDecoration,
+    this.style,
+    this.onSubmitSearch,
+    this.searchMode = SearchMode.onEdit,
+    this.emptyWidget = const SizedBox.shrink(),
+    this.textInputType = TextInputType.text,
+    this.obscureText = false,
+    this.focusNode,
+    this.searchFieldEnabled = true,
+    this.onItemSelected,
+    this.displayClearIcon = true,
+    this.defaultSuffixIconColor = Colors.grey,
+    this.displayDividder = false,
+    this.onRefresh,
+  }) : super(key: key) {
+    searchTextController ??= TextEditingController();
+    displayDividder = true;
+    assert(seperatorBuilder != null);
   }
 
   /// Initial list of all elements that will be displayed.
@@ -116,14 +146,16 @@ class SearchableList<T> extends StatefulWidget {
 
   ///An async callback invoked when dragging down the list
   ///if onRefresh is nullable the drag to refresh is not applied
-  final Future<void> Function()? onRefresh;
+  late Future<void> Function()? onRefresh;
 
   ///indicates whether the ssliver scroll effect will be applied
   ///on the listview and search field or not
   ///by default sliverScrollEffect == [false]
-  final bool sliverScrollEffect;
+  bool sliverScrollEffect = false;
 
-  final bool displayDividder;
+  ///TODO add missing code documentation
+  late bool displayDividder;
+  late Widget Function(BuildContext, int)? seperatorBuilder;
 
   @override
   State<SearchableList> createState() => _SearchableListState<T>();
@@ -153,27 +185,29 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         child: widget.onRefresh != null
             ? RefreshIndicator(
                 onRefresh: widget.onRefresh!,
-                child: ListView.separated(
-                  itemCount: widget.initialList.length,
-                  itemBuilder: (context, index) => _renderListItem(index),
-                  separatorBuilder: (ctx, index) {
-                    return widget.displayDividder
-                        ? const SizedBox()
-                        : const Divider();
-                  },
-                ),
+                child: widget.displayDividder
+                    ? _renderSeperatedListView()
+                    : ListView.builder(
+                        itemCount: widget.initialList.length,
+                        itemBuilder: (context, index) => _renderListItem(index),
+                      ),
               )
-            : ListView.separated(
-                itemCount: widget.initialList.length,
-                itemBuilder: (context, index) => _renderListItem(index),
-                separatorBuilder: (ctx, index) {
-                  return widget.displayDividder
-                      ? const SizedBox()
-                      : const Divider();
-                },
-              ),
+            : widget.displayDividder
+                ? _renderSeperatedListView()
+                : ListView.builder(
+                    itemCount: widget.initialList.length,
+                    itemBuilder: (context, index) => _renderListItem(index),
+                  ),
       );
     }
+  }
+
+  Widget _renderSeperatedListView() {
+    return ListView.separated(
+      itemCount: widget.initialList.length,
+      itemBuilder: (context, index) => _renderListItem(index),
+      separatorBuilder: widget.seperatorBuilder!,
+    );
   }
 
   Widget _renderSliverEffect() {
