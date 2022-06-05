@@ -4,6 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:searchable_listview/resources/arrays.dart';
 
 class SearchableList<T> extends StatefulWidget {
+  ///indicates whether the ssliver scroll effect will be applied
+  ///on the listview and search field or not
+  ///by default sliverScrollEffect == [false]
+  bool sliverScrollEffect = false;
+
+  ///indicate if the divider will be displayed or not
+  ///if true the listview will be rendered with [ListView.separated] constructor
+  bool displayDividder = false;
+
   SearchableList({
     Key? key,
     required this.initialList,
@@ -171,15 +180,12 @@ class SearchableList<T> extends StatefulWidget {
   ///if onRefresh is nullable the drag to refresh is not applied
   late Future<void> Function()? onRefresh;
 
-  ///indicates whether the ssliver scroll effect will be applied
-  ///on the listview and search field or not
-  ///by default sliverScrollEffect == [false]
-  bool sliverScrollEffect = false;
-
-  ///TODO add missing code documentation
-  bool displayDividder = false;
+  ///Builder callback required  when using [seperated] constructor
+  ///return the Widget that will seperate all the elements inside the list
   late Widget Function(BuildContext, int)? seperatorBuilder;
 
+  ///The scroll direction of the list
+  ///by default [Axis.vertical]
   final Axis scrollDirection;
 
   @override
