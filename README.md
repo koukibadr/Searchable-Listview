@@ -18,6 +18,8 @@
 - Add on item pressed callback
 - Customize search text style
 - Clear icon button in search to easily clear text
+- Customizable scroll direction
+- Searchable list with seperator builder
 
 ## Getting Started
 
@@ -25,7 +27,7 @@ In order to add motion toast to your project add this line to your `pubspec.yaml
 
 ```yaml
 dependencies:
-	searchable_listview:  1.5.3
+	searchable_listview:  1.6.0
 ```
 
 ## Attributes
@@ -112,13 +114,20 @@ dependencies:
 
   ///An async callback invoked when dragging down the list
   ///if onRefresh is nullable the drag to refresh is not applied
-  final Future<void> Function()? onRefresh;
+  late Future<void> Function()? onRefresh;
 
-  ///indicates whether the ssliver scroll effect will be applied 
-  ///on the listview and search field or not
-  ///by default sliverScrollEffect == [false]
-  final bool sliverScrollEffect;
+  ///Builder callback required  when using [seperated] constructor
+  ///return the Widget that will seperate all the elements inside the list
+  late Widget Function(BuildContext, int)? seperatorBuilder;
+
+  ///The scroll direction of the list
+  ///by default [Axis.vertical]
+  final Axis scrollDirection;
+
 ```
+
+### Migration:
+- If you are using the 1.5.3 version or older and you are using `sliverScrollEffect` parameter, for 1.6.0 version and above this parameter is replaced with a constructor `SearchableList.sliver` 
 
 ## Implementation
 
@@ -152,7 +161,7 @@ SearchableList<Actor>(
 ### Sliver scroll example
 
 ```dart
-SearchableList<Actor>(
+SearchableList<Actor>.sliver(
   initialList: actors,
   builder: (Actor user) => UserItem(user: user),
   filter: (value) => actors.where((element) => element.name.toLowerCase().contains(value),).toList(),
@@ -168,7 +177,6 @@ SearchableList<Actor>(
 	  borderRadius: BorderRadius.circular(10.0),
 	),
   ),
-  sliverScrollEffect: true
 ),
 
 ```
