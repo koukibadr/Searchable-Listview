@@ -34,16 +34,8 @@ class ExampleApp extends StatefulWidget {
 
 class _ExampleAppState extends State<ExampleApp> {
   final List<Actor> actors = [
-    Actor(
-      age: 47,
-      name: 'Leonardo',
-      lastName: 'DiCaprio',
-    ),
-    Actor(
-      age: 58,
-      name: 'Johnny',
-      lastName: 'Depp',
-    ),
+    Actor(age: 47, name: 'Leonardo', lastName: 'DiCaprio'),
+    Actor(age: 58, name: 'Johnny', lastName: 'Depp'),
     Actor(age: 78, name: 'Robert', lastName: 'De Niro'),
     Actor(age: 44, name: 'Tom', lastName: 'Hardy'),
     Actor(age: 66, name: 'Denzel', lastName: 'Washington'),
