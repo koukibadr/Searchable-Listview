@@ -60,7 +60,7 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: SearchableList<Actor>(
+              child: SearchableList<Actor>.sliver(
                 initialList: actors,
                 builder: (Actor actor) => ActorItem(actor: actor),
                 filter: _filterUserList,

@@ -24,14 +24,35 @@ class SearchableList<T> extends StatefulWidget {
     this.displayClearIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
     this.onRefresh,
-    this.sliverScrollEffect = false,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
-    displayDividder = false;
-    if (sliverScrollEffect && onRefresh != null) {
-      throw ("sliverScrollEffect will disable the pull-to-refresh effect, remove sliverScrollEffect or pulltToRefresh");
-    }
+  }
+
+  SearchableList.sliver({
+    Key? key,
+    required this.initialList,
+    required this.filter,
+    required this.builder,
+    this.searchTextController,
+    this.keyboardAction = TextInputAction.done,
+    this.inputDecoration,
+    this.style,
+    this.onSubmitSearch,
+    this.searchMode = SearchMode.onEdit,
+    this.emptyWidget = const SizedBox.shrink(),
+    this.textInputType = TextInputType.text,
+    this.obscureText = false,
+    this.focusNode,
+    this.searchFieldEnabled = true,
+    this.onItemSelected,
+    this.displayClearIcon = true,
+    this.defaultSuffixIconColor = Colors.grey,
+  }) : super(key: key) {
+    searchTextController ??= TextEditingController();
+    seperatorBuilder = null;
+    sliverScrollEffect = true;
+    onRefresh = null;
   }
 
   SearchableList.seperated({
@@ -153,7 +174,7 @@ class SearchableList<T> extends StatefulWidget {
   bool sliverScrollEffect = false;
 
   ///TODO add missing code documentation
-  late bool displayDividder;
+  bool displayDividder = false;
   late Widget Function(BuildContext, int)? seperatorBuilder;
 
   @override
