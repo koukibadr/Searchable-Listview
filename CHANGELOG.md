@@ -1,3 +1,10 @@
+## 1.6.0 - 05/06/2022
+
+- Searchable list with divider
+- Seperated sliver effect constructor
+- Enhanced code version with Flutter 3 support
+- Scroll direction parameter
+
 ## 1.5.3 - 25/05/2022
 
 - Fix onItemPressed attibute
