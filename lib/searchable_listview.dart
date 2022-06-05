@@ -24,6 +24,7 @@ class SearchableList<T> extends StatefulWidget {
     this.displayClearIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
     this.onRefresh,
+    this.scrollDirection = Axis.vertical,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
@@ -48,6 +49,7 @@ class SearchableList<T> extends StatefulWidget {
     this.onItemSelected,
     this.displayClearIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
+    this.scrollDirection = Axis.vertical,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
@@ -77,6 +79,7 @@ class SearchableList<T> extends StatefulWidget {
     this.defaultSuffixIconColor = Colors.grey,
     this.displayDividder = false,
     this.onRefresh,
+    this.scrollDirection = Axis.vertical,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     displayDividder = true;
@@ -177,6 +180,8 @@ class SearchableList<T> extends StatefulWidget {
   bool displayDividder = false;
   late Widget Function(BuildContext, int)? seperatorBuilder;
 
+  final Axis scrollDirection;
+
   @override
   State<SearchableList> createState() => _SearchableListState<T>();
 }
@@ -208,6 +213,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 child: widget.displayDividder
                     ? _renderSeperatedListView()
                     : ListView.builder(
+                        scrollDirection: widget.scrollDirection,
                         itemCount: widget.initialList.length,
                         itemBuilder: (context, index) => _renderListItem(index),
                       ),
@@ -215,6 +221,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
             : widget.displayDividder
                 ? _renderSeperatedListView()
                 : ListView.builder(
+                    scrollDirection: widget.scrollDirection,
                     itemCount: widget.initialList.length,
                     itemBuilder: (context, index) => _renderListItem(index),
                   ),
@@ -224,6 +231,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
 
   Widget _renderSeperatedListView() {
     return ListView.separated(
+      scrollDirection: widget.scrollDirection,
       itemCount: widget.initialList.length,
       itemBuilder: (context, index) => _renderListItem(index),
       separatorBuilder: widget.seperatorBuilder!,
@@ -231,25 +239,53 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   }
 
   Widget _renderSliverEffect() {
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          backgroundColor: Colors.transparent,
-          flexibleSpace: _renderSearchField(),
-        ),
-        SliverList(
-          delegate: widget.initialList.isEmpty
-              ? SliverChildBuilderDelegate(
-                  (context, index) => widget.emptyWidget,
-                  childCount: 1,
-                )
-              : SliverChildBuilderDelegate(
-                  (context, index) => _renderListItem(index),
-                  childCount: widget.initialList.length,
+    return widget.scrollDirection == Axis.horizontal
+        ? Column(
+            children: [
+              _renderSearchField(),
+              const SizedBox(
+                height: 10,
+              ),
+              Expanded(
+                child: CustomScrollView(
+                  scrollDirection: widget.scrollDirection,
+                  slivers: [
+                    SliverList(
+                      delegate: widget.initialList.isEmpty
+                          ? SliverChildBuilderDelegate(
+                              (context, index) => widget.emptyWidget,
+                              childCount: 1,
+                            )
+                          : SliverChildBuilderDelegate(
+                              (context, index) => _renderListItem(index),
+                              childCount: widget.initialList.length,
+                            ),
+                    )
+                  ],
                 ),
-        )
-      ],
-    );
+              ),
+            ],
+          )
+        : CustomScrollView(
+            scrollDirection: widget.scrollDirection,
+            slivers: [
+              SliverAppBar(
+                backgroundColor: Colors.transparent,
+                flexibleSpace: _renderSearchField(),
+              ),
+              SliverList(
+                delegate: widget.initialList.isEmpty
+                    ? SliverChildBuilderDelegate(
+                        (context, index) => widget.emptyWidget,
+                        childCount: 1,
+                      )
+                    : SliverChildBuilderDelegate(
+                        (context, index) => _renderListItem(index),
+                        childCount: widget.initialList.length,
+                      ),
+              )
+            ],
+          );
   }
 
   Widget? _renderSuffixIcon() {
