@@ -25,7 +25,6 @@ class SearchableList<T> extends StatefulWidget {
     this.defaultSuffixIconColor = Colors.grey,
     this.onRefresh,
     this.sliverScrollEffect = false,
-    this.displayDividder = false,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;

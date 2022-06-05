@@ -56,6 +56,7 @@ class _ExampleAppState extends State<ExampleApp> {
       width: double.infinity,
       child: Column(
         children: [
+          const Text('Simple searchable list'),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
@@ -64,9 +65,34 @@ class _ExampleAppState extends State<ExampleApp> {
                 builder: (Actor actor) => ActorItem(actor: actor),
                 filter: _filterUserList,
                 emptyWidget: const EmptyView(),
-                onItemSelected: (Actor item) {
-                  print(item.age);
+                onItemSelected: (Actor item) {},
+                inputDecoration: InputDecoration(
+                  labelText: "Search Actor",
+                  fillColor: Colors.white,
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(
+                      color: Colors.blue,
+                      width: 1.0,
+                    ),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const Text('Searchable list with divider'),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: SearchableList<Actor>.seperated(
+                seperatorBuilder: (p0, p1) {
+                  return const Divider();
                 },
+                initialList: actors,
+                builder: (Actor actor) => ActorItem(actor: actor),
+                filter: _filterUserList,
+                emptyWidget: const EmptyView(),
+                onItemSelected: (Actor item) {},
                 inputDecoration: InputDecoration(
                   labelText: "Search Actor",
                   fillColor: Colors.white,
