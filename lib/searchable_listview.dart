@@ -204,19 +204,21 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     return widget.sliverScrollEffect
         ? _renderSliverEffect()
         : Column(
-            children: widget.searchTextPosition == SearchTextPosition.top ? [
-              _renderSearchField(),
-              const SizedBox(
-                height: 20,
-              ),
-              _renderListView()
-            ] : [
-              _renderListView(),
-              const SizedBox(
-                height: 20,
-              ),
-              _renderSearchField(),
-            ],
+            children: widget.searchTextPosition == SearchTextPosition.top
+                ? [
+                    _renderSearchField(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    _renderListView()
+                  ]
+                : [
+                    _renderListView(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    _renderSearchField(),
+                  ],
           );
   }
 
@@ -259,15 +261,64 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   Widget _renderSliverEffect() {
     return widget.scrollDirection == Axis.horizontal
         ? Column(
-            children: [
-              _renderSearchField(),
-              const SizedBox(
-                height: 10,
-              ),
-              Expanded(
-                child: CustomScrollView(
-                  scrollDirection: widget.scrollDirection,
-                  slivers: [
+            children: widget.searchTextPosition == SearchTextPosition.top
+                ? [
+                    _renderSearchField(),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Expanded(
+                      child: CustomScrollView(
+                        scrollDirection: widget.scrollDirection,
+                        slivers: [
+                          SliverList(
+                            delegate: widget.initialList.isEmpty
+                                ? SliverChildBuilderDelegate(
+                                    (context, index) => widget.emptyWidget,
+                                    childCount: 1,
+                                  )
+                                : SliverChildBuilderDelegate(
+                                    (context, index) => _renderListItem(index),
+                                    childCount: widget.initialList.length,
+                                  ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ]
+                : [
+                    Expanded(
+                      child: CustomScrollView(
+                        scrollDirection: widget.scrollDirection,
+                        slivers: [
+                          SliverList(
+                            delegate: widget.initialList.isEmpty
+                                ? SliverChildBuilderDelegate(
+                                    (context, index) => widget.emptyWidget,
+                                    childCount: 1,
+                                  )
+                                : SliverChildBuilderDelegate(
+                                    (context, index) => _renderListItem(index),
+                                    childCount: widget.initialList.length,
+                                  ),
+                          )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    _renderSearchField(),
+                  ],
+          )
+        : CustomScrollView(
+            scrollDirection: widget.scrollDirection,
+            slivers: widget.searchTextPosition == SearchTextPosition.top
+                ? [
+                    SliverAppBar(
+                      backgroundColor: Colors.transparent,
+                      flexibleSpace: _renderSearchField(),
+                    ),
                     SliverList(
                       delegate: widget.initialList.isEmpty
                           ? SliverChildBuilderDelegate(
@@ -279,30 +330,24 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                               childCount: widget.initialList.length,
                             ),
                     )
+                  ]
+                : [
+                    SliverList(
+                      delegate: widget.initialList.isEmpty
+                          ? SliverChildBuilderDelegate(
+                              (context, index) => widget.emptyWidget,
+                              childCount: 1,
+                            )
+                          : SliverChildBuilderDelegate(
+                              (context, index) => _renderListItem(index),
+                              childCount: widget.initialList.length,
+                            ),
+                    ),
+                    SliverAppBar(
+                      backgroundColor: Colors.transparent,
+                      flexibleSpace: _renderSearchField(),
+                    ),
                   ],
-                ),
-              ),
-            ],
-          )
-        : CustomScrollView(
-            scrollDirection: widget.scrollDirection,
-            slivers: [
-              SliverAppBar(
-                backgroundColor: Colors.transparent,
-                flexibleSpace: _renderSearchField(),
-              ),
-              SliverList(
-                delegate: widget.initialList.isEmpty
-                    ? SliverChildBuilderDelegate(
-                        (context, index) => widget.emptyWidget,
-                        childCount: 1,
-                      )
-                    : SliverChildBuilderDelegate(
-                        (context, index) => _renderListItem(index),
-                        childCount: widget.initialList.length,
-                      ),
-              )
-            ],
           );
   }
 
