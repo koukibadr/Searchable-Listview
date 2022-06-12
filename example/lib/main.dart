@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:searchable_listview/resources/arrays.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 
 void main() {
@@ -48,39 +49,12 @@ class _ExampleAppState extends State<ExampleApp> {
       width: double.infinity,
       child: Column(
         children: [
-          const Text('Simple searchable list'),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(15),
-              child: SearchableList<Actor>.sliver(
-                initialList: actors,
-                builder: (Actor actor) => ActorItem(actor: actor),
-                filter: _filterUserList,
-                emptyWidget: const EmptyView(),
-                onItemSelected: (Actor item) {},
-                inputDecoration: InputDecoration(
-                  labelText: "Search Actor",
-                  fillColor: Colors.white,
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(
-                      color: Colors.blue,
-                      width: 1.0,
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                ),
-                scrollDirection: Axis.horizontal,
-              ),
-            ),
-          ),
           const Text('Searchable list with divider'),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: SearchableList<Actor>.seperated(
-                seperatorBuilder: (p0, p1) {
-                  return const Divider();
-                },
+              child: SearchableList<Actor>.sliver(
+                searchTextPosition: SearchTextPosition.bottom,
                 initialList: actors,
                 builder: (Actor actor) => ActorItem(actor: actor),
                 filter: _filterUserList,

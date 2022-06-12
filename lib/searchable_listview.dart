@@ -34,6 +34,7 @@ class SearchableList<T> extends StatefulWidget {
     this.defaultSuffixIconColor = Colors.grey,
     this.onRefresh,
     this.scrollDirection = Axis.vertical,
+    this.searchTextPosition = SearchTextPosition.top,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
@@ -59,6 +60,7 @@ class SearchableList<T> extends StatefulWidget {
     this.displayClearIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
     this.scrollDirection = Axis.vertical,
+    this.searchTextPosition = SearchTextPosition.top,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
@@ -89,6 +91,7 @@ class SearchableList<T> extends StatefulWidget {
     this.displayDividder = false,
     this.onRefresh,
     this.scrollDirection = Axis.vertical,
+    this.searchTextPosition = SearchTextPosition.top,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     displayDividder = true;
@@ -188,6 +191,9 @@ class SearchableList<T> extends StatefulWidget {
   ///by default [Axis.vertical]
   final Axis scrollDirection;
 
+  //TODO add missing code documentation
+  final SearchTextPosition searchTextPosition;
+
   @override
   State<SearchableList> createState() => _SearchableListState<T>();
 }
@@ -198,12 +204,18 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     return widget.sliverScrollEffect
         ? _renderSliverEffect()
         : Column(
-            children: [
+            children: widget.searchTextPosition == SearchTextPosition.top ? [
               _renderSearchField(),
               const SizedBox(
                 height: 20,
               ),
               _renderListView()
+            ] : [
+              _renderListView(),
+              const SizedBox(
+                height: 20,
+              ),
+              _renderSearchField(),
             ],
           );
   }
