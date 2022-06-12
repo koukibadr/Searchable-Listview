@@ -53,7 +53,7 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: SearchableList<Actor>.sliver(
+              child: SearchableList<Actor>(
                 searchTextPosition: SearchTextPosition.bottom,
                 initialList: actors,
                 builder: (Actor actor) => ActorItem(actor: actor),
@@ -71,7 +71,6 @@ class _ExampleAppState extends State<ExampleApp> {
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
-                scrollDirection: Axis.horizontal,
               ),
             ),
           ),
