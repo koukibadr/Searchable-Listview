@@ -1,3 +1,6 @@
+## 1.6.1 - 27/06/2022
+
+- Update package documentation
 ## 1.6.0 - 05/06/2022
 
 - Searchable list with divider

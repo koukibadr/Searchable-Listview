@@ -23,7 +23,7 @@
 
 ## Getting Started
 
-In order to add motion toast to your project add this line to your `pubspec.yaml` file
+In order to add searchable listview package to your project add this line to your `pubspec.yaml` file
 
 ```yaml
 dependencies:

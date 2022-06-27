@@ -1,6 +1,6 @@
 name: searchable_listview
 description: A new easy way to filter listview with simple implementation with possibilty to customize search field and empty widget
-version: 1.6.0
+version: 1.6.1
 homepage: https://github.com/koukibadr/Searchable-Listview
 
 environment:
