@@ -35,9 +35,11 @@ class SearchableList<T> extends StatefulWidget {
     this.onRefresh,
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
-    this.withPagination = false,
+    this.withPagination,
+    this.scrollController,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
+    scrollController ??= ScrollController();
     seperatorBuilder = null;
   }
 
@@ -62,9 +64,11 @@ class SearchableList<T> extends StatefulWidget {
     this.defaultSuffixIconColor = Colors.grey,
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
-    this.withPagination = false,
+    this.withPagination,
+    this.scrollController,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
+    scrollController ??= ScrollController();
     seperatorBuilder = null;
     sliverScrollEffect = true;
     onRefresh = null;
@@ -94,9 +98,11 @@ class SearchableList<T> extends StatefulWidget {
     this.onRefresh,
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
-    this.withPagination = false,
+    this.withPagination,
+    this.scrollController,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
+    scrollController ??= ScrollController();
     displayDividder = true;
     assert(seperatorBuilder != null);
   }
@@ -198,13 +204,18 @@ class SearchableList<T> extends StatefulWidget {
   final SearchTextPosition searchTextPosition;
 
   //TODO missing code documentation
-  final bool withPagination;
+  final Future<dynamic> Function([ T? result ])? withPagination;
+
+  ScrollController? scrollController;
 
   @override
   State<SearchableList> createState() => _SearchableListState<T>();
 }
 
 class _SearchableListState<T> extends State<SearchableList<T>> {
+
+  ScrollController scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return widget.sliverScrollEffect
@@ -216,7 +227,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     const SizedBox(
                       height: 20,
                     ),
-                    _renderListView()
+                    _renderListView(),
                   ]
                 : [
                     _renderListView(),
@@ -239,6 +250,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 child: widget.displayDividder
                     ? _renderSeperatedListView()
                     : ListView.builder(
+                        controller: scrollController,
                         scrollDirection: widget.scrollDirection,
                         itemCount: widget.initialList.length,
                         itemBuilder: (context, index) => _renderListItem(index),
@@ -247,6 +259,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
             : widget.displayDividder
                 ? _renderSeperatedListView()
                 : ListView.builder(
+                    controller: scrollController,
                     scrollDirection: widget.scrollDirection,
                     itemCount: widget.initialList.length,
                     itemBuilder: (context, index) => _renderListItem(index),
@@ -257,6 +270,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
 
   Widget _renderSeperatedListView() {
     return ListView.separated(
+      controller: scrollController,
       scrollDirection: widget.scrollDirection,
       itemCount: widget.initialList.length,
       itemBuilder: (context, index) => _renderListItem(index),

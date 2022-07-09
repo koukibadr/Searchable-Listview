@@ -87,6 +87,7 @@ class _ExampleAppState extends State<ExampleApp> {
   }
 
   List<Actor> _filterUserList(String searchTerm) {
+    Navigator.pop(context);
     return actors
         .where(
           (element) =>
