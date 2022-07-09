@@ -35,7 +35,7 @@ class SearchableList<T> extends StatefulWidget {
     this.onRefresh,
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
-    this.withPagination,
+    this.onPaginate,
     this.scrollController,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
@@ -64,7 +64,7 @@ class SearchableList<T> extends StatefulWidget {
     this.defaultSuffixIconColor = Colors.grey,
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
-    this.withPagination,
+    this.onPaginate,
     this.scrollController,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
@@ -98,7 +98,7 @@ class SearchableList<T> extends StatefulWidget {
     this.onRefresh,
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
-    this.withPagination,
+    this.onPaginate,
     this.scrollController,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
@@ -204,7 +204,7 @@ class SearchableList<T> extends StatefulWidget {
   final SearchTextPosition searchTextPosition;
 
   //TODO missing code documentation
-  final Future<dynamic> Function([ T? result ])? withPagination;
+  final Future<dynamic> Function()? onPaginate;
 
   ScrollController? scrollController;
 
@@ -215,6 +215,18 @@ class SearchableList<T> extends StatefulWidget {
 class _SearchableListState<T> extends State<SearchableList<T>> {
 
   ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    if(widget.onPaginate != null){
+      scrollController.addListener(() {
+        if(scrollController.position.pixels == scrollController.position.maxScrollExtent){
+          widget.onPaginate?.call();
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -246,6 +258,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       return Expanded(
         child: widget.onRefresh != null
             ? RefreshIndicator(
+                triggerMode: RefreshIndicatorTriggerMode.onEdge,
                 onRefresh: widget.onRefresh!,
                 child: widget.displayDividder
                     ? _renderSeperatedListView()

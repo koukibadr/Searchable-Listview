@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:searchable_listview/resources/arrays.dart';
 import 'package:searchable_listview/searchable_listview.dart';
@@ -54,7 +56,17 @@ class _ExampleAppState extends State<ExampleApp> {
             child: Padding(
               padding: const EdgeInsets.all(15),
               child: SearchableList<Actor>(
-                searchTextPosition: SearchTextPosition.bottom,
+                onPaginate: ()async {
+                  print('hello');
+                  await Future.delayed(const Duration(milliseconds: 4000));
+                  setState(() {
+                    actors.addAll([
+                      Actor(age: 22, name: 'Fathi', lastName: 'Hadawi'),
+                      Actor(age: 22, name: 'Hichem', lastName: 'Rostom'),
+                      Actor(age: 22, name: 'Kamel', lastName: 'Twati'),
+                    ]);
+                  });
+                },
                 initialList: actors,
                 builder: (Actor actor) => ActorItem(actor: actor),
                 filter: _filterUserList,
