@@ -35,6 +35,7 @@ class SearchableList<T> extends StatefulWidget {
     this.onRefresh,
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
+    this.withPagination = false,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
@@ -61,6 +62,7 @@ class SearchableList<T> extends StatefulWidget {
     this.defaultSuffixIconColor = Colors.grey,
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
+    this.withPagination = false,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
@@ -92,6 +94,7 @@ class SearchableList<T> extends StatefulWidget {
     this.onRefresh,
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
+    this.withPagination = false,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     displayDividder = true;
@@ -193,6 +196,9 @@ class SearchableList<T> extends StatefulWidget {
 
   //TODO add missing code documentation
   final SearchTextPosition searchTextPosition;
+
+  //TODO missing code documentation
+  final bool withPagination;
 
   @override
   State<SearchableList> createState() => _SearchableListState<T>();
