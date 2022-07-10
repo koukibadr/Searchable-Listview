@@ -194,10 +194,13 @@ class SearchableList<T> extends StatefulWidget {
   ///by default [Axis.vertical]
   final Axis scrollDirection;
 
-  //TODO add missing code documentation
+  ///The position of the text field (bottom or top)
+  ///by default the textfield is displayed on top
   final SearchTextPosition searchTextPosition;
 
-  //TODO missing code documentation
+  ///Callback function invoked each time the listview
+  ///reached the bottom
+  ///used to create pagination in listview
   final Future<dynamic> Function()? onPaginate;
 
   @override
@@ -206,14 +209,17 @@ class SearchableList<T> extends StatefulWidget {
 
 class _SearchableListState<T> extends State<SearchableList<T>> {
 
+  ///create scroll controller instance 
+  ///attached to the listview widget
   ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    if(widget.onPaginate != null){
+    if (widget.onPaginate != null) {
       scrollController.addListener(() {
-        if(scrollController.position.pixels == scrollController.position.maxScrollExtent){
+        if (scrollController.position.pixels ==
+            scrollController.position.maxScrollExtent) {
           widget.onPaginate?.call();
         }
       });
@@ -243,6 +249,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
           );
   }
 
+  ///creates listview based on the items passed to the widget
+  ///check whether the [widget.onRefresh] parameter is nullable or not
+  ///if [widget.displayDividder] is true
+  /// function will runder [ListView.separated]
+  ///else the function will render a normal listview [ListView.builder]
   Widget _renderListView() {
     if (widget.initialList.isEmpty) {
       return widget.emptyWidget;
@@ -273,6 +284,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     }
   }
 
+
+  ///renders a seperated listview using [ListView.separated]
   Widget _renderSeperatedListView() {
     return ListView.separated(
       controller: scrollController,
@@ -283,6 +296,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     );
   }
 
+
+  ///render sliver listview
+  ///if [widget.scrollDirection] set to [Axis.horizontal]
+  ///the function will render an horizontal sliver listview
+  ///else it will render a vertical listview
   Widget _renderSliverEffect() {
     return widget.scrollDirection == Axis.horizontal
         ? Column(
@@ -378,6 +396,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
           );
   }
 
+
+  ///render suffix icon
+  ///if [widget.displayClearIcon] is false 
+  ///the function will render a null icon
+  ///else it will display a clear icon if the textfield isn't empty
   Widget? _renderSuffixIcon() {
     return !widget.displayClearIcon
         ? null
@@ -398,6 +421,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
               );
   }
 
+
+  ///render the search field widget
   Widget _renderSearchField() {
     return TextField(
       focusNode: widget.focusNode,
@@ -423,6 +448,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     );
   }
 
+
+  ///render the list item widget, invoke [widget.builder] callback
+  ///with the index selected
   Widget _renderListItem(index) {
     return widget.onItemSelected == null
         ? widget.builder(

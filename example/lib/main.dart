@@ -70,7 +70,7 @@ class _ExampleAppState extends State<ExampleApp> {
                 builder: (Actor actor) => ActorItem(actor: actor),
                 filter: _filterUserList,
                 emptyWidget: const EmptyView(),
-                onRefresh: ()async {},
+                onRefresh: () async {},
                 onItemSelected: (Actor item) {},
                 inputDecoration: InputDecoration(
                   labelText: "Search Actor",
