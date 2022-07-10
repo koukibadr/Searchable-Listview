@@ -208,8 +208,7 @@ class SearchableList<T> extends StatefulWidget {
 }
 
 class _SearchableListState<T> extends State<SearchableList<T>> {
-
-  ///create scroll controller instance 
+  ///create scroll controller instance
   ///attached to the listview widget
   ScrollController scrollController = ScrollController();
 
@@ -284,7 +283,6 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     }
   }
 
-
   ///renders a seperated listview using [ListView.separated]
   Widget _renderSeperatedListView() {
     return ListView.separated(
@@ -295,7 +293,6 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       separatorBuilder: widget.seperatorBuilder!,
     );
   }
-
 
   ///render sliver listview
   ///if [widget.scrollDirection] set to [Axis.horizontal]
@@ -396,9 +393,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
           );
   }
 
-
   ///render suffix icon
-  ///if [widget.displayClearIcon] is false 
+  ///if [widget.displayClearIcon] is false
   ///the function will render a null icon
   ///else it will display a clear icon if the textfield isn't empty
   Widget? _renderSuffixIcon() {
@@ -420,7 +416,6 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 color: widget.defaultSuffixIconColor,
               );
   }
-
 
   ///render the search field widget
   Widget _renderSearchField() {
@@ -447,7 +442,6 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       },
     );
   }
-
 
   ///render the list item widget, invoke [widget.builder] callback
   ///with the index selected
