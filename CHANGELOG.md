@@ -1,3 +1,8 @@
+## 1.7.0 - 10/07/2022
+
+- Customizable text field position
+- Support pagination
+
 ## 1.6.1 - 27/06/2022
 
 - Update package documentation
