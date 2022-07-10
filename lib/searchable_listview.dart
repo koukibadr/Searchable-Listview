@@ -36,10 +36,8 @@ class SearchableList<T> extends StatefulWidget {
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
-    this.scrollController,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
-    scrollController ??= ScrollController();
     seperatorBuilder = null;
   }
 
@@ -65,10 +63,8 @@ class SearchableList<T> extends StatefulWidget {
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
-    this.scrollController,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
-    scrollController ??= ScrollController();
     seperatorBuilder = null;
     sliverScrollEffect = true;
     onRefresh = null;
@@ -99,10 +95,8 @@ class SearchableList<T> extends StatefulWidget {
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
-    this.scrollController,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
-    scrollController ??= ScrollController();
     displayDividder = true;
     assert(seperatorBuilder != null);
   }
@@ -206,8 +200,6 @@ class SearchableList<T> extends StatefulWidget {
   //TODO missing code documentation
   final Future<dynamic> Function()? onPaginate;
 
-  ScrollController? scrollController;
-
   @override
   State<SearchableList> createState() => _SearchableListState<T>();
 }
@@ -303,6 +295,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     Expanded(
                       child: CustomScrollView(
                         scrollDirection: widget.scrollDirection,
+                        controller: scrollController,
                         slivers: [
                           SliverList(
                             delegate: widget.initialList.isEmpty
@@ -323,6 +316,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     Expanded(
                       child: CustomScrollView(
                         scrollDirection: widget.scrollDirection,
+                        controller: scrollController,
                         slivers: [
                           SliverList(
                             delegate: widget.initialList.isEmpty

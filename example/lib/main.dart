@@ -56,9 +56,8 @@ class _ExampleAppState extends State<ExampleApp> {
             child: Padding(
               padding: const EdgeInsets.all(15),
               child: SearchableList<Actor>(
-                onPaginate: ()async {
-                  print('hello');
-                  await Future.delayed(const Duration(milliseconds: 4000));
+                onPaginate: () async {
+                  await Future.delayed(const Duration(milliseconds: 1000));
                   setState(() {
                     actors.addAll([
                       Actor(age: 22, name: 'Fathi', lastName: 'Hadawi'),
@@ -71,6 +70,7 @@ class _ExampleAppState extends State<ExampleApp> {
                 builder: (Actor actor) => ActorItem(actor: actor),
                 filter: _filterUserList,
                 emptyWidget: const EmptyView(),
+                onRefresh: ()async {},
                 onItemSelected: (Actor item) {},
                 inputDecoration: InputDecoration(
                   labelText: "Search Actor",
