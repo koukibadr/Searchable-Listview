@@ -9,6 +9,7 @@
 ## Features
 
 - Filter list view easily
+- Support pagination
 - Pull to refresh list
 - Sliver scroll animation effect
 - Display custom widget when list is empty
@@ -20,6 +21,8 @@
 - Clear icon button in search to easily clear text
 - Customizable scroll direction
 - Searchable list with seperator builder
+- Customizable text field position
+
 
 ## Getting Started
 
@@ -27,7 +30,7 @@ In order to add searchable listview package to your project add this line to you
 
 ```yaml
 dependencies:
-	searchable_listview:  1.6.0
+	searchable_listview:  1.7.0
 ```
 
 ## Attributes
@@ -123,6 +126,16 @@ dependencies:
   ///The scroll direction of the list
   ///by default [Axis.vertical]
   final Axis scrollDirection;
+
+  
+  ///The position of the text field (bottom or top)
+  ///by default the textfield is displayed on top
+  final SearchTextPosition searchTextPosition;
+
+  ///Callback function invoked each time the listview
+  ///reached the bottom
+  ///used to create pagination in listview
+  final Future<dynamic> Function()? onPaginate;
 
 ```
 
