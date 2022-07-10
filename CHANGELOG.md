@@ -1,3 +1,7 @@
+## 1.7.1 - 10/07/2022
+
+- Update project documentation
+
 ## 1.7.0 - 10/07/2022
 
 - Customizable text field position
