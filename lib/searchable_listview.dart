@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:searchable_listview/resources/arrays.dart';
+import 'package:searchable_listview/widgets/list_item.dart';
 import 'package:searchable_listview/widgets/serach_text_field.dart';
 
 class SearchableList<T> extends StatefulWidget {
@@ -295,7 +296,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         controller: scrollController,
                         scrollDirection: widget.scrollDirection,
                         itemCount: widget.initialList.length,
-                        itemBuilder: (context, index) => _renderListItem(index),
+                        itemBuilder: (context, index) => ListItem<T>(
+                          builder: widget.builder,
+                          item: widget.initialList[index],
+                          onItemSelected: widget.onItemSelected,
+                        ),
                       ),
               )
             : widget.displayDividder
@@ -304,7 +309,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     controller: scrollController,
                     scrollDirection: widget.scrollDirection,
                     itemCount: widget.initialList.length,
-                    itemBuilder: (context, index) => _renderListItem(index),
+                    itemBuilder: (context, index) => ListItem<T>(
+                      builder: widget.builder,
+                      item: widget.initialList[index],
+                      onItemSelected: widget.onItemSelected,
+                    ),
                   ),
       );
     }
@@ -316,7 +325,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       controller: scrollController,
       scrollDirection: widget.scrollDirection,
       itemCount: widget.initialList.length,
-      itemBuilder: (context, index) => _renderListItem(index),
+      itemBuilder: (context, index) => ListItem<T>(
+        builder: widget.builder,
+        item: widget.initialList[index],
+        onItemSelected: widget.onItemSelected,
+      ),
       separatorBuilder: widget.seperatorBuilder!,
     );
   }
@@ -359,7 +372,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                                     childCount: 1,
                                   )
                                 : SliverChildBuilderDelegate(
-                                    (context, index) => _renderListItem(index),
+                                    (context, index) => ListItem<T>(
+                                      builder: widget.builder,
+                                      item: widget.initialList[index],
+                                      onItemSelected: widget.onItemSelected,
+                                    ),
                                     childCount: widget.initialList.length,
                                   ),
                           )
@@ -380,7 +397,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                                     childCount: 1,
                                   )
                                 : SliverChildBuilderDelegate(
-                                    (context, index) => _renderListItem(index),
+                                    (context, index) => ListItem<T>(
+                                      builder: widget.builder,
+                                      item: widget.initialList[index],
+                                      onItemSelected: widget.onItemSelected,
+                                    ),
                                     childCount: widget.initialList.length,
                                   ),
                           )
@@ -434,7 +455,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                               childCount: 1,
                             )
                           : SliverChildBuilderDelegate(
-                              (context, index) => _renderListItem(index),
+                              (context, index) => ListItem<T>(
+                                builder: widget.builder,
+                                item: widget.initialList[index],
+                                onItemSelected: widget.onItemSelected,
+                              ),
                               childCount: widget.initialList.length,
                             ),
                     )
@@ -447,7 +472,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                               childCount: 1,
                             )
                           : SliverChildBuilderDelegate(
-                              (context, index) => _renderListItem(index),
+                              (context, index) => ListItem<T>(
+                                builder: widget.builder,
+                                item: widget.initialList[index],
+                                onItemSelected: widget.onItemSelected,
+                              ),
                               childCount: widget.initialList.length,
                             ),
                     ),
@@ -469,25 +498,6 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       ),
                     ),
                   ],
-          );
-  }
-
-  ///render the list item widget, invoke [widget.builder] callback
-  ///with the index selected
-  Widget _renderListItem(index) {
-    return widget.onItemSelected == null
-        ? widget.builder(
-            widget.initialList[index],
-          )
-        : InkWell(
-            onTap: () {
-              widget.onItemSelected!.call(
-                widget.initialList[index],
-              );
-            },
-            child: widget.builder(
-              widget.initialList[index],
-            ),
           );
   }
 
