@@ -1,3 +1,7 @@
+## 1.7.2 - 14/07/2022
+
+- Enhance widget rendering
+
 ## 1.7.1 - 10/07/2022
 
 - Update project documentation
