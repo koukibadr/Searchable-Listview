@@ -49,8 +49,7 @@ class SearchableList<T> extends StatefulWidget {
 
   SearchableList.sliver({
     Key? key,
-    this.initialList,
-    this.asyncListCallback,
+    required this.initialList,
     required this.filter,
     required this.builder,
     this.searchTextController,
@@ -71,9 +70,8 @@ class SearchableList<T> extends StatefulWidget {
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
   }) : super(key: key) {
-    if(asyncListCallback == null && initialList == null){
-      throw('either initialList or asyncListCallback must be provided');
-    }
+    assert(initialList != null);
+    asyncListCallback = null;
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
     sliverScrollEffect = true;
@@ -82,7 +80,8 @@ class SearchableList<T> extends StatefulWidget {
 
   SearchableList.seperated({
     Key? key,
-    required this.initialList,
+    this.initialList,
+    this.asyncListCallback,
     required this.filter,
     required this.builder,
     required this.seperatorBuilder,
@@ -106,6 +105,9 @@ class SearchableList<T> extends StatefulWidget {
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
   }) : super(key: key) {
+    if(asyncListCallback == null && initialList == null){
+      throw('either initialList or asyncListCallback must be provided');
+    }
     searchTextController ??= TextEditingController();
     displayDividder = true;
     assert(seperatorBuilder != null);
@@ -114,6 +116,8 @@ class SearchableList<T> extends StatefulWidget {
   /// Initial list of all elements that will be displayed.
   List<T>? initialList;
 
+
+  //TODO add missing code documentation
   Future<List<T>>? asyncListCallback;
 
   /// Callback to filter the list based on the given search value.
@@ -223,6 +227,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   ///create scroll controller instance
   ///attached to the listview widget
   ScrollController scrollController = ScrollController();
+
+  //TODO add code documentation
+  List<T> asyncListResult = [];
 
   @override
   void initState() {
