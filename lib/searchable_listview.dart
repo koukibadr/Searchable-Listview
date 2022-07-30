@@ -17,7 +17,8 @@ class SearchableList<T> extends StatefulWidget {
 
   SearchableList({
     Key? key,
-    required this.initialList,
+    this.initialList,
+    this.asyncListCallback,
     required this.filter,
     required this.builder,
     this.searchTextController,
@@ -39,13 +40,17 @@ class SearchableList<T> extends StatefulWidget {
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
   }) : super(key: key) {
+    if(asyncListCallback == null && initialList == null){
+      throw('either initialList or asyncListCallback must be provided');
+    }
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
   }
 
   SearchableList.sliver({
     Key? key,
-    required this.initialList,
+    this.initialList,
+    this.asyncListCallback,
     required this.filter,
     required this.builder,
     this.searchTextController,
@@ -66,6 +71,9 @@ class SearchableList<T> extends StatefulWidget {
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
   }) : super(key: key) {
+    if(asyncListCallback == null && initialList == null){
+      throw('either initialList or asyncListCallback must be provided');
+    }
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
     sliverScrollEffect = true;
@@ -104,7 +112,9 @@ class SearchableList<T> extends StatefulWidget {
   }
 
   /// Initial list of all elements that will be displayed.
-  late List<T> initialList;
+  List<T>? initialList;
+
+  Future<List<T>>? asyncListCallback;
 
   /// Callback to filter the list based on the given search value.
   ///
@@ -282,7 +292,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   /// function will runder [ListView.separated]
   ///else the function will render a normal listview [ListView.builder]
   Widget _renderListView() {
-    if (widget.initialList.isEmpty) {
+    if (widget.initialList!.isEmpty) {
       return widget.emptyWidget;
     } else {
       return Expanded(
@@ -295,10 +305,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     : ListView.builder(
                         controller: scrollController,
                         scrollDirection: widget.scrollDirection,
-                        itemCount: widget.initialList.length,
+                        itemCount: widget.initialList!.length,
                         itemBuilder: (context, index) => ListItem<T>(
                           builder: widget.builder,
-                          item: widget.initialList[index],
+                          item: widget.initialList![index],
                           onItemSelected: widget.onItemSelected,
                         ),
                       ),
@@ -308,10 +318,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 : ListView.builder(
                     controller: scrollController,
                     scrollDirection: widget.scrollDirection,
-                    itemCount: widget.initialList.length,
+                    itemCount: widget.initialList!.length,
                     itemBuilder: (context, index) => ListItem<T>(
                       builder: widget.builder,
-                      item: widget.initialList[index],
+                      item: widget.initialList![index],
                       onItemSelected: widget.onItemSelected,
                     ),
                   ),
@@ -324,10 +334,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     return ListView.separated(
       controller: scrollController,
       scrollDirection: widget.scrollDirection,
-      itemCount: widget.initialList.length,
+      itemCount: widget.initialList!.length,
       itemBuilder: (context, index) => ListItem<T>(
         builder: widget.builder,
-        item: widget.initialList[index],
+        item: widget.initialList![index],
         onItemSelected: widget.onItemSelected,
       ),
       separatorBuilder: widget.seperatorBuilder!,
@@ -366,7 +376,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         controller: scrollController,
                         slivers: [
                           SliverList(
-                            delegate: widget.initialList.isEmpty
+                            delegate: widget.initialList!.isEmpty
                                 ? SliverChildBuilderDelegate(
                                     (context, index) => widget.emptyWidget,
                                     childCount: 1,
@@ -374,10 +384,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                                 : SliverChildBuilderDelegate(
                                     (context, index) => ListItem<T>(
                                       builder: widget.builder,
-                                      item: widget.initialList[index],
+                                      item: widget.initialList![index],
                                       onItemSelected: widget.onItemSelected,
                                     ),
-                                    childCount: widget.initialList.length,
+                                    childCount: widget.initialList!.length,
                                   ),
                           )
                         ],
@@ -391,7 +401,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         controller: scrollController,
                         slivers: [
                           SliverList(
-                            delegate: widget.initialList.isEmpty
+                            delegate: widget.initialList!.isEmpty
                                 ? SliverChildBuilderDelegate(
                                     (context, index) => widget.emptyWidget,
                                     childCount: 1,
@@ -399,10 +409,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                                 : SliverChildBuilderDelegate(
                                     (context, index) => ListItem<T>(
                                       builder: widget.builder,
-                                      item: widget.initialList[index],
+                                      item: widget.initialList![index],
                                       onItemSelected: widget.onItemSelected,
                                     ),
-                                    childCount: widget.initialList.length,
+                                    childCount: widget.initialList!.length,
                                   ),
                           )
                         ],
@@ -449,7 +459,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       ),
                     ),
                     SliverList(
-                      delegate: widget.initialList.isEmpty
+                      delegate: widget.initialList!.isEmpty
                           ? SliverChildBuilderDelegate(
                               (context, index) => widget.emptyWidget,
                               childCount: 1,
@@ -457,16 +467,16 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                           : SliverChildBuilderDelegate(
                               (context, index) => ListItem<T>(
                                 builder: widget.builder,
-                                item: widget.initialList[index],
+                                item: widget.initialList![index],
                                 onItemSelected: widget.onItemSelected,
                               ),
-                              childCount: widget.initialList.length,
+                              childCount: widget.initialList!.length,
                             ),
                     )
                   ]
                 : [
                     SliverList(
-                      delegate: widget.initialList.isEmpty
+                      delegate: widget.initialList!.isEmpty
                           ? SliverChildBuilderDelegate(
                               (context, index) => widget.emptyWidget,
                               childCount: 1,
@@ -474,10 +484,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                           : SliverChildBuilderDelegate(
                               (context, index) => ListItem<T>(
                                 builder: widget.builder,
-                                item: widget.initialList[index],
+                                item: widget.initialList![index],
                                 onItemSelected: widget.onItemSelected,
                               ),
-                              childCount: widget.initialList.length,
+                              childCount: widget.initialList!.length,
                             ),
                     ),
                     SliverAppBar(
