@@ -64,9 +64,16 @@ class _ExampleAppState extends State<ExampleApp> {
                     ]);
                   });
                 },
-                initialList: actors,
+                asyncListCallback: () async {
+                  await Future.delayed(const Duration(milliseconds: 10000));
+                  return actors;
+                },
+                //initialList: actors,
                 builder: (Actor actor) => ActorItem(actor: actor),
-                filter: _filterUserList,
+                //filter: _filterUserList,
+                asyncListFilter: (q, list){
+                  return list.where((element) => element.name.contains(q)).toList();
+                },
                 emptyWidget: const EmptyView(),
                 onRefresh: () async {},
                 onItemSelected: (Actor item) {},

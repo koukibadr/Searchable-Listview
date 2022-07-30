@@ -19,7 +19,8 @@ class SearchableList<T> extends StatefulWidget {
     Key? key,
     this.initialList,
     this.asyncListCallback,
-    required this.filter,
+    this.filter,
+    this.asyncListFilter,
     required this.builder,
     this.searchTextController,
     this.keyboardAction = TextInputAction.done,
@@ -40,9 +41,13 @@ class SearchableList<T> extends StatefulWidget {
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
   }) : super(key: key) {
-    if(asyncListCallback == null && initialList == null){
-      throw('either initialList or asyncListCallback must be provided');
+    if (asyncListCallback == null && initialList == null) {
+      throw ('either initialList or asyncListCallback must be provided');
     }
+    assert(
+      (asyncListCallback != null && asyncListFilter != null) ||
+          (initialList != null && filter != null),
+    );
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
   }
@@ -72,6 +77,7 @@ class SearchableList<T> extends StatefulWidget {
   }) : super(key: key) {
     assert(initialList != null);
     asyncListCallback = null;
+    asyncListFilter = null;
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
     sliverScrollEffect = true;
@@ -82,7 +88,8 @@ class SearchableList<T> extends StatefulWidget {
     Key? key,
     this.initialList,
     this.asyncListCallback,
-    required this.filter,
+    this.filter,
+    this.asyncListFilter,
     required this.builder,
     required this.seperatorBuilder,
     this.searchTextController,
@@ -105,9 +112,13 @@ class SearchableList<T> extends StatefulWidget {
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
   }) : super(key: key) {
-    if(asyncListCallback == null && initialList == null){
-      throw('either initialList or asyncListCallback must be provided');
+    if (asyncListCallback == null && initialList == null) {
+      throw ('either initialList or asyncListCallback must be provided');
     }
+    assert(
+      (asyncListCallback != null && asyncListFilter != null) ||
+          (initialList != null && filter != null),
+    );
     searchTextController ??= TextEditingController();
     displayDividder = true;
     assert(seperatorBuilder != null);
@@ -116,9 +127,8 @@ class SearchableList<T> extends StatefulWidget {
   /// Initial list of all elements that will be displayed.
   List<T>? initialList;
 
-
   //TODO add missing code documentation
-  Future<List<T>>? asyncListCallback;
+  Future<List<T>?> Function()? asyncListCallback;
 
   /// Callback to filter the list based on the given search value.
   ///
@@ -126,7 +136,9 @@ class SearchableList<T> extends StatefulWidget {
   /// or invoked when submiting the text field if ```searchType == SEARCH_TYPE.onSubmit```.
   ///
   /// You should return a list of filtered elements.
-  final List<T> Function(String) filter;
+  late List<T> Function(String)? filter;
+
+  late List<T> Function(String, List<T>)? asyncListFilter;
 
   /// Builder function that generates the ListView items
   /// based on the given element.
@@ -230,6 +242,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
 
   //TODO add code documentation
   List<T> asyncListResult = [];
+  List<T> filtredAsyncListResult = [];
+
+  bool dataDownloaded = false;
 
   @override
   void initState() {
@@ -248,49 +263,83 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   Widget build(BuildContext context) {
     return widget.sliverScrollEffect
         ? _renderSliverEffect()
-        : Column(
-            children: widget.searchTextPosition == SearchTextPosition.top
-                ? [
-                    SearchTextField(
-                      filterList: _filterList,
-                      focusNode: widget.focusNode,
-                      inputDecoration: widget.inputDecoration,
-                      keyboardAction: widget.keyboardAction,
-                      obscureText: widget.obscureText,
-                      onSubmitSearch: widget.onSubmitSearch,
-                      searchFieldEnabled: widget.searchFieldEnabled,
-                      searchMode: widget.searchMode,
-                      searchTextController: widget.searchTextController,
-                      textInputType: widget.textInputType,
-                      displayClearIcon: widget.displayClearIcon,
-                      defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    _renderListView(),
-                  ]
-                : [
-                    _renderListView(),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    SearchTextField(
-                      filterList: _filterList,
-                      focusNode: widget.focusNode,
-                      inputDecoration: widget.inputDecoration,
-                      keyboardAction: widget.keyboardAction,
-                      obscureText: widget.obscureText,
-                      onSubmitSearch: widget.onSubmitSearch,
-                      searchFieldEnabled: widget.searchFieldEnabled,
-                      searchMode: widget.searchMode,
-                      searchTextController: widget.searchTextController,
-                      textInputType: widget.textInputType,
-                      displayClearIcon: widget.displayClearIcon,
-                      defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                    ),
-                  ],
+        : widget.asyncListCallback != null
+            ? _renderAsyncListView()
+            : _renderSearchableListView(
+                list: widget.initialList!,
+              );
+  }
+
+  Widget _renderAsyncListView() {
+    return dataDownloaded
+        ? _renderSearchableListView(list: filtredAsyncListResult)
+        : FutureBuilder(
+            future: widget.asyncListCallback!.call(),
+            builder: (context, snapshot) {
+              dataDownloaded =
+                  snapshot.connectionState != ConnectionState.waiting;
+              if (!dataDownloaded) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              asyncListResult = snapshot.data as List<T>? ?? [];
+              filtredAsyncListResult = asyncListResult;
+              return _renderSearchableListView(list: filtredAsyncListResult);
+            },
           );
+  }
+
+  Widget _renderSearchableListView({
+    required List<T> list,
+  }) {
+    return Column(
+      children: widget.searchTextPosition == SearchTextPosition.top
+          ? [
+              SearchTextField(
+                filterList: _filterList,
+                focusNode: widget.focusNode,
+                inputDecoration: widget.inputDecoration,
+                keyboardAction: widget.keyboardAction,
+                obscureText: widget.obscureText,
+                onSubmitSearch: widget.onSubmitSearch,
+                searchFieldEnabled: widget.searchFieldEnabled,
+                searchMode: widget.searchMode,
+                searchTextController: widget.searchTextController,
+                textInputType: widget.textInputType,
+                displayClearIcon: widget.displayClearIcon,
+                defaultSuffixIconColor: widget.defaultSuffixIconColor,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              _renderListView(
+                list: list,
+              ),
+            ]
+          : [
+              _renderListView(
+                list: list,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              SearchTextField(
+                filterList: _filterList,
+                focusNode: widget.focusNode,
+                inputDecoration: widget.inputDecoration,
+                keyboardAction: widget.keyboardAction,
+                obscureText: widget.obscureText,
+                onSubmitSearch: widget.onSubmitSearch,
+                searchFieldEnabled: widget.searchFieldEnabled,
+                searchMode: widget.searchMode,
+                searchTextController: widget.searchTextController,
+                textInputType: widget.textInputType,
+                displayClearIcon: widget.displayClearIcon,
+                defaultSuffixIconColor: widget.defaultSuffixIconColor,
+              ),
+            ],
+    );
   }
 
   ///creates listview based on the items passed to the widget
@@ -298,8 +347,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   ///if [widget.displayDividder] is true
   /// function will runder [ListView.separated]
   ///else the function will render a normal listview [ListView.builder]
-  Widget _renderListView() {
-    if (widget.initialList!.isEmpty) {
+  Widget _renderListView({
+    required List<T> list,
+  }) {
+    if (list.isEmpty) {
       return widget.emptyWidget;
     } else {
       return Expanded(
@@ -312,10 +363,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     : ListView.builder(
                         controller: scrollController,
                         scrollDirection: widget.scrollDirection,
-                        itemCount: widget.initialList!.length,
+                        itemCount: list.length,
                         itemBuilder: (context, index) => ListItem<T>(
                           builder: widget.builder,
-                          item: widget.initialList![index],
+                          item: list[index],
                           onItemSelected: widget.onItemSelected,
                         ),
                       ),
@@ -325,10 +376,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 : ListView.builder(
                     controller: scrollController,
                     scrollDirection: widget.scrollDirection,
-                    itemCount: widget.initialList!.length,
+                    itemCount: list.length,
                     itemBuilder: (context, index) => ListItem<T>(
                       builder: widget.builder,
-                      item: widget.initialList![index],
+                      item: list[index],
                       onItemSelected: widget.onItemSelected,
                     ),
                   ),
@@ -521,7 +572,14 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   void _filterList(String value) {
     setState(
       () {
-        widget.initialList = widget.filter(value);
+        if (widget.asyncListCallback != null) {
+          filtredAsyncListResult = widget.asyncListFilter!(
+            value,
+            asyncListResult,
+          );
+        } else {
+          widget.initialList = widget.filter!(value);
+        }
       },
     );
   }
