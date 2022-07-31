@@ -77,12 +77,32 @@ class _ExampleAppState extends State<ExampleApp> {
                     Text('Loading actors...')
                   ],
                 ),
+                errorWidget: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.error,
+                      color: Colors.red,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text('Error while fetching actors')
+                  ],
+                ),
                 asyncListCallback: () async {
-                  await Future.delayed(const Duration(milliseconds: 10000));
-                  return actors;
+                  await Future.delayed(
+                    const Duration(
+                      milliseconds: 10000,
+                    ),
+                  );
+                  return null;
+                  //return actors;
                 },
-                asyncListFilter: (q, list){
-                  return list.where((element) => element.name.contains(q)).toList();
+                asyncListFilter: (q, list) {
+                  return list
+                      .where((element) => element.name.contains(q))
+                      .toList();
                 },
                 emptyWidget: const EmptyView(),
                 onRefresh: () async {},
