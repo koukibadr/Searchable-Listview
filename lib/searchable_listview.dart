@@ -21,6 +21,7 @@ class SearchableList<T> extends StatefulWidget {
     this.asyncListCallback,
     this.filter,
     this.asyncListFilter,
+    this.loadingWidget,
     required this.builder,
     this.searchTextController,
     this.keyboardAction = TextInputAction.done,
@@ -90,6 +91,7 @@ class SearchableList<T> extends StatefulWidget {
     this.asyncListCallback,
     this.filter,
     this.asyncListFilter,
+    this.loadingWidget,
     required this.builder,
     required this.seperatorBuilder,
     this.searchTextController,
@@ -127,8 +129,7 @@ class SearchableList<T> extends StatefulWidget {
   /// Initial list of all elements that will be displayed.
   List<T>? initialList;
 
-  //TODO add missing code documentation
-  Future<List<T>?> Function()? asyncListCallback;
+  
 
   /// Callback to filter the list based on the given search value.
   ///
@@ -138,7 +139,10 @@ class SearchableList<T> extends StatefulWidget {
   /// You should return a list of filtered elements.
   late List<T> Function(String)? filter;
 
+  //TODO add missing code documentation
+  Future<List<T>?> Function()? asyncListCallback;
   late List<T> Function(String, List<T>)? asyncListFilter;
+  Widget? loadingWidget;
 
   /// Builder function that generates the ListView items
   /// based on the given element.
@@ -279,7 +283,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
               dataDownloaded =
                   snapshot.connectionState != ConnectionState.waiting;
               if (!dataDownloaded) {
-                return const Center(
+                return widget.loadingWidget ?? const Center(
                   child: CircularProgressIndicator(),
                 );
               }

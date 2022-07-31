@@ -64,13 +64,23 @@ class _ExampleAppState extends State<ExampleApp> {
                     ]);
                   });
                 },
+                builder: (Actor actor) => ActorItem(actor: actor),
+                // initialList: actors,
+                // filter: _filterUserList,
+                loadingWidget: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    CircularProgressIndicator(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text('Loading actors...')
+                  ],
+                ),
                 asyncListCallback: () async {
                   await Future.delayed(const Duration(milliseconds: 10000));
                   return actors;
                 },
-                //initialList: actors,
-                builder: (Actor actor) => ActorItem(actor: actor),
-                //filter: _filterUserList,
                 asyncListFilter: (q, list){
                   return list.where((element) => element.name.contains(q)).toList();
                 },
