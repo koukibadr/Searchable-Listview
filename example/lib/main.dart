@@ -65,8 +65,6 @@ class _ExampleAppState extends State<ExampleApp> {
                   });
                 },
                 builder: (Actor actor) => ActorItem(actor: actor),
-                // initialList: actors,
-                // filter: _filterUserList,
                 loadingWidget: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
