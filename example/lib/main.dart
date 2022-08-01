@@ -96,8 +96,7 @@ class _ExampleAppState extends State<ExampleApp> {
                       milliseconds: 10000,
                     ),
                   );
-                  return null;
-                  //return actors;
+                  return actors;
                 },
                 asyncListFilter: (q, list) {
                   return list

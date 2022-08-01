@@ -129,12 +129,10 @@ class SearchableList<T> extends StatefulWidget {
   }
 
   /// Initial list of all elements that will be displayed.
-  /// 
+  ///
   ///when [initialList] is null you need to provide [asyncListCallback]
   ///to filter the [initialList] you need provide [filter] callback
   List<T>? initialList;
-
-  
 
   /// Callback to filter the list based on the given search value.
   ///
@@ -150,13 +148,12 @@ class SearchableList<T> extends StatefulWidget {
   ///to filter the [asyncListCallback] result you need provide [asyncListFilter]
   Future<List<T>?> Function()? asyncListCallback;
 
-
-  ///Callback invoked when filtring the searchable list 
+  ///Callback invoked when filtring the searchable list
   ///used when providing [asyncListCallback]
   ///
   ///can't be null when [asyncListCallback] isn't null
   late List<T> Function(String, List<T>)? asyncListFilter;
-  
+
   ///Loading widget displayed when [asyncListCallback] is loading
   ///
   ///if nothing is provided in [loadingWidget] searchable list will display a [CircularProgressIndicator]
@@ -266,7 +263,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   ///create scroll controller instance
   ///attached to the listview widget
   ScrollController scrollController = ScrollController();
-  
+
   List<T> asyncListResult = [];
   List<T> filtredAsyncListResult = [];
 
@@ -305,14 +302,16 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
               dataDownloaded =
                   snapshot.connectionState != ConnectionState.waiting;
               if (!dataDownloaded) {
-                return widget.loadingWidget ?? const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return widget.loadingWidget ??
+                    const Center(
+                      child: CircularProgressIndicator(),
+                    );
               }
-              if(snapshot.data == null){
-                return widget.errorWidget ?? const Center(
-                  child: Icon(Icons.error),
-                );
+              if (snapshot.data == null) {
+                return widget.errorWidget ??
+                    const Center(
+                      child: Icon(Icons.error),
+                    );
               }
               asyncListResult = snapshot.data as List<T>;
               filtredAsyncListResult = asyncListResult;
