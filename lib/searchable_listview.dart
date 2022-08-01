@@ -129,6 +129,9 @@ class SearchableList<T> extends StatefulWidget {
   }
 
   /// Initial list of all elements that will be displayed.
+  /// 
+  ///when [initialList] is null you need to provide [asyncListCallback]
+  ///to filter the [initialList] you need provide [filter] callback
   List<T>? initialList;
 
   
@@ -141,10 +144,27 @@ class SearchableList<T> extends StatefulWidget {
   /// You should return a list of filtered elements.
   late List<T> Function(String)? filter;
 
-  //TODO add missing code documentation
+  ///Async callback that return list to be displayed with future builder
+  ///
+  ///when [asyncListCallback] is null you need to provide [initialList]
+  ///to filter the [asyncListCallback] result you need provide [asyncListFilter]
   Future<List<T>?> Function()? asyncListCallback;
+
+
+  ///Callback invoked when filtring the searchable list 
+  ///used when providing [asyncListCallback]
+  ///
+  ///can't be null when [asyncListCallback] isn't null
   late List<T> Function(String, List<T>)? asyncListFilter;
+  
+  ///Loading widget displayed when [asyncListCallback] is loading
+  ///
+  ///if nothing is provided in [loadingWidget] searchable list will display a [CircularProgressIndicator]
   Widget? loadingWidget;
+
+  ///error widget displayed when [asyncListCallback] result is null
+  ///
+  ///if nothing is provided in [errorWidget] searchable list will display a [Icon]
   Widget? errorWidget;
 
   /// Builder function that generates the ListView items
@@ -246,8 +266,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   ///create scroll controller instance
   ///attached to the listview widget
   ScrollController scrollController = ScrollController();
-
-  //TODO add code documentation
+  
   List<T> asyncListResult = [];
   List<T> filtredAsyncListResult = [];
 
