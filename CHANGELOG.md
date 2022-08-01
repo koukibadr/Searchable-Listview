@@ -1,3 +1,10 @@
+## 2.0.0 - 01/08/2022
+
+- Support async callback on rendering list
+- Display loading when async call is loading
+- Display Error widget when async callback return error
+- Filter async callback result list
+
 ## 1.7.2 - 14/07/2022
 
 - Enhance widget rendering
