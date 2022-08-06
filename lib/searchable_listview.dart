@@ -2,8 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:searchable_listview/resources/arrays.dart';
+import 'package:searchable_listview/widgets/default_error_widget.dart';
 import 'package:searchable_listview/widgets/list_item.dart';
 import 'package:searchable_listview/widgets/serach_text_field.dart';
+
+import 'widgets/default_loading_widget.dart';
 
 class SearchableList<T> extends StatefulWidget {
   ///indicates whether the ssliver scroll effect will be applied
@@ -302,16 +305,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
               dataDownloaded =
                   snapshot.connectionState != ConnectionState.waiting;
               if (!dataDownloaded) {
-                return widget.loadingWidget ??
-                    const Center(
-                      child: CircularProgressIndicator(),
-                    );
+                return widget.loadingWidget ?? const DefaultLoadingWidget();
               }
               if (snapshot.data == null) {
-                return widget.errorWidget ??
-                    const Center(
-                      child: Icon(Icons.error),
-                    );
+                return widget.errorWidget ?? const DefaultErrorWidget();
               }
               asyncListResult = snapshot.data as List<T>;
               filtredAsyncListResult = asyncListResult;
