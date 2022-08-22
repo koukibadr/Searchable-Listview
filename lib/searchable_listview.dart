@@ -336,6 +336,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 textInputType: widget.textInputType,
                 displayClearIcon: widget.displayClearIcon,
                 defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                textStyle: widget.style,
               ),
               const SizedBox(
                 height: 20,
@@ -364,6 +365,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 textInputType: widget.textInputType,
                 displayClearIcon: widget.displayClearIcon,
                 defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                textStyle: widget.style,
               ),
             ],
     );
@@ -451,6 +453,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       textInputType: widget.textInputType,
                       displayClearIcon: widget.displayClearIcon,
                       defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                      textStyle: widget.style,
                     ),
                     const SizedBox(
                       height: 10,
@@ -519,6 +522,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       textInputType: widget.textInputType,
                       displayClearIcon: widget.displayClearIcon,
                       defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                      textStyle: widget.style,
                     ),
                   ],
           )
@@ -541,6 +545,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         textInputType: widget.textInputType,
                         displayClearIcon: widget.displayClearIcon,
                         defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                        textStyle: widget.style
                       ),
                     ),
                     SliverList(
@@ -590,6 +595,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         textInputType: widget.textInputType,
                         displayClearIcon: widget.displayClearIcon,
                         defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                        textStyle: widget.style
                       ),
                     ),
                   ],

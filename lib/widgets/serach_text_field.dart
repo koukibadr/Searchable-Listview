@@ -14,6 +14,7 @@ class SearchTextField extends StatelessWidget {
   final Function(String)? onSubmitSearch;
   final bool displayClearIcon;
   final Color defaultSuffixIconColor;
+  final TextStyle? textStyle;
 
   const SearchTextField({
     Key? key,
@@ -29,6 +30,7 @@ class SearchTextField extends StatelessWidget {
     required this.textInputType,
     required this.displayClearIcon,
     required this.defaultSuffixIconColor,
+    required this.textStyle,
   }) : super(key: key);
 
   @override
@@ -39,6 +41,7 @@ class SearchTextField extends StatelessWidget {
       decoration: inputDecoration?.copyWith(
         suffix: inputDecoration?.suffix ?? _renderSuffixIcon(),
       ),
+      style: textStyle,
       controller: searchTextController,
       textInputAction: keyboardAction,
       keyboardType: textInputType,
