@@ -54,9 +54,7 @@ class _ExampleAppState extends State<ExampleApp> {
             child: Padding(
               padding: const EdgeInsets.all(15),
               child: SearchableList<Actor>(
-                style: const TextStyle(
-                  fontSize: 25
-                ),
+                style: const TextStyle(fontSize: 25),
                 onPaginate: () async {
                   await Future.delayed(const Duration(milliseconds: 1000));
                   setState(() {
