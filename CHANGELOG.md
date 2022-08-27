@@ -1,3 +1,7 @@
+## 2.0.1 - 27/08/2022
+
+- Fix text style parameter integration
+
 ## 2.0.0 - 01/08/2022
 
 - Support async callback on rendering list
