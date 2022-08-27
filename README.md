@@ -26,6 +26,7 @@
 - Customizable scroll direction
 - Searchable list with seperator builder
 - Customizable text field position
+- Customizable text style in search field
 
 ## Getting Started
 
@@ -33,7 +34,7 @@ In order to add searchable listview package to your project add this line to you
 
 ```yaml
 dependencies:
-	searchable_listview:  2.0.0
+	searchable_listview:  2.0.1
 ```
 
 ## Attributes
