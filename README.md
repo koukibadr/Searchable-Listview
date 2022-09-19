@@ -34,7 +34,7 @@ In order to add searchable listview package to your project add this line to you
 
 ```yaml
 dependencies:
-	searchable_listview:  2.0.1
+	searchable_listview:  2.1.1
 ```
 
 ## Attributes
@@ -167,6 +167,23 @@ dependencies:
   ///reached the bottom
   ///used to create pagination in listview
   final Future<dynamic> Function()? onPaginate;
+
+  ///space between the search textfield and the list
+  ///by default the padding is set to 20
+  final double spaceBetweenSearchAndList;
+
+  ///cusor color used in the search textfield
+  final Color? cursorColor;
+
+  ///max lines attribute used in the search textfield
+  final int? maxLines;
+
+  ///max length attribute used in the search field
+  final int? maxLength;
+
+  ///the text alignement of the search field
+  ///by default the alignement is start
+  final TextAlign textAlign;
 
 ````
 
