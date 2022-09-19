@@ -45,6 +45,7 @@ class SearchableList<T> extends StatefulWidget {
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
+    this.spaceBetweenSearchAndList = 20,
   }) : super(key: key) {
     if (asyncListCallback == null && initialList == null) {
       throw ('either initialList or asyncListCallback must be provided');
@@ -79,6 +80,7 @@ class SearchableList<T> extends StatefulWidget {
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
+    this.spaceBetweenSearchAndList = 20,
   }) : super(key: key) {
     assert(initialList != null);
     asyncListCallback = null;
@@ -118,6 +120,7 @@ class SearchableList<T> extends StatefulWidget {
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
+    this.spaceBetweenSearchAndList = 20,
   }) : super(key: key) {
     if (asyncListCallback == null && initialList == null) {
       throw ('either initialList or asyncListCallback must be provided');
@@ -258,6 +261,9 @@ class SearchableList<T> extends StatefulWidget {
   ///used to create pagination in listview
   final Future<dynamic> Function()? onPaginate;
 
+  //TODO add missing code documentation
+  final double spaceBetweenSearchAndList;
+
   @override
   State<SearchableList> createState() => _SearchableListState<T>();
 }
@@ -338,8 +344,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 defaultSuffixIconColor: widget.defaultSuffixIconColor,
                 textStyle: widget.style,
               ),
-              const SizedBox(
-                height: 20,
+              SizedBox(
+                height: widget.spaceBetweenSearchAndList,
               ),
               _renderListView(
                 list: list,
@@ -349,8 +355,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
               _renderListView(
                 list: list,
               ),
-              const SizedBox(
-                height: 20,
+              SizedBox(
+                height: widget.spaceBetweenSearchAndList,
               ),
               SearchTextField(
                 filterList: _filterList,
@@ -455,8 +461,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       defaultSuffixIconColor: widget.defaultSuffixIconColor,
                       textStyle: widget.style,
                     ),
-                    const SizedBox(
-                      height: 10,
+                    SizedBox(
+                      height: widget.spaceBetweenSearchAndList,
                     ),
                     Expanded(
                       child: CustomScrollView(
@@ -506,8 +512,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         ],
                       ),
                     ),
-                    const SizedBox(
-                      height: 10,
+                    SizedBox(
+                      height: widget.spaceBetweenSearchAndList,
                     ),
                     SearchTextField(
                       filterList: _filterList,
