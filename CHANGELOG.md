@@ -1,3 +1,8 @@
+## 2.1.1 - 19/09/2022
+
+- Add textfield parameters
+- Add padding between textfield and list attribute
+
 ## 2.0.1 - 27/08/2022
 
 - Fix text style parameter integration
