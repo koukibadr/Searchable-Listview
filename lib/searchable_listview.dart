@@ -46,6 +46,10 @@ class SearchableList<T> extends StatefulWidget {
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
     this.spaceBetweenSearchAndList = 20,
+    this.cursorColor,
+    this.maxLines,
+    this.maxLength,
+    this.textAlign = TextAlign.start,
   }) : super(key: key) {
     if (asyncListCallback == null && initialList == null) {
       throw ('either initialList or asyncListCallback must be provided');
@@ -81,6 +85,10 @@ class SearchableList<T> extends StatefulWidget {
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
     this.spaceBetweenSearchAndList = 20,
+    this.cursorColor,
+    this.maxLines,
+    this.maxLength,
+    this.textAlign = TextAlign.start,
   }) : super(key: key) {
     assert(initialList != null);
     asyncListCallback = null;
@@ -121,6 +129,10 @@ class SearchableList<T> extends StatefulWidget {
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
     this.spaceBetweenSearchAndList = 20,
+    this.cursorColor,
+    this.maxLines,
+    this.maxLength,
+    this.textAlign = TextAlign.start,
   }) : super(key: key) {
     if (asyncListCallback == null && initialList == null) {
       throw ('either initialList or asyncListCallback must be provided');
@@ -264,6 +276,11 @@ class SearchableList<T> extends StatefulWidget {
   //TODO add missing code documentation
   final double spaceBetweenSearchAndList;
 
+  final Color? cursorColor;
+  final int? maxLines;
+  final int? maxLength;
+  final TextAlign textAlign;
+
   @override
   State<SearchableList> createState() => _SearchableListState<T>();
 }
@@ -343,6 +360,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 displayClearIcon: widget.displayClearIcon,
                 defaultSuffixIconColor: widget.defaultSuffixIconColor,
                 textStyle: widget.style,
+                cursorColor: widget.cursorColor,
+                maxLength: widget.maxLength,
+                maxLines: widget.maxLines,
+                textAlign: widget.textAlign,
               ),
               SizedBox(
                 height: widget.spaceBetweenSearchAndList,
@@ -372,6 +393,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 displayClearIcon: widget.displayClearIcon,
                 defaultSuffixIconColor: widget.defaultSuffixIconColor,
                 textStyle: widget.style,
+                cursorColor: widget.cursorColor,
+                maxLength: widget.maxLength,
+                maxLines: widget.maxLines,
+                textAlign: widget.textAlign,
               ),
             ],
     );
@@ -460,6 +485,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       displayClearIcon: widget.displayClearIcon,
                       defaultSuffixIconColor: widget.defaultSuffixIconColor,
                       textStyle: widget.style,
+                      cursorColor: widget.cursorColor,
+                      maxLength: widget.maxLength,
+                      maxLines: widget.maxLines,
+                      textAlign: widget.textAlign,
                     ),
                     SizedBox(
                       height: widget.spaceBetweenSearchAndList,
@@ -529,6 +558,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       displayClearIcon: widget.displayClearIcon,
                       defaultSuffixIconColor: widget.defaultSuffixIconColor,
                       textStyle: widget.style,
+                      cursorColor: widget.cursorColor,
+                      maxLength: widget.maxLength,
+                      maxLines: widget.maxLines,
+                      textAlign: widget.textAlign,
                     ),
                   ],
           )
@@ -539,19 +572,24 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     SliverAppBar(
                       backgroundColor: Colors.transparent,
                       flexibleSpace: SearchTextField(
-                          filterList: _filterList,
-                          focusNode: widget.focusNode,
-                          inputDecoration: widget.inputDecoration,
-                          keyboardAction: widget.keyboardAction,
-                          obscureText: widget.obscureText,
-                          onSubmitSearch: widget.onSubmitSearch,
-                          searchFieldEnabled: widget.searchFieldEnabled,
-                          searchMode: widget.searchMode,
-                          searchTextController: widget.searchTextController,
-                          textInputType: widget.textInputType,
-                          displayClearIcon: widget.displayClearIcon,
-                          defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                          textStyle: widget.style),
+                        filterList: _filterList,
+                        focusNode: widget.focusNode,
+                        inputDecoration: widget.inputDecoration,
+                        keyboardAction: widget.keyboardAction,
+                        obscureText: widget.obscureText,
+                        onSubmitSearch: widget.onSubmitSearch,
+                        searchFieldEnabled: widget.searchFieldEnabled,
+                        searchMode: widget.searchMode,
+                        searchTextController: widget.searchTextController,
+                        textInputType: widget.textInputType,
+                        displayClearIcon: widget.displayClearIcon,
+                        defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                        textStyle: widget.style,
+                        cursorColor: widget.cursorColor,
+                        maxLength: widget.maxLength,
+                        maxLines: widget.maxLines,
+                        textAlign: widget.textAlign,
+                      ),
                     ),
                     SliverList(
                       delegate: widget.initialList!.isEmpty
@@ -588,19 +626,24 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     SliverAppBar(
                       backgroundColor: Colors.transparent,
                       flexibleSpace: SearchTextField(
-                          filterList: _filterList,
-                          focusNode: widget.focusNode,
-                          inputDecoration: widget.inputDecoration,
-                          keyboardAction: widget.keyboardAction,
-                          obscureText: widget.obscureText,
-                          onSubmitSearch: widget.onSubmitSearch,
-                          searchFieldEnabled: widget.searchFieldEnabled,
-                          searchMode: widget.searchMode,
-                          searchTextController: widget.searchTextController,
-                          textInputType: widget.textInputType,
-                          displayClearIcon: widget.displayClearIcon,
-                          defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                          textStyle: widget.style),
+                        filterList: _filterList,
+                        focusNode: widget.focusNode,
+                        inputDecoration: widget.inputDecoration,
+                        keyboardAction: widget.keyboardAction,
+                        obscureText: widget.obscureText,
+                        onSubmitSearch: widget.onSubmitSearch,
+                        searchFieldEnabled: widget.searchFieldEnabled,
+                        searchMode: widget.searchMode,
+                        searchTextController: widget.searchTextController,
+                        textInputType: widget.textInputType,
+                        displayClearIcon: widget.displayClearIcon,
+                        defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                        textStyle: widget.style,
+                        cursorColor: widget.cursorColor,
+                        maxLength: widget.maxLength,
+                        maxLines: widget.maxLines,
+                        textAlign: widget.textAlign,
+                      ),
                     ),
                   ],
           );

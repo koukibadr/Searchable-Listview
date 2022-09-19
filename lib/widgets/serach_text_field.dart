@@ -15,6 +15,10 @@ class SearchTextField extends StatelessWidget {
   final bool displayClearIcon;
   final Color defaultSuffixIconColor;
   final TextStyle? textStyle;
+  final Color? cursorColor;
+  final int? maxLines;
+  final int? maxLength;
+  final TextAlign textAlign;
 
   const SearchTextField({
     Key? key,
@@ -31,11 +35,19 @@ class SearchTextField extends StatelessWidget {
     required this.displayClearIcon,
     required this.defaultSuffixIconColor,
     required this.textStyle,
+    required this.cursorColor,
+    required this.maxLines,
+    required this.maxLength,
+    required this.textAlign,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      cursorColor: cursorColor,
+      maxLength: maxLength,
+      maxLines: maxLines,
+      textAlign: textAlign,
       focusNode: focusNode,
       enabled: searchFieldEnabled,
       decoration: inputDecoration?.copyWith(
