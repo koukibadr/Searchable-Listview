@@ -273,12 +273,21 @@ class SearchableList<T> extends StatefulWidget {
   ///used to create pagination in listview
   final Future<dynamic> Function()? onPaginate;
 
-  //TODO add missing code documentation
+  ///space between the search textfield and the list
+  ///by default the padding is set to 20
   final double spaceBetweenSearchAndList;
 
+  ///cusor color used in the search textfield
   final Color? cursorColor;
+
+  ///max lines attribute used in the search textfield
   final int? maxLines;
+
+  ///max length attribute used in the search field
   final int? maxLength;
+
+  ///the text alignement of the search field
+  ///by default the alignement is start
   final TextAlign textAlign;
 
   @override
