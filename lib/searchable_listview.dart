@@ -50,6 +50,7 @@ class SearchableList<T> extends StatefulWidget {
     this.maxLines,
     this.maxLength,
     this.textAlign = TextAlign.start,
+    this.autoCompleteHints = const [],
   }) : super(key: key) {
     if (asyncListCallback == null && initialList == null) {
       throw ('either initialList or asyncListCallback must be provided');
@@ -89,6 +90,7 @@ class SearchableList<T> extends StatefulWidget {
     this.maxLines,
     this.maxLength,
     this.textAlign = TextAlign.start,
+    this.autoCompleteHints = const [],
   }) : super(key: key) {
     assert(initialList != null);
     asyncListCallback = null;
@@ -133,6 +135,7 @@ class SearchableList<T> extends StatefulWidget {
     this.maxLines,
     this.maxLength,
     this.textAlign = TextAlign.start,
+    this.autoCompleteHints = const [],
   }) : super(key: key) {
     if (asyncListCallback == null && initialList == null) {
       throw ('either initialList or asyncListCallback must be provided');
@@ -289,6 +292,9 @@ class SearchableList<T> extends StatefulWidget {
   ///the text alignement of the search field
   ///by default the alignement is start
   final TextAlign textAlign;
+
+  //TODO add code documentation
+  final List<String> autoCompleteHints;
 
   @override
   State<SearchableList> createState() => _SearchableListState<T>();
