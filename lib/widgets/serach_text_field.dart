@@ -19,6 +19,7 @@ class SearchTextField extends StatelessWidget {
   final int? maxLines;
   final int? maxLength;
   final TextAlign textAlign;
+  final List<String> autoCompleteHints;
 
   const SearchTextField({
     Key? key,
@@ -39,10 +40,49 @@ class SearchTextField extends StatelessWidget {
     required this.maxLines,
     required this.maxLength,
     required this.textAlign,
+    required this.autoCompleteHints,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (autoCompleteHints.isNotEmpty) {
+      return Autocomplete(
+        optionsBuilder: (textEditingValue) {
+          return autoCompleteHints;
+        },
+        onSelected: (option) {
+          filterList(option.toString());
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        fieldViewBuilder: (
+          context,
+          textEditingController,
+          focusNode,
+          onFieldSubmitted,
+        ) {
+          return TextField(
+            cursorColor: cursorColor,
+            maxLength: maxLength,
+            maxLines: maxLines,
+            textAlign: textAlign,
+            focusNode: focusNode,
+            enabled: searchFieldEnabled,
+            decoration: inputDecoration?.copyWith(
+              suffix: InkWell(
+                  onTap: () {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
+                  child: const Icon(Icons.close)),
+            ),
+            style: textStyle,
+            controller: textEditingController,
+            onChanged: (value) {
+              filterList(value);
+            },
+          );
+        },
+      );
+    }
     return TextField(
       cursorColor: cursorColor,
       maxLength: maxLength,

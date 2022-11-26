@@ -379,6 +379,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 maxLength: widget.maxLength,
                 maxLines: widget.maxLines,
                 textAlign: widget.textAlign,
+                autoCompleteHints: widget.autoCompleteHints,
               ),
               SizedBox(
                 height: widget.spaceBetweenSearchAndList,
@@ -412,6 +413,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 maxLength: widget.maxLength,
                 maxLines: widget.maxLines,
                 textAlign: widget.textAlign,
+                autoCompleteHints: widget.autoCompleteHints,
               ),
             ],
     );
@@ -504,6 +506,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       maxLength: widget.maxLength,
                       maxLines: widget.maxLines,
                       textAlign: widget.textAlign,
+                      autoCompleteHints: widget.autoCompleteHints,
                     ),
                     SizedBox(
                       height: widget.spaceBetweenSearchAndList,
@@ -577,6 +580,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       maxLength: widget.maxLength,
                       maxLines: widget.maxLines,
                       textAlign: widget.textAlign,
+                      autoCompleteHints: widget.autoCompleteHints,
                     ),
                   ],
           )
@@ -604,6 +608,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         maxLength: widget.maxLength,
                         maxLines: widget.maxLines,
                         textAlign: widget.textAlign,
+                        autoCompleteHints: widget.autoCompleteHints,
                       ),
                     ),
                     SliverList(
@@ -658,6 +663,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         maxLength: widget.maxLength,
                         maxLines: widget.maxLines,
                         textAlign: widget.textAlign,
+                        autoCompleteHints: widget.autoCompleteHints,
                       ),
                     ),
                   ],
