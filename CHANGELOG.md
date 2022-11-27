@@ -1,3 +1,7 @@
+## 2.2.1 - 27/11/2022
+
+- Add autocomplete options attribute
+
 ## 2.1.1 - 19/09/2022
 
 - Add textfield parameters
