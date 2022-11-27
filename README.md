@@ -27,6 +27,7 @@
 - Searchable list with seperator builder
 - Customizable text field position
 - Customizable text style in search field
+- Customize autocomplete options
 
 ## Getting Started
 
@@ -34,7 +35,7 @@ In order to add searchable listview package to your project add this line to you
 
 ```yaml
 dependencies:
-	searchable_listview:  2.1.1
+	searchable_listview:  2.2.1
 ```
 
 ## Attributes
@@ -184,6 +185,10 @@ dependencies:
   ///the text alignement of the search field
   ///by default the alignement is start
   final TextAlign textAlign;
+
+  ///List of strings  to display in an auto complete field
+  ///by default list is empty so a simple text field is displayed
+  final List<String> autoCompleteHints;
 
 ````
 
