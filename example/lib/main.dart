@@ -55,11 +55,7 @@ class _ExampleAppState extends State<ExampleApp> {
             child: Padding(
               padding: const EdgeInsets.all(15),
               child: SearchableList<Actor>(
-                autoCompleteHints: const [
-                  'Ali',
-                  'Leonardo',
-                  'Jack'
-                ],
+                autoCompleteHints: const ['Ali', 'Leonardo', 'Jack'],
                 style: const TextStyle(fontSize: 25),
                 onPaginate: () async {
                   await Future.delayed(const Duration(milliseconds: 1000));
