@@ -293,7 +293,8 @@ class SearchableList<T> extends StatefulWidget {
   ///by default the alignement is start
   final TextAlign textAlign;
 
-  //TODO add code documentation
+  ///List of strings  to display in an auto complete field
+  ///by default list is empty so a simple text field is displayed
   final List<String> autoCompleteHints;
 
   @override
@@ -361,26 +362,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     return Column(
       children: widget.searchTextPosition == SearchTextPosition.top
           ? [
-              SearchTextField(
-                filterList: _filterList,
-                focusNode: widget.focusNode,
-                inputDecoration: widget.inputDecoration,
-                keyboardAction: widget.keyboardAction,
-                obscureText: widget.obscureText,
-                onSubmitSearch: widget.onSubmitSearch,
-                searchFieldEnabled: widget.searchFieldEnabled,
-                searchMode: widget.searchMode,
-                searchTextController: widget.searchTextController,
-                textInputType: widget.textInputType,
-                displayClearIcon: widget.displayClearIcon,
-                defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                textStyle: widget.style,
-                cursorColor: widget.cursorColor,
-                maxLength: widget.maxLength,
-                maxLines: widget.maxLines,
-                textAlign: widget.textAlign,
-                autoCompleteHints: widget.autoCompleteHints,
-              ),
+              _renderSearchField(),
               SizedBox(
                 height: widget.spaceBetweenSearchAndList,
               ),
@@ -395,26 +377,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
               SizedBox(
                 height: widget.spaceBetweenSearchAndList,
               ),
-              SearchTextField(
-                filterList: _filterList,
-                focusNode: widget.focusNode,
-                inputDecoration: widget.inputDecoration,
-                keyboardAction: widget.keyboardAction,
-                obscureText: widget.obscureText,
-                onSubmitSearch: widget.onSubmitSearch,
-                searchFieldEnabled: widget.searchFieldEnabled,
-                searchMode: widget.searchMode,
-                searchTextController: widget.searchTextController,
-                textInputType: widget.textInputType,
-                displayClearIcon: widget.displayClearIcon,
-                defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                textStyle: widget.style,
-                cursorColor: widget.cursorColor,
-                maxLength: widget.maxLength,
-                maxLines: widget.maxLines,
-                textAlign: widget.textAlign,
-                autoCompleteHints: widget.autoCompleteHints,
-              ),
+              _renderSearchField(),
             ],
     );
   }
@@ -488,26 +451,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         ? Column(
             children: widget.searchTextPosition == SearchTextPosition.top
                 ? [
-                    SearchTextField(
-                      filterList: _filterList,
-                      focusNode: widget.focusNode,
-                      inputDecoration: widget.inputDecoration,
-                      keyboardAction: widget.keyboardAction,
-                      obscureText: widget.obscureText,
-                      onSubmitSearch: widget.onSubmitSearch,
-                      searchFieldEnabled: widget.searchFieldEnabled,
-                      searchMode: widget.searchMode,
-                      searchTextController: widget.searchTextController,
-                      textInputType: widget.textInputType,
-                      displayClearIcon: widget.displayClearIcon,
-                      defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                      textStyle: widget.style,
-                      cursorColor: widget.cursorColor,
-                      maxLength: widget.maxLength,
-                      maxLines: widget.maxLines,
-                      textAlign: widget.textAlign,
-                      autoCompleteHints: widget.autoCompleteHints,
-                    ),
+                    _renderSearchField(),
                     SizedBox(
                       height: widget.spaceBetweenSearchAndList,
                     ),
@@ -562,26 +506,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     SizedBox(
                       height: widget.spaceBetweenSearchAndList,
                     ),
-                    SearchTextField(
-                      filterList: _filterList,
-                      focusNode: widget.focusNode,
-                      inputDecoration: widget.inputDecoration,
-                      keyboardAction: widget.keyboardAction,
-                      obscureText: widget.obscureText,
-                      onSubmitSearch: widget.onSubmitSearch,
-                      searchFieldEnabled: widget.searchFieldEnabled,
-                      searchMode: widget.searchMode,
-                      searchTextController: widget.searchTextController,
-                      textInputType: widget.textInputType,
-                      displayClearIcon: widget.displayClearIcon,
-                      defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                      textStyle: widget.style,
-                      cursorColor: widget.cursorColor,
-                      maxLength: widget.maxLength,
-                      maxLines: widget.maxLines,
-                      textAlign: widget.textAlign,
-                      autoCompleteHints: widget.autoCompleteHints,
-                    ),
+                    _renderSearchField(),
                   ],
           )
         : CustomScrollView(
@@ -590,26 +515,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 ? [
                     SliverAppBar(
                       backgroundColor: Colors.transparent,
-                      flexibleSpace: SearchTextField(
-                        filterList: _filterList,
-                        focusNode: widget.focusNode,
-                        inputDecoration: widget.inputDecoration,
-                        keyboardAction: widget.keyboardAction,
-                        obscureText: widget.obscureText,
-                        onSubmitSearch: widget.onSubmitSearch,
-                        searchFieldEnabled: widget.searchFieldEnabled,
-                        searchMode: widget.searchMode,
-                        searchTextController: widget.searchTextController,
-                        textInputType: widget.textInputType,
-                        displayClearIcon: widget.displayClearIcon,
-                        defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                        textStyle: widget.style,
-                        cursorColor: widget.cursorColor,
-                        maxLength: widget.maxLength,
-                        maxLines: widget.maxLines,
-                        textAlign: widget.textAlign,
-                        autoCompleteHints: widget.autoCompleteHints,
-                      ),
+                      flexibleSpace: _renderSearchField(),
                     ),
                     SliverList(
                       delegate: widget.initialList!.isEmpty
@@ -645,26 +551,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     ),
                     SliverAppBar(
                       backgroundColor: Colors.transparent,
-                      flexibleSpace: SearchTextField(
-                        filterList: _filterList,
-                        focusNode: widget.focusNode,
-                        inputDecoration: widget.inputDecoration,
-                        keyboardAction: widget.keyboardAction,
-                        obscureText: widget.obscureText,
-                        onSubmitSearch: widget.onSubmitSearch,
-                        searchFieldEnabled: widget.searchFieldEnabled,
-                        searchMode: widget.searchMode,
-                        searchTextController: widget.searchTextController,
-                        textInputType: widget.textInputType,
-                        displayClearIcon: widget.displayClearIcon,
-                        defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                        textStyle: widget.style,
-                        cursorColor: widget.cursorColor,
-                        maxLength: widget.maxLength,
-                        maxLines: widget.maxLines,
-                        textAlign: widget.textAlign,
-                        autoCompleteHints: widget.autoCompleteHints,
-                      ),
+                      flexibleSpace: _renderSearchField(),
                     ),
                   ],
           );
@@ -682,6 +569,30 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
           widget.initialList = widget.filter!(value);
         }
       },
+    );
+  }
+
+  /// render search field widget
+  Widget _renderSearchField() {
+    return SearchTextField(
+      filterList: _filterList,
+      focusNode: widget.focusNode,
+      inputDecoration: widget.inputDecoration,
+      keyboardAction: widget.keyboardAction,
+      obscureText: widget.obscureText,
+      onSubmitSearch: widget.onSubmitSearch,
+      searchFieldEnabled: widget.searchFieldEnabled,
+      searchMode: widget.searchMode,
+      searchTextController: widget.searchTextController,
+      textInputType: widget.textInputType,
+      displayClearIcon: widget.displayClearIcon,
+      defaultSuffixIconColor: widget.defaultSuffixIconColor,
+      textStyle: widget.style,
+      cursorColor: widget.cursorColor,
+      maxLength: widget.maxLength,
+      maxLines: widget.maxLines,
+      textAlign: widget.textAlign,
+      autoCompleteHints: widget.autoCompleteHints,
     );
   }
 }

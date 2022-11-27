@@ -55,7 +55,6 @@ class _ExampleAppState extends State<ExampleApp> {
             child: Padding(
               padding: const EdgeInsets.all(15),
               child: SearchableList<Actor>(
-                autoCompleteHints: const ['Ali', 'Leonardo', 'Jack'],
                 style: const TextStyle(fontSize: 25),
                 onPaginate: () async {
                   await Future.delayed(const Duration(milliseconds: 1000));
@@ -131,16 +130,6 @@ class _ExampleAppState extends State<ExampleApp> {
         ],
       ),
     );
-  }
-
-  List<Actor> _filterUserList(String searchTerm) {
-    return actors
-        .where(
-          (element) =>
-              element.name.toLowerCase().contains(searchTerm) ||
-              element.lastName.contains(searchTerm),
-        )
-        .toList();
   }
 
   void addActor() {
