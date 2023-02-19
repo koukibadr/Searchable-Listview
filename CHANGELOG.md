@@ -1,3 +1,7 @@
+## 2.2.2 - 19/02/2023
+
+- Fix keyboard closing issue [#48](https://github.com/koukibadr/Searchable-Listview/issues/48)
+
 ## 2.2.1 - 27/11/2022
 
 - Add autocomplete options attribute
