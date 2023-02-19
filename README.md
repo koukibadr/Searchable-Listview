@@ -190,6 +190,10 @@ dependencies:
   ///by default list is empty so a simple text field is displayed
   final List<String> autoCompleteHints;
 
+  ///indicate whether the search textfield have it's focus on by default or not
+  ///by default [autoFocusOnSearch = true]
+  final bool autoFocusOnSearch;
+
 ````
 
 ### Migration:
