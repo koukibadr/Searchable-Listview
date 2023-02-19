@@ -20,6 +20,7 @@ class SearchTextField extends StatelessWidget {
   final int? maxLength;
   final TextAlign textAlign;
   final List<String> autoCompleteHints;
+  final bool autoFocus;
 
   const SearchTextField({
     Key? key,
@@ -41,6 +42,7 @@ class SearchTextField extends StatelessWidget {
     required this.maxLength,
     required this.textAlign,
     required this.autoCompleteHints,
+    required this.autoFocus,
   }) : super(key: key);
 
   @override
@@ -93,6 +95,7 @@ class SearchTextField extends StatelessWidget {
       decoration: inputDecoration?.copyWith(
         suffix: inputDecoration?.suffix ?? _renderSuffixIcon(),
       ),
+      autofocus: autoFocus,
       style: textStyle,
       controller: searchTextController,
       textInputAction: keyboardAction,

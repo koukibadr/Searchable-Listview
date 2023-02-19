@@ -51,6 +51,7 @@ class SearchableList<T> extends StatefulWidget {
     this.maxLength,
     this.textAlign = TextAlign.start,
     this.autoCompleteHints = const [],
+    this.autoFocusOnSearch = true,
   }) : super(key: key) {
     if (asyncListCallback == null && initialList == null) {
       throw ('either initialList or asyncListCallback must be provided');
@@ -91,6 +92,7 @@ class SearchableList<T> extends StatefulWidget {
     this.maxLength,
     this.textAlign = TextAlign.start,
     this.autoCompleteHints = const [],
+    this.autoFocusOnSearch = true,
   }) : super(key: key) {
     assert(initialList != null);
     asyncListCallback = null;
@@ -136,6 +138,7 @@ class SearchableList<T> extends StatefulWidget {
     this.maxLength,
     this.textAlign = TextAlign.start,
     this.autoCompleteHints = const [],
+    this.autoFocusOnSearch = true,
   }) : super(key: key) {
     if (asyncListCallback == null && initialList == null) {
       throw ('either initialList or asyncListCallback must be provided');
@@ -296,6 +299,8 @@ class SearchableList<T> extends StatefulWidget {
   ///List of strings  to display in an auto complete field
   ///by default list is empty so a simple text field is displayed
   final List<String> autoCompleteHints;
+
+  final bool autoFocusOnSearch;
 
   @override
   State<SearchableList> createState() => _SearchableListState<T>();
@@ -593,6 +598,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       maxLines: widget.maxLines,
       textAlign: widget.textAlign,
       autoCompleteHints: widget.autoCompleteHints,
+      autoFocus: widget.autoFocusOnSearch,
     );
   }
 }
