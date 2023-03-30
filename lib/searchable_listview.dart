@@ -52,6 +52,7 @@ class SearchableList<T> extends StatefulWidget {
     this.textAlign = TextAlign.start,
     this.autoCompleteHints = const [],
     this.autoFocusOnSearch = true,
+    this.secondaryWidget,
   }) : super(key: key) {
     if (asyncListCallback == null && initialList == null) {
       throw ('either initialList or asyncListCallback must be provided');
@@ -93,6 +94,7 @@ class SearchableList<T> extends StatefulWidget {
     this.textAlign = TextAlign.start,
     this.autoCompleteHints = const [],
     this.autoFocusOnSearch = true,
+    this.secondaryWidget,
   }) : super(key: key) {
     assert(initialList != null);
     asyncListCallback = null;
@@ -139,6 +141,7 @@ class SearchableList<T> extends StatefulWidget {
     this.textAlign = TextAlign.start,
     this.autoCompleteHints = const [],
     this.autoFocusOnSearch = true,
+    this.secondaryWidget,
   }) : super(key: key) {
     if (asyncListCallback == null && initialList == null) {
       throw ('either initialList or asyncListCallback must be provided');
@@ -300,10 +303,13 @@ class SearchableList<T> extends StatefulWidget {
   ///by default list is empty so a simple text field is displayed
   final List<String> autoCompleteHints;
 
-
   ///indicate whether the search textfield have it's focus on by default or not
   ///by default [autoFocusOnSearch = true]
   final bool autoFocusOnSearch;
+
+  ///secondary widget will be displayed alongside the search field
+  ///by default it's null
+  final Widget? secondaryWidget;
 
   @override
   State<SearchableList> createState() => _SearchableListState<T>();
@@ -582,26 +588,33 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
 
   /// render search field widget
   Widget _renderSearchField() {
-    return SearchTextField(
-      filterList: _filterList,
-      focusNode: widget.focusNode,
-      inputDecoration: widget.inputDecoration,
-      keyboardAction: widget.keyboardAction,
-      obscureText: widget.obscureText,
-      onSubmitSearch: widget.onSubmitSearch,
-      searchFieldEnabled: widget.searchFieldEnabled,
-      searchMode: widget.searchMode,
-      searchTextController: widget.searchTextController,
-      textInputType: widget.textInputType,
-      displayClearIcon: widget.displayClearIcon,
-      defaultSuffixIconColor: widget.defaultSuffixIconColor,
-      textStyle: widget.style,
-      cursorColor: widget.cursorColor,
-      maxLength: widget.maxLength,
-      maxLines: widget.maxLines,
-      textAlign: widget.textAlign,
-      autoCompleteHints: widget.autoCompleteHints,
-      autoFocus: widget.autoFocusOnSearch,
+    return Row(
+      children: [
+        Expanded(
+          child: SearchTextField(
+            filterList: _filterList,
+            focusNode: widget.focusNode,
+            inputDecoration: widget.inputDecoration,
+            keyboardAction: widget.keyboardAction,
+            obscureText: widget.obscureText,
+            onSubmitSearch: widget.onSubmitSearch,
+            searchFieldEnabled: widget.searchFieldEnabled,
+            searchMode: widget.searchMode,
+            searchTextController: widget.searchTextController,
+            textInputType: widget.textInputType,
+            displayClearIcon: widget.displayClearIcon,
+            defaultSuffixIconColor: widget.defaultSuffixIconColor,
+            textStyle: widget.style,
+            cursorColor: widget.cursorColor,
+            maxLength: widget.maxLength,
+            maxLines: widget.maxLines,
+            textAlign: widget.textAlign,
+            autoCompleteHints: widget.autoCompleteHints,
+            autoFocus: widget.autoFocusOnSearch,
+          ),
+        ),
+        if (widget.secondaryWidget != null) widget.secondaryWidget!,
+      ],
     );
   }
 }
