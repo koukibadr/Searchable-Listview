@@ -28,6 +28,7 @@
 - Customizable text field position
 - Customizable text style in search field
 - Customize autocomplete options
+- Customizable secondary widget alongside search
 
 ## Getting Started
 
@@ -35,7 +36,7 @@ In order to add searchable listview package to your project add this line to you
 
 ```yaml
 dependencies:
-	searchable_listview:  2.2.2
+	searchable_listview:  2.3.2
 ```
 
 ## Attributes
@@ -193,6 +194,10 @@ dependencies:
   ///indicate whether the search textfield have it's focus on by default or not
   ///by default [autoFocusOnSearch = true]
   final bool autoFocusOnSearch;
+
+  ///secondary widget will be displayed alongside the search field
+  ///by default it's null
+  final Widget? secondaryWidget;
 
 ````
 

@@ -1,3 +1,7 @@
+## 2.3.2 - 30/03/2023
+
+- Add secondary widget display alongside search field
+
 ## 2.2.2 - 19/02/2023
 
 - Fix keyboard closing issue [#48](https://github.com/koukibadr/Searchable-Listview/issues/48)
