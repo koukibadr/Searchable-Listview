@@ -65,6 +65,56 @@ class SearchableList<T> extends StatefulWidget {
     seperatorBuilder = null;
   }
 
+  SearchableList.expansion({
+    Key? key,
+    required this.expansionListData,
+    required this.expansionTitleBuilder,
+    required this.filterExpansionData,
+    this.initialList,
+    this.asyncListCallback,
+    this.filter,
+    this.asyncListFilter,
+    this.loadingWidget,
+    this.errorWidget,
+    required this.builder,
+    this.searchTextController,
+    this.keyboardAction = TextInputAction.done,
+    this.inputDecoration,
+    this.style,
+    this.onSubmitSearch,
+    this.searchMode = SearchMode.onEdit,
+    this.emptyWidget = const SizedBox.shrink(),
+    this.textInputType = TextInputType.text,
+    this.obscureText = false,
+    this.focusNode,
+    this.searchFieldEnabled = true,
+    this.onItemSelected,
+    this.displayClearIcon = true,
+    this.defaultSuffixIconColor = Colors.grey,
+    this.onRefresh,
+    this.scrollDirection = Axis.vertical,
+    this.searchTextPosition = SearchTextPosition.top,
+    this.onPaginate,
+    this.spaceBetweenSearchAndList = 20,
+    this.cursorColor,
+    this.maxLines,
+    this.maxLength,
+    this.textAlign = TextAlign.start,
+    this.autoCompleteHints = const [],
+    this.autoFocusOnSearch = true,
+    this.secondaryWidget,
+  }) : super(key: key) {
+    if (asyncListCallback == null && initialList == null) {
+      throw ('either initialList or asyncListCallback must be provided');
+    }
+    assert(
+      (asyncListCallback != null && asyncListFilter != null) ||
+          (initialList != null && filter != null),
+    );
+    searchTextController ??= TextEditingController();
+    seperatorBuilder = null;
+  }
+
   SearchableList.sliver({
     Key? key,
     required this.initialList,
@@ -311,6 +361,12 @@ class SearchableList<T> extends StatefulWidget {
   ///by default it's null
   final Widget? secondaryWidget;
 
+  late Map<dynamic, List<T>> expansionListData;
+
+  late Map<T, List<T>> Function(String)? filterExpansionData;
+
+  late Widget Function(dynamic) expansionTitleBuilder;
+
   @override
   State<SearchableList> createState() => _SearchableListState<T>();
 }
@@ -324,6 +380,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   List<T> filtredAsyncListResult = [];
 
   bool dataDownloaded = false;
+
+  bool isExpansionList = true; //TODO change this
 
   @override
   void initState() {
@@ -340,13 +398,15 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.sliverScrollEffect
-        ? _renderSliverEffect()
-        : widget.asyncListCallback != null
-            ? _renderAsyncListView()
-            : _renderSearchableListView(
-                list: widget.initialList!,
-              );
+    return isExpansionList
+        ? _renderSearchableExpansionList()
+        : widget.sliverScrollEffect
+            ? _renderSliverEffect()
+            : widget.asyncListCallback != null
+                ? _renderAsyncListView()
+                : _renderSearchableListView(
+                    list: widget.initialList!,
+                  );
   }
 
   Widget _renderAsyncListView() {
@@ -396,6 +456,16 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     );
   }
 
+  Widget _renderSearchableExpansionList() {
+    return Column(children: [
+      _renderSearchField(),
+      SizedBox(
+        height: widget.spaceBetweenSearchAndList,
+      ),
+      _renderExpansionListView(),
+    ]);
+  }
+
   ///creates listview based on the items passed to the widget
   ///check whether the [widget.onRefresh] parameter is nullable or not
   ///if [widget.displayDividder] is true
@@ -437,6 +507,29 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       onItemSelected: widget.onItemSelected,
                     ),
                   ),
+      );
+    }
+  }
+
+  Widget _renderExpansionListView() {
+    if (widget.expansionListData.isEmpty) {
+      return widget.emptyWidget;
+    } else {
+      return Expanded(
+        child: ListView.builder(
+          controller: scrollController,
+          scrollDirection: widget.scrollDirection,
+          itemCount: widget.expansionListData.length,
+          itemBuilder: (context, index) {
+            var entryKey = widget.expansionListData.keys.toList()[index];
+            var entryValueList = widget.expansionListData[entryKey];
+            return ExpansionTile(
+              title: widget.expansionTitleBuilder.call(entryKey),
+              children:
+                  entryValueList?.map((e) => widget.builder(e)).toList() ?? [],
+            );
+          },
+        ),
       );
     }
   }
@@ -574,6 +667,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   void _filterList(String value) {
     setState(
       () {
+        if (isExpansionList) {
+          widget.expansionListData =
+              widget.filterExpansionData?.call(value) ?? {};
+        }
         if (widget.asyncListCallback != null) {
           filtredAsyncListResult = widget.asyncListFilter!(
             value,
