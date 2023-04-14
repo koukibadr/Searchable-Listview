@@ -321,6 +321,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   ScrollController scrollController = ScrollController();
 
   List<T> asyncListResult = [];
+  late Future<List<T>?> asyncListFuture;
   List<T> filtredAsyncListResult = [];
 
   bool dataDownloaded = false;
@@ -335,6 +336,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
           widget.onPaginate?.call();
         }
       });
+    }
+    if (widget.asyncListCallback != null) {
+      asyncListFuture = widget.asyncListCallback!.call();
     }
   }
 
@@ -353,7 +357,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     return dataDownloaded
         ? _renderSearchableListView(list: filtredAsyncListResult)
         : FutureBuilder(
-            future: widget.asyncListCallback!.call(),
+            future: asyncListFuture,
             builder: (context, snapshot) {
               dataDownloaded =
                   snapshot.connectionState != ConnectionState.waiting;
