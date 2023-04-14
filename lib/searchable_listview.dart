@@ -413,7 +413,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 triggerMode: RefreshIndicatorTriggerMode.onEdge,
                 onRefresh: widget.onRefresh!,
                 child: widget.displayDividder
-                    ? _renderSeperatedListView()
+                    ? _renderSeperatedListView(list: list)
                     : ListView.builder(
                         controller: scrollController,
                         scrollDirection: widget.scrollDirection,
@@ -426,7 +426,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       ),
               )
             : widget.displayDividder
-                ? _renderSeperatedListView()
+                ? _renderSeperatedListView(list: list)
                 : ListView.builder(
                     controller: scrollController,
                     scrollDirection: widget.scrollDirection,
@@ -442,14 +442,16 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   }
 
   ///renders a seperated listview using [ListView.separated]
-  Widget _renderSeperatedListView() {
+  Widget _renderSeperatedListView({
+    required List<T> list,
+  }) {
     return ListView.separated(
       controller: scrollController,
       scrollDirection: widget.scrollDirection,
-      itemCount: widget.initialList!.length,
+      itemCount: list.length,
       itemBuilder: (context, index) => ListItem<T>(
         builder: widget.builder,
-        item: widget.initialList![index],
+        item: list[index],
         onItemSelected: widget.onItemSelected,
       ),
       separatorBuilder: widget.seperatorBuilder!,
