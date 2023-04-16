@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:searchable_listview/resources/arrays.dart';
 import 'package:searchable_listview/widgets/default_error_widget.dart';
 import 'package:searchable_listview/widgets/list_item.dart';
-import 'package:searchable_listview/widgets/serach_text_field.dart';
 
 import 'widgets/default_loading_widget.dart';
+import 'widgets/serach_text_field.dart';
 
 class SearchableList<T> extends StatefulWidget {
   ///indicates whether the ssliver scroll effect will be applied
@@ -352,10 +352,16 @@ class SearchableList<T> extends StatefulWidget {
   ///by default it's null
   final Widget? secondaryWidget;
 
+  ///Map of data used to build  searchable expansion list
+  ///required when using [expansion] constructor
   late Map<dynamic, List<T>> expansionListData;
 
+  ///callback used when filtering the expansion list
+  ///required when using [expansion] constructor
   late Map<dynamic, List<T>> Function(String)? filterExpansionData;
 
+  ///the expansion list title widget builder
+  ///required when using [expansion] constructor
   late Widget Function(dynamic) expansionTitleBuilder;
 
   bool isExpansionList = false;
@@ -427,7 +433,28 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     return Column(
       children: widget.searchTextPosition == SearchTextPosition.top
           ? [
-              _renderSearchField(),
+              SearchTextField(
+                filterList: _filterList,
+                focusNode: widget.focusNode,
+                inputDecoration: widget.inputDecoration,
+                keyboardAction: widget.keyboardAction,
+                obscureText: widget.obscureText,
+                onSubmitSearch: widget.onSubmitSearch,
+                searchFieldEnabled: widget.searchFieldEnabled,
+                searchMode: widget.searchMode,
+                searchTextController: widget.searchTextController,
+                textInputType: widget.textInputType,
+                displayClearIcon: widget.displayClearIcon,
+                defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                textStyle: widget.style,
+                cursorColor: widget.cursorColor,
+                maxLength: widget.maxLength,
+                maxLines: widget.maxLines,
+                textAlign: widget.textAlign,
+                autoCompleteHints: widget.autoCompleteHints,
+                autoFocus: widget.autoFocusOnSearch,
+                secondaryWidget: widget.secondaryWidget,
+              ),
               SizedBox(
                 height: widget.spaceBetweenSearchAndList,
               ),
@@ -442,14 +469,56 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
               SizedBox(
                 height: widget.spaceBetweenSearchAndList,
               ),
-              _renderSearchField(),
+              SearchTextField(
+                filterList: _filterList,
+                focusNode: widget.focusNode,
+                inputDecoration: widget.inputDecoration,
+                keyboardAction: widget.keyboardAction,
+                obscureText: widget.obscureText,
+                onSubmitSearch: widget.onSubmitSearch,
+                searchFieldEnabled: widget.searchFieldEnabled,
+                searchMode: widget.searchMode,
+                searchTextController: widget.searchTextController,
+                textInputType: widget.textInputType,
+                displayClearIcon: widget.displayClearIcon,
+                defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                textStyle: widget.style,
+                cursorColor: widget.cursorColor,
+                maxLength: widget.maxLength,
+                maxLines: widget.maxLines,
+                textAlign: widget.textAlign,
+                autoCompleteHints: widget.autoCompleteHints,
+                autoFocus: widget.autoFocusOnSearch,
+                secondaryWidget: widget.secondaryWidget,
+              ),
             ],
     );
   }
 
   Widget _renderSearchableExpansionList() {
     return Column(children: [
-      _renderSearchField(),
+      SearchTextField(
+        filterList: _filterList,
+        focusNode: widget.focusNode,
+        inputDecoration: widget.inputDecoration,
+        keyboardAction: widget.keyboardAction,
+        obscureText: widget.obscureText,
+        onSubmitSearch: widget.onSubmitSearch,
+        searchFieldEnabled: widget.searchFieldEnabled,
+        searchMode: widget.searchMode,
+        searchTextController: widget.searchTextController,
+        textInputType: widget.textInputType,
+        displayClearIcon: widget.displayClearIcon,
+        defaultSuffixIconColor: widget.defaultSuffixIconColor,
+        textStyle: widget.style,
+        cursorColor: widget.cursorColor,
+        maxLength: widget.maxLength,
+        maxLines: widget.maxLines,
+        textAlign: widget.textAlign,
+        autoCompleteHints: widget.autoCompleteHints,
+        autoFocus: widget.autoFocusOnSearch,
+        secondaryWidget: widget.secondaryWidget,
+      ),
       SizedBox(
         height: widget.spaceBetweenSearchAndList,
       ),
@@ -516,8 +585,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
             var entryValueList = widget.expansionListData[entryKey];
             return ExpansionTile(
               title: widget.expansionTitleBuilder.call(entryKey),
-              children:
-                  entryValueList
+              children: entryValueList
                       ?.map(
                         (item) => widget.onItemSelected == null
                             ? widget.builder(item)
@@ -561,7 +629,28 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         ? Column(
             children: widget.searchTextPosition == SearchTextPosition.top
                 ? [
-                    _renderSearchField(),
+                    SearchTextField(
+                      filterList: _filterList,
+                      focusNode: widget.focusNode,
+                      inputDecoration: widget.inputDecoration,
+                      keyboardAction: widget.keyboardAction,
+                      obscureText: widget.obscureText,
+                      onSubmitSearch: widget.onSubmitSearch,
+                      searchFieldEnabled: widget.searchFieldEnabled,
+                      searchMode: widget.searchMode,
+                      searchTextController: widget.searchTextController,
+                      textInputType: widget.textInputType,
+                      displayClearIcon: widget.displayClearIcon,
+                      defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                      textStyle: widget.style,
+                      cursorColor: widget.cursorColor,
+                      maxLength: widget.maxLength,
+                      maxLines: widget.maxLines,
+                      textAlign: widget.textAlign,
+                      autoCompleteHints: widget.autoCompleteHints,
+                      autoFocus: widget.autoFocusOnSearch,
+                      secondaryWidget: widget.secondaryWidget,
+                    ),
                     SizedBox(
                       height: widget.spaceBetweenSearchAndList,
                     ),
@@ -616,7 +705,28 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     SizedBox(
                       height: widget.spaceBetweenSearchAndList,
                     ),
-                    _renderSearchField(),
+                    SearchTextField(
+                      filterList: _filterList,
+                      focusNode: widget.focusNode,
+                      inputDecoration: widget.inputDecoration,
+                      keyboardAction: widget.keyboardAction,
+                      obscureText: widget.obscureText,
+                      onSubmitSearch: widget.onSubmitSearch,
+                      searchFieldEnabled: widget.searchFieldEnabled,
+                      searchMode: widget.searchMode,
+                      searchTextController: widget.searchTextController,
+                      textInputType: widget.textInputType,
+                      displayClearIcon: widget.displayClearIcon,
+                      defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                      textStyle: widget.style,
+                      cursorColor: widget.cursorColor,
+                      maxLength: widget.maxLength,
+                      maxLines: widget.maxLines,
+                      textAlign: widget.textAlign,
+                      autoCompleteHints: widget.autoCompleteHints,
+                      autoFocus: widget.autoFocusOnSearch,
+                      secondaryWidget: widget.secondaryWidget,
+                    ),
                   ],
           )
         : CustomScrollView(
@@ -625,7 +735,28 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 ? [
                     SliverAppBar(
                       backgroundColor: Colors.transparent,
-                      flexibleSpace: _renderSearchField(),
+                      flexibleSpace: SearchTextField(
+                        filterList: _filterList,
+                        focusNode: widget.focusNode,
+                        inputDecoration: widget.inputDecoration,
+                        keyboardAction: widget.keyboardAction,
+                        obscureText: widget.obscureText,
+                        onSubmitSearch: widget.onSubmitSearch,
+                        searchFieldEnabled: widget.searchFieldEnabled,
+                        searchMode: widget.searchMode,
+                        searchTextController: widget.searchTextController,
+                        textInputType: widget.textInputType,
+                        displayClearIcon: widget.displayClearIcon,
+                        defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                        textStyle: widget.style,
+                        cursorColor: widget.cursorColor,
+                        maxLength: widget.maxLength,
+                        maxLines: widget.maxLines,
+                        textAlign: widget.textAlign,
+                        autoCompleteHints: widget.autoCompleteHints,
+                        autoFocus: widget.autoFocusOnSearch,
+                        secondaryWidget: widget.secondaryWidget,
+                      ),
                     ),
                     SliverList(
                       delegate: widget.initialList!.isEmpty
@@ -661,7 +792,28 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     ),
                     SliverAppBar(
                       backgroundColor: Colors.transparent,
-                      flexibleSpace: _renderSearchField(),
+                      flexibleSpace: SearchTextField(
+                        filterList: _filterList,
+                        focusNode: widget.focusNode,
+                        inputDecoration: widget.inputDecoration,
+                        keyboardAction: widget.keyboardAction,
+                        obscureText: widget.obscureText,
+                        onSubmitSearch: widget.onSubmitSearch,
+                        searchFieldEnabled: widget.searchFieldEnabled,
+                        searchMode: widget.searchMode,
+                        searchTextController: widget.searchTextController,
+                        textInputType: widget.textInputType,
+                        displayClearIcon: widget.displayClearIcon,
+                        defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                        textStyle: widget.style,
+                        cursorColor: widget.cursorColor,
+                        maxLength: widget.maxLength,
+                        maxLines: widget.maxLines,
+                        textAlign: widget.textAlign,
+                        autoCompleteHints: widget.autoCompleteHints,
+                        autoFocus: widget.autoFocusOnSearch,
+                        secondaryWidget: widget.secondaryWidget,
+                      ),
                     ),
                   ],
           );
@@ -685,37 +837,5 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         widget.initialList = widget.filter!(value);
       });
     }
-  }
-
-  /// render search field widget
-  Widget _renderSearchField() {
-    return Row(
-      children: [
-        Expanded(
-          child: SearchTextField(
-            filterList: _filterList,
-            focusNode: widget.focusNode,
-            inputDecoration: widget.inputDecoration,
-            keyboardAction: widget.keyboardAction,
-            obscureText: widget.obscureText,
-            onSubmitSearch: widget.onSubmitSearch,
-            searchFieldEnabled: widget.searchFieldEnabled,
-            searchMode: widget.searchMode,
-            searchTextController: widget.searchTextController,
-            textInputType: widget.textInputType,
-            displayClearIcon: widget.displayClearIcon,
-            defaultSuffixIconColor: widget.defaultSuffixIconColor,
-            textStyle: widget.style,
-            cursorColor: widget.cursorColor,
-            maxLength: widget.maxLength,
-            maxLines: widget.maxLines,
-            textAlign: widget.textAlign,
-            autoCompleteHints: widget.autoCompleteHints,
-            autoFocus: widget.autoFocusOnSearch,
-          ),
-        ),
-        if (widget.secondaryWidget != null) widget.secondaryWidget!,
-      ],
-    );
   }
 }
