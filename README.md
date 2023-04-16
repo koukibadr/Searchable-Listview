@@ -44,39 +44,32 @@ dependencies:
 
 ````dart
 
-/// Initial list of all elements that will be displayed.
-  ///
+  /// Initial list of all elements that will be displayed.
   ///when [initialList] is null you need to provide [asyncListCallback]
   ///to filter the [initialList] you need provide [filter] callback
   List<T>? initialList;
 
   /// Callback to filter the list based on the given search value.
-  ///
-  /// Invoked on changing the text field search if ```searchType == SEARCH_TYPE.onEdit```
-  /// or invoked when submiting the text field if ```searchType == SEARCH_TYPE.onSubmit```.
-  ///
+  /// Invoked on changing the text field search if searchType == SEARCH_TYPE.onEdit
+  /// or invoked when submiting the text field if searchType == SEARCH_TYPE.onSubmit.
   /// You should return a list of filtered elements.
   late List<T> Function(String)? filter;
 
   ///Async callback that return list to be displayed with future builder
-  ///
   ///when [asyncListCallback] is null you need to provide [initialList]
   ///to filter the [asyncListCallback] result you need provide [asyncListFilter]
   Future<List<T>?> Function()? asyncListCallback;
 
   ///Callback invoked when filtring the searchable list
   ///used when providing [asyncListCallback]
-  ///
   ///can't be null when [asyncListCallback] isn't null
   late List<T> Function(String, List<T>)? asyncListFilter;
 
   ///Loading widget displayed when [asyncListCallback] is loading
-  ///
   ///if nothing is provided in [loadingWidget] searchable list will display a [CircularProgressIndicator]
   Widget? loadingWidget;
 
   ///error widget displayed when [asyncListCallback] result is null
-  ///
   ///if nothing is provided in [errorWidget] searchable list will display a [Icon]
   Widget? errorWidget;
 
@@ -85,32 +78,26 @@ dependencies:
   final Widget Function(T) builder;
 
   /// The widget to be displayed when the filter returns an empty list.
-  ///
   /// Defaults to `const SizedBox.shrink()`.
   final Widget emptyWidget;
 
   /// Text editing controller applied on the search field.
-  ///
   /// Defaults to null.
   late TextEditingController? searchTextController;
 
   /// The keyboard action key
-  ///
   /// Defaults to [TextInputAction.done].
   final TextInputAction keyboardAction;
 
   /// The text field input decoration
-  ///
   /// Defaults to null.
   final InputDecoration? inputDecoration;
 
   /// The style for the input text field
-  ///
   /// Defaults to null.
   final TextStyle? style;
 
   /// The keyboard text input type
-  ///
   /// Defaults to [TextInputType.text]
   final TextInputType textInputType;
 
@@ -118,11 +105,8 @@ dependencies:
   final Function(String?)? onSubmitSearch;
 
   /// The search type on submiting text field or when changing the text field value
-  ///```dart
   ///SEARCH_TYPE.onEdit,
   ///SEARCH_TYPE.onSubmit
-  ///```
-  ///
   /// Defaults to [SearchMode.onEdit].
   final SearchMode searchMode;
 
