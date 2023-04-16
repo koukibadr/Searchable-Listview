@@ -44,16 +44,18 @@ class _ExampleAppState extends State<ExampleApp> {
     Actor(age: 49, name: 'Ben', lastName: 'Affleck'),
   ];
 
-  final Map<String,List<Actor>> mapOfActors = {'test 1' : [
-    Actor(age: 47, name: 'Leonardo', lastName: 'DiCaprio'),
-    Actor(age: 66, name: 'Denzel', lastName: 'Washington'),
-    Actor(age: 49, name: 'Ben', lastName: 'Affleck'),
-  ],
-  'test 2' : [
-    Actor(age: 58, name: 'Johnny', lastName: 'Depp'),
-    Actor(age: 78, name: 'Robert', lastName: 'De Niro'),
-    Actor(age: 44, name: 'Tom', lastName: 'Hardy'),
-  ]};
+  final Map<String, List<Actor>> mapOfActors = {
+    'test 1': [
+      Actor(age: 47, name: 'Leonardo', lastName: 'DiCaprio'),
+      Actor(age: 66, name: 'Denzel', lastName: 'Washington'),
+      Actor(age: 49, name: 'Ben', lastName: 'Affleck'),
+    ],
+    'test 2': [
+      Actor(age: 58, name: 'Johnny', lastName: 'Depp'),
+      Actor(age: 78, name: 'Robert', lastName: 'De Niro'),
+      Actor(age: 44, name: 'Tom', lastName: 'Hardy'),
+    ]
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -65,21 +67,7 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: SearchableList<Actor>.expansion(
-                expansionListData: mapOfActors,
-                expansionTitleBuilder: (p0) {
-                  return Container(
-                    color: Colors.grey[300],
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    height: 30,
-                    child: Center(
-                      child: Text(p0.toString()),
-                    ),
-                  );
-                },
-                filterExpansionData: (p0) {
-                  return Map.fromIterable(mapOfActors.entries.where((listActors) => listActors.key.contains(p0)).toList());
-                },
+              child: SearchableList<Actor>(
                 style: const TextStyle(fontSize: 25),
                 onPaginate: () async {
                   await Future.delayed(const Duration(milliseconds: 1000));
@@ -179,6 +167,45 @@ class _ExampleAppState extends State<ExampleApp> {
       name: 'ALi',
     ));
     setState(() {});
+  }
+
+  Widget expansionSearchableList() {
+    return SearchableList<Actor>.expansion(
+      expansionListData: mapOfActors,
+      expansionTitleBuilder: (p0) {
+        return Container(
+          color: Colors.grey[300],
+          width: MediaQuery.of(context).size.width * 0.8,
+          height: 30,
+          child: Center(
+            child: Text(p0.toString()),
+          ),
+        );
+      },
+      filterExpansionData: (p0) {
+        final filteredMap = {
+          for (final entry in mapOfActors.entries)
+            entry.key: (mapOfActors[entry.key] ?? [])
+                .where((element) => element.name.contains(p0))
+                .toList()
+        };
+        return filteredMap;
+      },
+      style: const TextStyle(fontSize: 25),
+      builder: (Actor actor) => ActorItem(actor: actor),
+      emptyWidget: const EmptyView(),
+      inputDecoration: InputDecoration(
+        labelText: "Search Actor",
+        fillColor: Colors.white,
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            color: Colors.blue,
+            width: 1.0,
+          ),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+    );
   }
 }
 
