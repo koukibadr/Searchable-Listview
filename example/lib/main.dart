@@ -1,3 +1,4 @@
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:searchable_listview/searchable_listview.dart';
@@ -44,12 +45,12 @@ class _ExampleAppState extends State<ExampleApp> {
   ];
 
   final Map<String, List<Actor>> mapOfActors = {
-    'First list': [
+    'test 1': [
       Actor(age: 47, name: 'Leonardo', lastName: 'DiCaprio'),
       Actor(age: 66, name: 'Denzel', lastName: 'Washington'),
       Actor(age: 49, name: 'Ben', lastName: 'Affleck'),
     ],
-    'Second list': [
+    'test 2': [
       Actor(age: 58, name: 'Johnny', lastName: 'Depp'),
       Actor(age: 78, name: 'Robert', lastName: 'De Niro'),
       Actor(age: 44, name: 'Tom', lastName: 'Hardy'),
@@ -66,7 +67,85 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: expansionSearchableList(),
+              child: SearchableList<Actor>(
+                style: const TextStyle(fontSize: 25),
+                onPaginate: () async {
+                  await Future.delayed(const Duration(milliseconds: 1000));
+                  setState(() {
+                    actors.addAll([
+                      Actor(age: 22, name: 'Fathi', lastName: 'Hadawi'),
+                      Actor(age: 22, name: 'Hichem', lastName: 'Rostom'),
+                      Actor(age: 22, name: 'Kamel', lastName: 'Twati'),
+                    ]);
+                  });
+                },
+                builder: (Actor actor) => ActorItem(actor: actor),
+                loadingWidget: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    CircularProgressIndicator(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text('Loading actors...')
+                  ],
+                ),
+                errorWidget: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.error,
+                      color: Colors.red,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text('Error while fetching actors')
+                  ],
+                ),
+                asyncListCallback: () async {
+                  await Future.delayed(
+                    const Duration(
+                      milliseconds: 10000,
+                    ),
+                  );
+                  return actors;
+                },
+                asyncListFilter: (q, list) {
+                  return list
+                      .where((element) => element.name.contains(q))
+                      .toList();
+                },
+                emptyWidget: const EmptyView(),
+                onRefresh: () async {},
+                onItemSelected: (Actor item) {},
+                inputDecoration: InputDecoration(
+                  labelText: "Search Actor",
+                  fillColor: Colors.white,
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(
+                      color: Colors.blue,
+                      width: 1.0,
+                    ),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+                secondaryWidget: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Container(
+                    color: Colors.grey[400],
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 20,
+                        horizontal: 10,
+                      ),
+                      child: Center(
+                        child: Icon(Icons.sort),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
           Align(

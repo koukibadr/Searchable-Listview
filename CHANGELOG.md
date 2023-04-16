@@ -1,3 +1,8 @@
+## 2.4.0 - 16/04/2023
+
+- Add support to expansion lists
+- Filter expansion lists
+
 ## 2.3.2 - 30/03/2023
 
 - Add secondary widget display alongside search field

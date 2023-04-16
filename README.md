@@ -10,6 +10,7 @@
 
 - Filter list view easily
 - Filter async list
+- Filter expansion list
 - Support async callback in rendering list
 - Customizable loading when async callback is loading
 - Customizable error widget
@@ -36,7 +37,7 @@ In order to add searchable listview package to your project add this line to you
 
 ```yaml
 dependencies:
-	searchable_listview:  2.3.2
+	searchable_listview:  2.4.0
 ```
 
 ## Attributes
@@ -278,6 +279,52 @@ SearchableList<Actor>(
 
 <p align="center">
 <img src="https://github.com/koukibadr/Searchable-Listview/blob/main/example/searchable_listview_example.gif?raw=true" width="300"/>
+</p>
+
+
+### Expansion list with search implementation
+
+```dart
+SearchableList<Actor>.expansion(
+    expansionListData: mapOfActors,
+    expansionTitleBuilder: (p0) {
+      return Container(
+        color: Colors.grey[300],
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: 30,
+        child: Center(
+          child: Text(p0.toString()),
+        ),
+      );
+    },
+    filterExpansionData: (p0) {
+      final filteredMap = {
+        for (final entry in mapOfActors.entries)
+          entry.key: (mapOfActors[entry.key] ?? [])
+              .where((element) => element.name.contains(p0))
+              .toList()
+        };
+        return filteredMap;
+      },
+      style: const TextStyle(fontSize: 25),
+      builder: (Actor actor) => ActorItem(actor: actor),
+      emptyWidget: const EmptyView(),
+      inputDecoration: InputDecoration(
+        labelText: "Search Actor",
+        fillColor: Colors.white,
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            color: Colors.blue,
+            width: 1.0,
+          ),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+    )
+```
+
+<p align="center">
+<img src="https://github.com/koukibadr/Searchable-Listview/blob/main/example/Screenshot_1681660275.png?raw=true" width="300"/>
 </p>
 
 ### Async callback build implementation

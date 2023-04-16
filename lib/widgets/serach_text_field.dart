@@ -118,7 +118,7 @@ class SearchTextField extends StatelessWidget {
                       }
                     },
                   )),
-                  if (secondaryWidget != null) secondaryWidget!,
+        if (secondaryWidget != null) secondaryWidget!,
       ],
     );
   }
