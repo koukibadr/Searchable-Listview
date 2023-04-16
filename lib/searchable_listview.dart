@@ -65,6 +65,47 @@ class SearchableList<T> extends StatefulWidget {
     seperatorBuilder = null;
   }
 
+  SearchableList.expansion({
+    Key? key,
+    required this.expansionListData,
+    required this.expansionTitleBuilder,
+    required this.filterExpansionData,
+    required this.builder,
+    this.searchTextController,
+    this.keyboardAction = TextInputAction.done,
+    this.inputDecoration,
+    this.style,
+    this.onSubmitSearch,
+    this.searchMode = SearchMode.onEdit,
+    this.emptyWidget = const SizedBox.shrink(),
+    this.textInputType = TextInputType.text,
+    this.obscureText = false,
+    this.focusNode,
+    this.searchFieldEnabled = true,
+    this.onItemSelected,
+    this.displayClearIcon = true,
+    this.defaultSuffixIconColor = Colors.grey,
+    this.spaceBetweenSearchAndList = 20,
+    this.cursorColor,
+    this.maxLines,
+    this.maxLength,
+    this.textAlign = TextAlign.start,
+    this.autoCompleteHints = const [],
+    this.autoFocusOnSearch = true,
+    this.secondaryWidget,
+  }) : super(key: key) {
+    if (asyncListCallback == null && initialList == null) {
+      throw ('either initialList or asyncListCallback must be provided');
+    }
+    assert(
+      (asyncListCallback != null && asyncListFilter != null) ||
+          (initialList != null && filter != null),
+    );
+    searchTextController ??= TextEditingController();
+    seperatorBuilder = null;
+    isExpansionList = true;
+  }
+
   SearchableList.sliver({
     Key? key,
     required this.initialList,
@@ -271,16 +312,16 @@ class SearchableList<T> extends StatefulWidget {
 
   ///The scroll direction of the list
   ///by default [Axis.vertical]
-  final Axis scrollDirection;
+  Axis scrollDirection = Axis.vertical;
 
   ///The position of the text field (bottom or top)
   ///by default the textfield is displayed on top
-  final SearchTextPosition searchTextPosition;
+  SearchTextPosition searchTextPosition = SearchTextPosition.top;
 
   ///Callback function invoked each time the listview
   ///reached the bottom
   ///used to create pagination in listview
-  final Future<dynamic> Function()? onPaginate;
+  late Future<dynamic> Function()? onPaginate;
 
   ///space between the search textfield and the list
   ///by default the padding is set to 20
@@ -311,6 +352,14 @@ class SearchableList<T> extends StatefulWidget {
   ///by default it's null
   final Widget? secondaryWidget;
 
+  late Map<dynamic, List<T>> expansionListData;
+
+  late Map<dynamic, List<T>> Function(String)? filterExpansionData;
+
+  late Widget Function(dynamic) expansionTitleBuilder;
+
+  bool isExpansionList = false;
+
   @override
   State<SearchableList> createState() => _SearchableListState<T>();
 }
@@ -340,13 +389,15 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.sliverScrollEffect
-        ? _renderSliverEffect()
-        : widget.asyncListCallback != null
-            ? _renderAsyncListView()
-            : _renderSearchableListView(
-                list: widget.initialList!,
-              );
+    return widget.isExpansionList
+        ? _renderSearchableExpansionList()
+        : widget.sliverScrollEffect
+            ? _renderSliverEffect()
+            : widget.asyncListCallback != null
+                ? _renderAsyncListView()
+                : _renderSearchableListView(
+                    list: widget.initialList!,
+                  );
   }
 
   Widget _renderAsyncListView() {
@@ -396,6 +447,16 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     );
   }
 
+  Widget _renderSearchableExpansionList() {
+    return Column(children: [
+      _renderSearchField(),
+      SizedBox(
+        height: widget.spaceBetweenSearchAndList,
+      ),
+      _renderExpansionListView(),
+    ]);
+  }
+
   ///creates listview based on the items passed to the widget
   ///check whether the [widget.onRefresh] parameter is nullable or not
   ///if [widget.displayDividder] is true
@@ -437,6 +498,41 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       onItemSelected: widget.onItemSelected,
                     ),
                   ),
+      );
+    }
+  }
+
+  Widget _renderExpansionListView() {
+    if (widget.expansionListData.isEmpty) {
+      return widget.emptyWidget;
+    } else {
+      return Expanded(
+        child: ListView.builder(
+          controller: scrollController,
+          scrollDirection: widget.scrollDirection,
+          itemCount: widget.expansionListData.length,
+          itemBuilder: (context, index) {
+            var entryKey = widget.expansionListData.keys.toList()[index];
+            var entryValueList = widget.expansionListData[entryKey];
+            return ExpansionTile(
+              title: widget.expansionTitleBuilder.call(entryKey),
+              children:
+                  entryValueList
+                      ?.map(
+                        (item) => widget.onItemSelected == null
+                            ? widget.builder(item)
+                            : InkWell(
+                                onTap: () {
+                                  widget.onItemSelected?.call(item);
+                                },
+                                child: widget.builder(item),
+                              ),
+                      )
+                      .toList() ??
+                  [],
+            );
+          },
+        ),
       );
     }
   }
@@ -572,18 +668,23 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   }
 
   void _filterList(String value) {
-    setState(
-      () {
-        if (widget.asyncListCallback != null) {
-          filtredAsyncListResult = widget.asyncListFilter!(
-            value,
-            asyncListResult,
-          );
-        } else {
-          widget.initialList = widget.filter!(value);
-        }
-      },
-    );
+    if (widget.isExpansionList) {
+      setState(() {
+        widget.expansionListData =
+            widget.filterExpansionData?.call(value) ?? {};
+      });
+    } else if (widget.asyncListCallback != null) {
+      setState(() {
+        filtredAsyncListResult = widget.asyncListFilter!(
+          value,
+          asyncListResult,
+        );
+      });
+    } else {
+      setState(() {
+        widget.initialList = widget.filter!(value);
+      });
+    }
   }
 
   /// render search field widget
