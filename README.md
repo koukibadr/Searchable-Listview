@@ -199,6 +199,18 @@ dependencies:
   ///by default it's null
   final Widget? secondaryWidget;
 
+  ///Map of data used to build  searchable expansion list
+  ///required when using [expansion] constructor
+  late Map<dynamic, List<T>> expansionListData;
+
+  ///callback used when filtering the expansion list
+  ///required when using [expansion] constructor
+  late Map<dynamic, List<T>> Function(String)? filterExpansionData;
+
+  ///the expansion list title widget builder
+  ///required when using [expansion] constructor
+  late Widget Function(dynamic) expansionTitleBuilder;
+
 ````
 
 ### Migration:
@@ -214,6 +226,16 @@ SearchableList<Object>
 ```
 
 Used to create simple listview with search field (with other attributes to customize your own listview)
+
+
+### Expansion constructor
+
+```
+SearchableList<Object>.expansion
+```
+
+Used to create expansion listview with search field (with other attributes to customize your own expansion list)
+
 
 ### Seperator constructor
 

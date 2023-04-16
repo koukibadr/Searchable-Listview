@@ -94,13 +94,6 @@ class SearchableList<T> extends StatefulWidget {
     this.autoFocusOnSearch = true,
     this.secondaryWidget,
   }) : super(key: key) {
-    if (asyncListCallback == null && initialList == null) {
-      throw ('either initialList or asyncListCallback must be provided');
-    }
-    assert(
-      (asyncListCallback != null && asyncListFilter != null) ||
-          (initialList != null && filter != null),
-    );
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
     isExpansionList = true;
@@ -321,7 +314,7 @@ class SearchableList<T> extends StatefulWidget {
   ///Callback function invoked each time the listview
   ///reached the bottom
   ///used to create pagination in listview
-  late Future<dynamic> Function()? onPaginate;
+  Future<dynamic> Function()? onPaginate;
 
   ///space between the search textfield and the list
   ///by default the padding is set to 20
