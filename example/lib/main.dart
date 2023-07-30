@@ -116,6 +116,7 @@ class _ExampleAppState extends State<ExampleApp> {
                       .where((element) => element.name.contains(q))
                       .toList();
                 },
+                reverse: true,
                 emptyWidget: const EmptyView(),
                 onRefresh: () async {},
                 onItemSelected: (Actor item) {},

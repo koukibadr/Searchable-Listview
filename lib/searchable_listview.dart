@@ -53,6 +53,11 @@ class SearchableList<T> extends StatefulWidget {
     this.autoCompleteHints = const [],
     this.autoFocusOnSearch = true,
     this.secondaryWidget,
+    this.physics,
+    this.shrinkWrap = false,
+    this.itemExtent,
+    this.listViewPadding,
+    this.reverse = false,
   }) : super(key: key) {
     if (asyncListCallback == null && initialList == null) {
       throw ('either initialList or asyncListCallback must be provided');
@@ -93,6 +98,11 @@ class SearchableList<T> extends StatefulWidget {
     this.autoCompleteHints = const [],
     this.autoFocusOnSearch = true,
     this.secondaryWidget,
+    this.physics,
+    this.shrinkWrap = false,
+    this.itemExtent,
+    this.listViewPadding,
+    this.reverse = false,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
@@ -137,6 +147,11 @@ class SearchableList<T> extends StatefulWidget {
     seperatorBuilder = null;
     sliverScrollEffect = true;
     onRefresh = null;
+    shrinkWrap = false;
+    reverse = false;
+    physics = null;
+    itemExtent = null;
+    listViewPadding = null;
   }
 
   SearchableList.seperated({
@@ -176,6 +191,10 @@ class SearchableList<T> extends StatefulWidget {
     this.autoCompleteHints = const [],
     this.autoFocusOnSearch = true,
     this.secondaryWidget,
+    this.physics,
+    this.shrinkWrap = false,
+    this.listViewPadding,
+    this.reverse = false,
   }) : super(key: key) {
     if (asyncListCallback == null && initialList == null) {
       throw ('either initialList or asyncListCallback must be provided');
@@ -187,6 +206,7 @@ class SearchableList<T> extends StatefulWidget {
     searchTextController ??= TextEditingController();
     displayDividder = true;
     assert(seperatorBuilder != null);
+    itemExtent = null;
   }
 
   /// Initial list of all elements that will be displayed.
@@ -356,6 +376,16 @@ class SearchableList<T> extends StatefulWidget {
   ///the expansion list title widget builder
   ///required when using [expansion] constructor
   late Widget Function(dynamic) expansionTitleBuilder;
+
+  late ScrollPhysics? physics;
+
+  late bool shrinkWrap;
+
+  late double? itemExtent;
+
+  late EdgeInsetsGeometry? listViewPadding;
+
+  late bool reverse;
 
   bool isExpansionList = false;
 
@@ -538,6 +568,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 child: widget.displayDividder
                     ? _renderSeperatedListView()
                     : ListView.builder(
+                        physics: widget.physics,
+                        shrinkWrap: widget.shrinkWrap,
+                        itemExtent: widget.itemExtent,
+                        padding: widget.listViewPadding,
+                        reverse: widget.reverse,
                         controller: scrollController,
                         scrollDirection: widget.scrollDirection,
                         itemCount: list.length,
@@ -551,6 +586,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
             : widget.displayDividder
                 ? _renderSeperatedListView()
                 : ListView.builder(
+                    physics: widget.physics,
+                    shrinkWrap: widget.shrinkWrap,
+                    itemExtent: widget.itemExtent,
+                    padding: widget.listViewPadding,
+                    reverse: widget.reverse,
                     controller: scrollController,
                     scrollDirection: widget.scrollDirection,
                     itemCount: list.length,
@@ -573,6 +613,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
           controller: scrollController,
           scrollDirection: widget.scrollDirection,
           itemCount: widget.expansionListData.length,
+          physics: widget.physics,
+          shrinkWrap: widget.shrinkWrap,
+          itemExtent: widget.itemExtent,
+          padding: widget.listViewPadding,
+          reverse: widget.reverse,
           itemBuilder: (context, index) {
             var entryKey = widget.expansionListData.keys.toList()[index];
             var entryValueList = widget.expansionListData[entryKey];
@@ -604,6 +649,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       controller: scrollController,
       scrollDirection: widget.scrollDirection,
       itemCount: widget.initialList!.length,
+      physics: widget.physics,
+      shrinkWrap: widget.shrinkWrap,
+      padding: widget.listViewPadding,
+      reverse: widget.reverse,
       itemBuilder: (context, index) => ListItem<T>(
         builder: widget.builder,
         item: widget.initialList![index],
