@@ -37,7 +37,7 @@ In order to add searchable listview package to your project add this line to you
 
 ```yaml
 dependencies:
-	searchable_listview:  2.4.0
+	searchable_listview:  2.5.0
 ```
 
 ## Attributes
@@ -74,8 +74,8 @@ dependencies:
   Widget? errorWidget;
 
   /// Builder function that generates the ListView items
-  /// based on the given element.
-  final Widget Function(T) builder;
+  /// based on the given index.
+  final Widget Function(int) builder;
 
   /// The widget to be displayed when the filter returns an empty list.
   /// Defaults to `const SizedBox.shrink()`.
@@ -196,11 +196,32 @@ dependencies:
   ///required when using [expansion] constructor
   late Widget Function(dynamic) expansionTitleBuilder;
 
+  ///physics attributes used in listview widget
+  late ScrollPhysics? physics;
+
+  ///shrinkWrap used in listview widget, not used in sliver searchable list
+  ///by default `shrinkWrap = false`
+  late bool shrinkWrap;
+
+  ///item extent of the listview
+  late double? itemExtent;
+
+  ///listview item padding
+  late EdgeInsetsGeometry? listViewPadding;
+
+  ///list items reverse attributes
+  ///by default `reverse = false`
+  ///not available for sliver listview constructor
+  late bool reverse;
+
 ````
 
 ### Migration:
 
-- If you are using the 1.5.3 version or older and you are using `sliverScrollEffect` parameter, for 1.6.0 version and above this parameter is replaced with a constructor `SearchableList.sliver`
+- **If you are using the 1.5.3 version or older and you are using `sliverScrollEffect` parameter, for 1.6.0 version and above this parameter is replaced with a constructor `SearchableList.sliver`**
+
+
+- **If you are migrating to 2.5.0 version you need to change the `builder` callback as now it provide the element index and not the element object**
 
 ## Implementation
 
@@ -247,7 +268,7 @@ SearchableList<Actor>(
   filter: (value) => actors.where((element) => element.name.toLowerCase().contains(value),).toList(),
   emptyWidget:  const EmptyView(),
   inputDecoration: InputDecoration(
-    labelText: "Search Actor",
+  labelText: "Search Actor",
 	fillColor: Colors.white,
 	focusedBorder: OutlineInputBorder(
 	  borderSide: const BorderSide(
