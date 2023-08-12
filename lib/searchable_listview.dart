@@ -139,6 +139,7 @@ class SearchableList<T> extends StatefulWidget {
     this.autoCompleteHints = const [],
     this.autoFocusOnSearch = true,
     this.secondaryWidget,
+    this.physics,
   }) : super(key: key) {
     assert(initialList != null);
     asyncListCallback = null;
@@ -148,10 +149,9 @@ class SearchableList<T> extends StatefulWidget {
     sliverScrollEffect = true;
     onRefresh = null;
     shrinkWrap = false;
-    reverse = false;
-    physics = null;
     itemExtent = null;
     listViewPadding = null;
+    this.reverse = false;
   }
 
   SearchableList.seperated({
@@ -377,14 +377,23 @@ class SearchableList<T> extends StatefulWidget {
   ///required when using [expansion] constructor
   late Widget Function(dynamic) expansionTitleBuilder;
 
+  ///physics attributes used in listview widget
+  ///not
   late ScrollPhysics? physics;
 
+  ///shrinkWrap used in listview widget, not used in sliver searchable list
+  ///by default `shrinkWrap = false`
   late bool shrinkWrap;
 
+  ///item extent of the listview
   late double? itemExtent;
 
+  ///listview item padding
   late EdgeInsetsGeometry? listViewPadding;
 
+  ///list items reverse attributes
+  ///by default `reverse = false`
+  ///not available for sliver listview constructor
   late bool reverse;
 
   bool isExpansionList = false;
@@ -699,6 +708,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     Expanded(
                       child: CustomScrollView(
                         scrollDirection: widget.scrollDirection,
+                        physics: widget.physics,
                         controller: scrollController,
                         slivers: [
                           SliverList(
@@ -725,6 +735,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       child: CustomScrollView(
                         scrollDirection: widget.scrollDirection,
                         controller: scrollController,
+                        physics: widget.physics,
                         slivers: [
                           SliverList(
                             delegate: widget.initialList!.isEmpty
@@ -773,6 +784,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
           )
         : CustomScrollView(
             scrollDirection: widget.scrollDirection,
+            physics: widget.physics,
             slivers: widget.searchTextPosition == SearchTextPosition.top
                 ? [
                     SliverAppBar(
