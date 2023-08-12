@@ -104,7 +104,7 @@ class _ExampleAppState extends State<ExampleApp> {
           ]);
         });
       },
-      builder: (Actor actor) => ActorItem(actor: actor),
+      builder: (int index) => ActorItem(actor: actors[index]),
       loadingWidget: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -178,7 +178,7 @@ class _ExampleAppState extends State<ExampleApp> {
       filter: (p0) {
         return actors;
       },
-      builder: (Actor actor) => ActorItem(actor: actor),
+      builder: (int index) => ActorItem(actor: actors[index]),
     );
   }
 
@@ -205,7 +205,7 @@ class _ExampleAppState extends State<ExampleApp> {
         return filteredMap;
       },
       style: const TextStyle(fontSize: 25),
-      builder: (Actor actor) => ActorItem(actor: actor),
+      builder: (int index) => ActorItem(actor: actors[index]),
       emptyWidget: const EmptyView(),
       inputDecoration: InputDecoration(
         labelText: "Search Actor",
