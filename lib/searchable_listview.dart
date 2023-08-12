@@ -246,7 +246,7 @@ class SearchableList<T> extends StatefulWidget {
   Widget? errorWidget;
 
   /// Builder function that generates the ListView items
-  /// based on the given element.
+  /// based on the given index.
   final Widget Function(int) builder;
 
   /// The widget to be displayed when the filter returns an empty list.
@@ -378,7 +378,6 @@ class SearchableList<T> extends StatefulWidget {
   late Widget Function(dynamic) expansionTitleBuilder;
 
   ///physics attributes used in listview widget
-  ///not
   late ScrollPhysics? physics;
 
   ///shrinkWrap used in listview widget, not used in sliver searchable list

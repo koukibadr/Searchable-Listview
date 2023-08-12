@@ -1,3 +1,8 @@
+## 2.5.0 - 12/08/2023
+
+- Add list index availability in builder callback [#59](https://github.com/koukibadr/Searchable-Listview/issues/59)
+- Add shrink wrap and physics attributes [#61](https://github.com/koukibadr/Searchable-Listview/issues/61)
+
 ## 2.4.0 - 16/04/2023
 
 - Add support to expansion lists
