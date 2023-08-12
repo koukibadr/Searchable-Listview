@@ -67,86 +67,7 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: SearchableList<Actor>(
-                style: const TextStyle(fontSize: 25),
-                onPaginate: () async {
-                  await Future.delayed(const Duration(milliseconds: 1000));
-                  setState(() {
-                    actors.addAll([
-                      Actor(age: 22, name: 'Fathi', lastName: 'Hadawi'),
-                      Actor(age: 22, name: 'Hichem', lastName: 'Rostom'),
-                      Actor(age: 22, name: 'Kamel', lastName: 'Twati'),
-                    ]);
-                  });
-                },
-                builder: (Actor actor) => ActorItem(actor: actor),
-                loadingWidget: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    CircularProgressIndicator(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text('Loading actors...')
-                  ],
-                ),
-                errorWidget: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.error,
-                      color: Colors.red,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text('Error while fetching actors')
-                  ],
-                ),
-                asyncListCallback: () async {
-                  await Future.delayed(
-                    const Duration(
-                      milliseconds: 10000,
-                    ),
-                  );
-                  return actors;
-                },
-                asyncListFilter: (q, list) {
-                  return list
-                      .where((element) => element.name.contains(q))
-                      .toList();
-                },
-                reverse: true,
-                emptyWidget: const EmptyView(),
-                onRefresh: () async {},
-                onItemSelected: (Actor item) {},
-                inputDecoration: InputDecoration(
-                  labelText: "Search Actor",
-                  fillColor: Colors.white,
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(
-                      color: Colors.blue,
-                      width: 1.0,
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                ),
-                secondaryWidget: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Container(
-                    color: Colors.grey[400],
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 20,
-                        horizontal: 10,
-                      ),
-                      child: Center(
-                        child: Icon(Icons.sort),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              child: sliverListViewBuilder(),
             ),
           ),
           Align(
@@ -168,6 +89,97 @@ class _ExampleAppState extends State<ExampleApp> {
       name: 'ALi',
     ));
     setState(() {});
+  }
+
+  Widget renderSimpleSearchableList() {
+    return SearchableList<Actor>(
+      style: const TextStyle(fontSize: 25),
+      onPaginate: () async {
+        await Future.delayed(const Duration(milliseconds: 1000));
+        setState(() {
+          actors.addAll([
+            Actor(age: 22, name: 'Fathi', lastName: 'Hadawi'),
+            Actor(age: 22, name: 'Hichem', lastName: 'Rostom'),
+            Actor(age: 22, name: 'Kamel', lastName: 'Twati'),
+          ]);
+        });
+      },
+      builder: (Actor actor) => ActorItem(actor: actor),
+      loadingWidget: const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(
+            height: 20,
+          ),
+          Text('Loading actors...')
+        ],
+      ),
+      errorWidget: const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.error,
+            color: Colors.red,
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Text('Error while fetching actors')
+        ],
+      ),
+      asyncListCallback: () async {
+        await Future.delayed(
+          const Duration(
+            milliseconds: 10000,
+          ),
+        );
+        return actors;
+      },
+      asyncListFilter: (q, list) {
+        return list.where((element) => element.name.contains(q)).toList();
+      },
+      reverse: true,
+      emptyWidget: const EmptyView(),
+      onRefresh: () async {},
+      onItemSelected: (Actor item) {},
+      inputDecoration: InputDecoration(
+        labelText: "Search Actor",
+        fillColor: Colors.white,
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            color: Colors.blue,
+            width: 1.0,
+          ),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+      secondaryWidget: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Container(
+          color: Colors.grey[400],
+          child: const Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: 20,
+              horizontal: 10,
+            ),
+            child: Center(
+              child: Icon(Icons.sort),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget sliverListViewBuilder() {
+    return SearchableList.sliver(
+      initialList: actors,
+      filter: (p0) {
+        return actors;
+      },
+      builder: (Actor actor) => ActorItem(actor: actor),
+    );
   }
 
   Widget expansionSearchableList() {
@@ -278,9 +290,9 @@ class EmptyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: const [
+      children: [
         Icon(
           Icons.error,
           color: Colors.red,
