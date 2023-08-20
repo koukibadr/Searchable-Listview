@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:searchable_listview/searchable_listview.dart';
@@ -94,30 +93,10 @@ class _ExampleAppState extends State<ExampleApp> {
   Widget renderSimpleSearchableList() {
     return SearchableList<Actor>(
       style: const TextStyle(fontSize: 25),
-      onPaginate: () async {
-        await Future.delayed(const Duration(milliseconds: 1000));
-        setState(() {
-          actors.addAll([
-            Actor(age: 22, name: 'Fathi', lastName: 'Hadawi'),
-            Actor(age: 22, name: 'Hichem', lastName: 'Rostom'),
-            Actor(age: 22, name: 'Kamel', lastName: 'Twati'),
-          ]);
-        });
-      },
       builder: (int index) => ActorItem(actor: actors[index]),
-      loadingWidget: const Column(
+      errorWidget: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(),
-          SizedBox(
-            height: 20,
-          ),
-          Text('Loading actors...')
-        ],
-      ),
-      errorWidget: const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+        children: const [
           Icon(
             Icons.error,
             color: Colors.red,
@@ -128,16 +107,9 @@ class _ExampleAppState extends State<ExampleApp> {
           Text('Error while fetching actors')
         ],
       ),
-      asyncListCallback: () async {
-        await Future.delayed(
-          const Duration(
-            milliseconds: 10000,
-          ),
-        );
-        return actors;
-      },
-      asyncListFilter: (q, list) {
-        return list.where((element) => element.name.contains(q)).toList();
+      initialList: actors,
+      filter: (p0) {
+        return actors.where((element) => element.name.contains(p0)).toList();
       },
       reverse: true,
       emptyWidget: const EmptyView(),
@@ -290,9 +262,9 @@ class EmptyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
+      children: const [
         Icon(
           Icons.error,
           color: Colors.red,

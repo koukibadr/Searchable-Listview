@@ -408,6 +408,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
 
   List<T> asyncListResult = [];
   List<T> filtredAsyncListResult = [];
+  late List<T> displayedList = widget.initialList ?? [];
 
   bool dataDownloaded = false;
 
@@ -433,13 +434,15 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
             : widget.asyncListCallback != null
                 ? _renderAsyncListView()
                 : _renderSearchableListView(
-                    list: widget.initialList!,
+                    list: displayedList,
+                    originalList: widget.initialList ?? [],
                   );
   }
 
   Widget _renderAsyncListView() {
     return dataDownloaded
-        ? _renderSearchableListView(list: filtredAsyncListResult)
+        ? _renderSearchableListView(
+            list: filtredAsyncListResult, originalList: asyncListResult)
         : FutureBuilder(
             future: widget.asyncListCallback!.call(),
             builder: (context, snapshot) {
@@ -453,13 +456,15 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
               }
               asyncListResult = snapshot.data as List<T>;
               filtredAsyncListResult = asyncListResult;
-              return _renderSearchableListView(list: filtredAsyncListResult);
+              return _renderSearchableListView(
+                  list: filtredAsyncListResult, originalList: asyncListResult);
             },
           );
   }
 
   Widget _renderSearchableListView({
     required List<T> list,
+    required List<T> originalList,
   }) {
     return Column(
       children: widget.searchTextPosition == SearchTextPosition.top
@@ -491,11 +496,13 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
               ),
               _renderListView(
                 list: list,
+                originalList: originalList,
               ),
             ]
           : [
               _renderListView(
                 list: list,
+                originalList: originalList,
               ),
               SizedBox(
                 height: widget.spaceBetweenSearchAndList,
@@ -564,6 +571,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   ///else the function will render a normal listview [ListView.builder]
   Widget _renderListView({
     required List<T> list,
+    required List<T> originalList,
   }) {
     if (list.isEmpty) {
       return widget.emptyWidget;
@@ -586,7 +594,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         itemCount: list.length,
                         itemBuilder: (context, index) => ListItem<T>(
                           builder: (item) {
-                            return widget.builder(index);
+                            return widget.builder(originalList.indexOf(item));
                           },
                           item: list[index],
                           onItemSelected: widget.onItemSelected,
@@ -605,7 +613,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     scrollDirection: widget.scrollDirection,
                     itemCount: list.length,
                     itemBuilder: (context, index) => ListItem<T>(
-                      builder: (_) => widget.builder(index),
+                      builder: (item) {
+                        return widget.builder(originalList.indexOf(item));
+                      },
                       item: list[index],
                       onItemSelected: widget.onItemSelected,
                     ),
@@ -633,18 +643,19 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
             var entryValueList = widget.expansionListData[entryKey];
             return ExpansionTile(
               title: widget.expansionTitleBuilder.call(entryKey),
-              children: entryValueList
-                      ?.map(
-                        (item) => widget.onItemSelected == null
-                            ? widget.builder(index)
-                            : InkWell(
-                                onTap: () {
-                                  widget.onItemSelected?.call(item);
-                                },
-                                child: widget.builder(index),
-                              ),
-                      )
-                      .toList() ??
+              children: entryValueList?.map(
+                    (item) {
+                      var initialList = widget.initialList ?? [];
+                      return widget.onItemSelected == null
+                          ? widget.builder(index)
+                          : InkWell(
+                              onTap: () {
+                                widget.onItemSelected?.call(item);
+                              },
+                              child: widget.builder(initialList.indexOf(item)),
+                            );
+                    },
+                  ).toList() ??
                   [],
             );
           },
@@ -658,14 +669,17 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     return ListView.separated(
       controller: scrollController,
       scrollDirection: widget.scrollDirection,
-      itemCount: widget.initialList!.length,
+      itemCount: displayedList.length,
       physics: widget.physics,
       shrinkWrap: widget.shrinkWrap,
       padding: widget.listViewPadding,
       reverse: widget.reverse,
       itemBuilder: (context, index) => ListItem<T>(
-        builder: (_) => widget.builder(index),
-        item: widget.initialList![index],
+        builder: (item) {
+          var initialList = widget.initialList ?? [];
+          return widget.builder(initialList.indexOf(item));
+        },
+        item: displayedList[index],
         onItemSelected: widget.onItemSelected,
       ),
       separatorBuilder: widget.seperatorBuilder!,
@@ -713,18 +727,23 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         controller: scrollController,
                         slivers: [
                           SliverList(
-                            delegate: widget.initialList!.isEmpty
+                            delegate: displayedList.isEmpty
                                 ? SliverChildBuilderDelegate(
                                     (context, index) => widget.emptyWidget,
                                     childCount: 1,
                                   )
                                 : SliverChildBuilderDelegate(
                                     (context, index) => ListItem<T>(
-                                      builder: (_) => widget.builder(index),
-                                      item: widget.initialList![index],
+                                      builder: (item) {
+                                        var initialList =
+                                            widget.initialList ?? [];
+                                        return widget
+                                            .builder(initialList.indexOf(item));
+                                      },
+                                      item: displayedList[index],
                                       onItemSelected: widget.onItemSelected,
                                     ),
-                                    childCount: widget.initialList!.length,
+                                    childCount: displayedList.length,
                                   ),
                           )
                         ],
@@ -739,18 +758,23 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         physics: widget.physics,
                         slivers: [
                           SliverList(
-                            delegate: widget.initialList!.isEmpty
+                            delegate: displayedList.isEmpty
                                 ? SliverChildBuilderDelegate(
                                     (context, index) => widget.emptyWidget,
                                     childCount: 1,
                                   )
                                 : SliverChildBuilderDelegate(
                                     (context, index) => ListItem<T>(
-                                      builder: (_) => widget.builder(index),
-                                      item: widget.initialList![index],
+                                      builder: (item) {
+                                        var initialList =
+                                            widget.initialList ?? [];
+                                        return widget
+                                            .builder(initialList.indexOf(item));
+                                      },
+                                      item: displayedList[index],
                                       onItemSelected: widget.onItemSelected,
                                     ),
-                                    childCount: widget.initialList!.length,
+                                    childCount: displayedList.length,
                                   ),
                           )
                         ],
@@ -814,35 +838,43 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       ),
                     ),
                     SliverList(
-                      delegate: widget.initialList!.isEmpty
+                      delegate: displayedList.isEmpty
                           ? SliverChildBuilderDelegate(
                               (context, index) => widget.emptyWidget,
                               childCount: 1,
                             )
                           : SliverChildBuilderDelegate(
                               (context, index) => ListItem<T>(
-                                builder: (_) => widget.builder(index),
-                                item: widget.initialList![index],
+                                builder: (item) {
+                                  var initialList = widget.initialList ?? [];
+                                  return widget
+                                      .builder(initialList.indexOf(item));
+                                },
+                                item: displayedList[index],
                                 onItemSelected: widget.onItemSelected,
                               ),
-                              childCount: widget.initialList!.length,
+                              childCount: displayedList.length,
                             ),
                     )
                   ]
                 : [
                     SliverList(
-                      delegate: widget.initialList!.isEmpty
+                      delegate: displayedList.isEmpty
                           ? SliverChildBuilderDelegate(
                               (context, index) => widget.emptyWidget,
                               childCount: 1,
                             )
                           : SliverChildBuilderDelegate(
                               (context, index) => ListItem<T>(
-                                builder: (_) => widget.builder(index),
-                                item: widget.initialList![index],
+                                builder: (item) {
+                                  var initialList = widget.initialList ?? [];
+                                  return widget
+                                      .builder(initialList.indexOf(item));
+                                },
+                                item: displayedList[index],
                                 onItemSelected: widget.onItemSelected,
                               ),
-                              childCount: widget.initialList!.length,
+                              childCount: displayedList.length,
                             ),
                     ),
                     SliverAppBar(
@@ -889,7 +921,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       });
     } else {
       setState(() {
-        widget.initialList = widget.filter!(value);
+        displayedList = widget.filter!(value);
       });
     }
   }
