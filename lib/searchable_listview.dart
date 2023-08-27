@@ -68,6 +68,7 @@ class SearchableList<T> extends StatefulWidget {
     );
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
+    expansionListBuilder = null;
   }
 
   SearchableList.expansion({
@@ -75,7 +76,7 @@ class SearchableList<T> extends StatefulWidget {
     required this.expansionListData,
     required this.expansionTitleBuilder,
     required this.filterExpansionData,
-    required this.builder,
+    required this.expansionListBuilder,
     this.searchTextController,
     this.keyboardAction = TextInputAction.done,
     this.inputDecoration,
@@ -107,6 +108,7 @@ class SearchableList<T> extends StatefulWidget {
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
     isExpansionList = true;
+    builder = null;
   }
 
   SearchableList.sliver({
@@ -152,6 +154,7 @@ class SearchableList<T> extends StatefulWidget {
     itemExtent = null;
     listViewPadding = null;
     this.reverse = false;
+    expansionListBuilder = null;
   }
 
   SearchableList.seperated({
@@ -207,75 +210,67 @@ class SearchableList<T> extends StatefulWidget {
     displayDividder = true;
     assert(seperatorBuilder != null);
     itemExtent = null;
+    expansionListBuilder = null;
   }
 
   /// Initial list of all elements that will be displayed.
-  ///
   ///when [initialList] is null you need to provide [asyncListCallback]
   ///to filter the [initialList] you need provide [filter] callback
   List<T>? initialList;
 
   /// Callback to filter the list based on the given search value.
-  ///
   /// Invoked on changing the text field search if ```searchType == SEARCH_TYPE.onEdit```
   /// or invoked when submiting the text field if ```searchType == SEARCH_TYPE.onSubmit```.
-  ///
   /// You should return a list of filtered elements.
-  late List<T> Function(String)? filter;
+  late List<T> Function(String query)? filter;
 
   ///Async callback that return list to be displayed with future builder
-  ///
   ///when [asyncListCallback] is null you need to provide [initialList]
   ///to filter the [asyncListCallback] result you need provide [asyncListFilter]
   Future<List<T>?> Function()? asyncListCallback;
 
   ///Callback invoked when filtring the searchable list
   ///used when providing [asyncListCallback]
-  ///
   ///can't be null when [asyncListCallback] isn't null
   late List<T> Function(String, List<T>)? asyncListFilter;
 
   ///Loading widget displayed when [asyncListCallback] is loading
-  ///
   ///if nothing is provided in [loadingWidget] searchable list will display a [CircularProgressIndicator]
   Widget? loadingWidget;
 
   ///error widget displayed when [asyncListCallback] result is null
-  ///
   ///if nothing is provided in [errorWidget] searchable list will display a [Icon]
   Widget? errorWidget;
 
   /// Builder function that generates the ListView items
   /// based on the given index.
-  final Widget Function(int) builder;
+  /// first parameter is the item index in the initial list
+  /// second parameter is the item index in the actual list (filtered index)
+  late Widget Function(int initialIndex,int actualIndex)? builder;
+
+  late Widget Function(int)? expansionListBuilder;
 
   /// The widget to be displayed when the filter returns an empty list.
-  ///
   /// Defaults to `const SizedBox.shrink()`.
   final Widget emptyWidget;
 
   /// Text editing controller applied on the search field.
-  ///
   /// Defaults to null.
   late TextEditingController? searchTextController;
 
   /// The keyboard action key
-  ///
   /// Defaults to [TextInputAction.done].
   final TextInputAction keyboardAction;
 
   /// The text field input decoration
-  ///
   /// Defaults to null.
   final InputDecoration? inputDecoration;
 
   /// The style for the input text field
-  ///
   /// Defaults to null.
   final TextStyle? style;
 
   /// The keyboard text input type
-  ///
   /// Defaults to [TextInputType.text]
   final TextInputType textInputType;
 
@@ -287,7 +282,6 @@ class SearchableList<T> extends StatefulWidget {
   ///SEARCH_TYPE.onEdit,
   ///SEARCH_TYPE.onSubmit
   ///```
-  ///
   /// Defaults to [SearchMode.onEdit].
   final SearchMode searchMode;
 
@@ -321,7 +315,7 @@ class SearchableList<T> extends StatefulWidget {
 
   ///Builder callback required  when using [seperated] constructor
   ///return the Widget that will seperate all the elements inside the list
-  late Widget Function(BuildContext, int)? seperatorBuilder;
+  late Widget Function(BuildContext context, int index)? seperatorBuilder;
 
   ///The scroll direction of the list
   ///by default [Axis.vertical]
@@ -594,7 +588,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         itemCount: list.length,
                         itemBuilder: (context, index) => ListItem<T>(
                           builder: (item) {
-                            return widget.builder(originalList.indexOf(item));
+                            return widget.builder!(originalList.indexOf(item),list.indexOf(item));
                           },
                           item: list[index],
                           onItemSelected: widget.onItemSelected,
@@ -614,7 +608,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     itemCount: list.length,
                     itemBuilder: (context, index) => ListItem<T>(
                       builder: (item) {
-                        return widget.builder(originalList.indexOf(item));
+                        return widget.builder!(originalList.indexOf(item),list.indexOf(item));
                       },
                       item: list[index],
                       onItemSelected: widget.onItemSelected,
@@ -647,12 +641,14 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     (item) {
                       var initialList = widget.initialList ?? [];
                       return widget.onItemSelected == null
-                          ? widget.builder(index)
+                          ? widget.expansionListBuilder!(index)
                           : InkWell(
                               onTap: () {
                                 widget.onItemSelected?.call(item);
                               },
-                              child: widget.builder(initialList.indexOf(item)),
+                              child: widget.expansionListBuilder!(
+                                initialList.indexOf(item),
+                              ),
                             );
                     },
                   ).toList() ??
@@ -677,7 +673,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       itemBuilder: (context, index) => ListItem<T>(
         builder: (item) {
           var initialList = widget.initialList ?? [];
-          return widget.builder(initialList.indexOf(item));
+          return widget.builder!(initialList.indexOf(item),displayedList.indexOf(item));
         },
         item: displayedList[index],
         onItemSelected: widget.onItemSelected,
@@ -737,8 +733,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                                       builder: (item) {
                                         var initialList =
                                             widget.initialList ?? [];
-                                        return widget
-                                            .builder(initialList.indexOf(item));
+                                        return widget.builder!(initialList.indexOf(item),displayedList.indexOf(item));
                                       },
                                       item: displayedList[index],
                                       onItemSelected: widget.onItemSelected,
@@ -768,8 +763,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                                       builder: (item) {
                                         var initialList =
                                             widget.initialList ?? [];
-                                        return widget
-                                            .builder(initialList.indexOf(item));
+                                        return widget.builder!(initialList.indexOf(item),displayedList.indexOf(item));
                                       },
                                       item: displayedList[index],
                                       onItemSelected: widget.onItemSelected,
@@ -847,8 +841,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                               (context, index) => ListItem<T>(
                                 builder: (item) {
                                   var initialList = widget.initialList ?? [];
-                                  return widget
-                                      .builder(initialList.indexOf(item));
+                                  return widget.builder!(initialList.indexOf(item),displayedList.indexOf(item));
                                 },
                                 item: displayedList[index],
                                 onItemSelected: widget.onItemSelected,
@@ -868,8 +861,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                               (context, index) => ListItem<T>(
                                 builder: (item) {
                                   var initialList = widget.initialList ?? [];
-                                  return widget
-                                      .builder(initialList.indexOf(item));
+                                  return widget.builder!(initialList.indexOf(item),displayedList.indexOf(item));
                                 },
                                 item: displayedList[index],
                                 onItemSelected: widget.onItemSelected,
