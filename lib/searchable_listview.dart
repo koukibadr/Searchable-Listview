@@ -246,8 +246,11 @@ class SearchableList<T> extends StatefulWidget {
   /// based on the given index.
   /// first parameter is the item index in the initial list
   /// second parameter is the item index in the actual list (filtered index)
-  late Widget Function(int initialIndex,int actualIndex)? builder;
+  late Widget Function(int initialIndex, int actualIndex)? builder;
 
+  /// Builder function that generates the Expansion listView items
+  /// based on the given index.
+  /// Used only for expansion list constructor
   late Widget Function(int)? expansionListBuilder;
 
   /// The widget to be displayed when the filter returns an empty list.
@@ -588,7 +591,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         itemCount: list.length,
                         itemBuilder: (context, index) => ListItem<T>(
                           builder: (item) {
-                            return widget.builder!(originalList.indexOf(item),list.indexOf(item));
+                            return widget.builder!(
+                                originalList.indexOf(item), list.indexOf(item));
                           },
                           item: list[index],
                           onItemSelected: widget.onItemSelected,
@@ -608,7 +612,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     itemCount: list.length,
                     itemBuilder: (context, index) => ListItem<T>(
                       builder: (item) {
-                        return widget.builder!(originalList.indexOf(item),list.indexOf(item));
+                        return widget.builder!(
+                            originalList.indexOf(item), list.indexOf(item));
                       },
                       item: list[index],
                       onItemSelected: widget.onItemSelected,
@@ -673,7 +678,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       itemBuilder: (context, index) => ListItem<T>(
         builder: (item) {
           var initialList = widget.initialList ?? [];
-          return widget.builder!(initialList.indexOf(item),displayedList.indexOf(item));
+          return widget.builder!(
+              initialList.indexOf(item), displayedList.indexOf(item));
         },
         item: displayedList[index],
         onItemSelected: widget.onItemSelected,
@@ -733,7 +739,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                                       builder: (item) {
                                         var initialList =
                                             widget.initialList ?? [];
-                                        return widget.builder!(initialList.indexOf(item),displayedList.indexOf(item));
+                                        return widget.builder!(
+                                            initialList.indexOf(item),
+                                            displayedList.indexOf(item));
                                       },
                                       item: displayedList[index],
                                       onItemSelected: widget.onItemSelected,
@@ -763,7 +771,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                                       builder: (item) {
                                         var initialList =
                                             widget.initialList ?? [];
-                                        return widget.builder!(initialList.indexOf(item),displayedList.indexOf(item));
+                                        return widget.builder!(
+                                            initialList.indexOf(item),
+                                            displayedList.indexOf(item));
                                       },
                                       item: displayedList[index],
                                       onItemSelected: widget.onItemSelected,
@@ -841,7 +851,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                               (context, index) => ListItem<T>(
                                 builder: (item) {
                                   var initialList = widget.initialList ?? [];
-                                  return widget.builder!(initialList.indexOf(item),displayedList.indexOf(item));
+                                  return widget.builder!(
+                                      initialList.indexOf(item),
+                                      displayedList.indexOf(item));
                                 },
                                 item: displayedList[index],
                                 onItemSelected: widget.onItemSelected,
@@ -861,7 +873,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                               (context, index) => ListItem<T>(
                                 builder: (item) {
                                   var initialList = widget.initialList ?? [];
-                                  return widget.builder!(initialList.indexOf(item),displayedList.indexOf(item));
+                                  return widget.builder!(
+                                      initialList.indexOf(item),
+                                      displayedList.indexOf(item));
                                 },
                                 item: displayedList[index],
                                 onItemSelected: widget.onItemSelected,

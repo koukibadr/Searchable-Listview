@@ -1,3 +1,7 @@
+## 2.6.1 - 27/08/2023
+
+- Update listview builder callback definition (Exposing two parameters : actual index and initial index) (Issue : [#66](https://github.com/koukibadr/Searchable-Listview/issues/66))
+
 ## 2.5.1 - 20/08/2023
 
 - Fix build callback index attribute (Issue : [#66](https://github.com/koukibadr/Searchable-Listview/issues/66))

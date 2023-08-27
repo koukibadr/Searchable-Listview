@@ -37,7 +37,7 @@ In order to add searchable listview package to your project add this line to you
 
 ```yaml
 dependencies:
-	searchable_listview:  2.5.1
+	searchable_listview:  2.6.1
 ```
 
 ## Attributes
@@ -50,10 +50,10 @@ dependencies:
   List<T>? initialList;
 
   /// Callback to filter the list based on the given search value.
-  /// Invoked on changing the text field search if searchType == SEARCH_TYPE.onEdit
-  /// or invoked when submiting the text field if searchType == SEARCH_TYPE.onSubmit.
+  /// Invoked on changing the text field search if ```searchType == SEARCH_TYPE.onEdit```
+  /// or invoked when submiting the text field if ```searchType == SEARCH_TYPE.onSubmit```.
   /// You should return a list of filtered elements.
-  late List<T> Function(String)? filter;
+  late List<T> Function(String query)? filter;
 
   ///Async callback that return list to be displayed with future builder
   ///when [asyncListCallback] is null you need to provide [initialList]
@@ -75,7 +75,14 @@ dependencies:
 
   /// Builder function that generates the ListView items
   /// based on the given index.
-  final Widget Function(int) builder;
+  /// first parameter is the item index in the initial list
+  /// second parameter is the item index in the actual list (filtered index)
+  late Widget Function(int initialIndex,int actualIndex)? builder;
+
+  /// Builder function that generates the Expansion listView items
+  /// based on the given index.
+  /// Used only for expansion list constructor
+  late Widget Function(int)? expansionListBuilder;
 
   /// The widget to be displayed when the filter returns an empty list.
   /// Defaults to `const SizedBox.shrink()`.
@@ -105,8 +112,10 @@ dependencies:
   final Function(String?)? onSubmitSearch;
 
   /// The search type on submiting text field or when changing the text field value
+  ///```dart
   ///SEARCH_TYPE.onEdit,
   ///SEARCH_TYPE.onSubmit
+  ///```
   /// Defaults to [SearchMode.onEdit].
   final SearchMode searchMode;
 
@@ -140,20 +149,20 @@ dependencies:
 
   ///Builder callback required  when using [seperated] constructor
   ///return the Widget that will seperate all the elements inside the list
-  late Widget Function(BuildContext, int)? seperatorBuilder;
+  late Widget Function(BuildContext context, int index)? seperatorBuilder;
 
   ///The scroll direction of the list
   ///by default [Axis.vertical]
-  final Axis scrollDirection;
+  Axis scrollDirection = Axis.vertical;
 
   ///The position of the text field (bottom or top)
   ///by default the textfield is displayed on top
-  final SearchTextPosition searchTextPosition;
+  SearchTextPosition searchTextPosition = SearchTextPosition.top;
 
   ///Callback function invoked each time the listview
   ///reached the bottom
   ///used to create pagination in listview
-  final Future<dynamic> Function()? onPaginate;
+  Future<dynamic> Function()? onPaginate;
 
   ///space between the search textfield and the list
   ///by default the padding is set to 20
