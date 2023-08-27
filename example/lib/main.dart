@@ -65,7 +65,7 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: renderSimpleSearchableList(),
+              child: sliverListViewBuilder(),
             ),
           ),
           Align(
@@ -90,9 +90,14 @@ class _ExampleAppState extends State<ExampleApp> {
   }
 
   Widget renderSimpleSearchableList() {
-    return SearchableList<Actor>(
+    return SearchableList<Actor>.seperated(
+      seperatorBuilder: (context, index) {
+        return const Divider();
+      },
       style: const TextStyle(fontSize: 25),
-      builder: (int index) => ActorItem(actor: actors[index]),
+      builder: (initialIndex, actualIndex) {
+        return ActorItem(actor: actors[initialIndex]);
+      },
       errorWidget: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: const [
@@ -146,10 +151,12 @@ class _ExampleAppState extends State<ExampleApp> {
   Widget sliverListViewBuilder() {
     return SearchableList.sliver(
       initialList: actors,
-      filter: (p0) {
-        return actors;
+      filter: (query) {
+        return actors.where((element) => element.name.contains(query)).toList();
       },
-      builder: (int index) => ActorItem(actor: actors[index]),
+      builder: (initialIndex, actualIndex) {
+        return ActorItem(actor: actors[initialIndex]);
+      },
     );
   }
 
@@ -176,7 +183,7 @@ class _ExampleAppState extends State<ExampleApp> {
         return filteredMap;
       },
       style: const TextStyle(fontSize: 25),
-      builder: (int index) => ActorItem(actor: actors[index]),
+      expansionListBuilder: (int index) => ActorItem(actor: actors[index]),
       emptyWidget: const EmptyView(),
       inputDecoration: InputDecoration(
         labelText: "Search Actor",
