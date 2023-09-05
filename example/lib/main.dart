@@ -65,7 +65,7 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: sliverListViewBuilder(),
+              child: renderSimpleSearchableList(),
             ),
           ),
           Align(
@@ -95,8 +95,9 @@ class _ExampleAppState extends State<ExampleApp> {
         return const Divider();
       },
       style: const TextStyle(fontSize: 25),
-      builder: (initialIndex, actualIndex) {
-        return ActorItem(actor: actors[initialIndex]);
+      builder: (list, index, item) {
+        //return ActorItem(actor: item);
+        return ActorItem(actor: list[index]);
       },
       errorWidget: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -149,13 +150,13 @@ class _ExampleAppState extends State<ExampleApp> {
   }
 
   Widget sliverListViewBuilder() {
-    return SearchableList.sliver(
+    return SearchableList<Actor>.sliver(
       initialList: actors,
       filter: (query) {
         return actors.where((element) => element.name.contains(query)).toList();
       },
-      builder: (initialIndex, actualIndex) {
-        return ActorItem(actor: actors[initialIndex]);
+      builder: (list, index, item) {
+        return ActorItem(actor: list[index]);
       },
     );
   }
