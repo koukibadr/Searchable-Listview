@@ -197,7 +197,9 @@ class SearchableList<T> extends StatefulWidget {
     expansionListBuilder = null;
   }
 
-  @Deprecated('Use default constructor or async constructor with divider options')
+  @Deprecated(
+    'Use default constructor or async constructor with divider options `seperatorBuilder`',
+  )
   SearchableList.seperated({
     Key? key,
     required this.initialList,
@@ -252,7 +254,6 @@ class SearchableList<T> extends StatefulWidget {
   }
 
   /// Initial list of all elements that will be displayed.
-  ///when [initialList] is null you need to provide [asyncListCallback]
   ///to filter the [initialList] you need provide [filter] callback
   late List<T> initialList;
 
@@ -263,7 +264,6 @@ class SearchableList<T> extends StatefulWidget {
   List<T> Function(String query)? filter;
 
   ///Async callback that return list to be displayed with future builder
-  ///when [asyncListCallback] is null you need to provide [initialList]
   ///to filter the [asyncListCallback] result you need provide [asyncListFilter]
   Future<List<T>?> Function()? asyncListCallback;
 
@@ -282,8 +282,9 @@ class SearchableList<T> extends StatefulWidget {
 
   /// Builder function that generates the ListView items
   /// based on the given index.
-  /// first parameter is the item index in the initial list
+  /// first parameter is the rendered list
   /// second parameter is the item index in the actual list (filtered index)
+  /// third parameter is the list item that will be rendered
   late Widget Function(List<T> displayedList, int itemIndex, T item)? builder;
 
   /// Builder function that generates the Expansion listView items
@@ -716,11 +717,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       reverse: widget.reverse,
       itemBuilder: (context, index) => ListItem<T>(
         builder: (item) {
-          return widget.builder!(
-            list,
-            list.indexOf(item),
-            item
-          );
+          return widget.builder!(list, list.indexOf(item), item);
         },
         item: list[index],
         onItemSelected: widget.onItemSelected,
@@ -971,7 +968,6 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     } else {
       setState(() {
         widget.initialList = widget.filter!(value);
-        print(widget.initialList);
       });
     }
   }

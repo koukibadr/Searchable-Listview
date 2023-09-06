@@ -90,7 +90,7 @@ class _ExampleAppState extends State<ExampleApp> {
   }
 
   Widget renderSimpleSearchableList() {
-    return SearchableList<Actor>.seperated(
+    return SearchableList<Actor>(
       seperatorBuilder: (context, index) {
         return const Divider();
       },
@@ -170,7 +170,11 @@ class _ExampleAppState extends State<ExampleApp> {
         return actors;
       },
       asyncListFilter: (query, list) {
-        return actors.where((element) => element.name.contains(query) || element.lastName.contains(query)).toList();
+        return actors
+            .where((element) =>
+                element.name.contains(query) ||
+                element.lastName.contains(query))
+            .toList();
       },
       seperatorBuilder: (context, index) {
         return const Divider();
@@ -190,7 +194,7 @@ class _ExampleAppState extends State<ExampleApp> {
       ),
     );
   }
-  
+
   Widget expansionSearchableList() {
     return SearchableList<Actor>.expansion(
       expansionListData: mapOfActors,

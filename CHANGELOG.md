@@ -1,3 +1,11 @@
+## 2.7.0 - 06/09/2023
+
+- Update simple searchable list state management
+- Create seperate async consrtuctor for rendering async listview
+- Update `builder` callback by adding `list` and `item` parameters providing the rendered list and the current rendered item
+- `SearchableList.seperated` is now deprecated and it will be no longer available in the future versions
+
+
 ## 2.6.1 - 27/08/2023
 
 - Update listview builder callback definition (Exposing two parameters : actual index and initial index) (Issue : [#66](https://github.com/koukibadr/Searchable-Listview/issues/66))

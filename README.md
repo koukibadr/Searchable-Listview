@@ -45,18 +45,16 @@ dependencies:
 ````dart
 
   /// Initial list of all elements that will be displayed.
-  ///when [initialList] is null you need to provide [asyncListCallback]
   ///to filter the [initialList] you need provide [filter] callback
-  List<T>? initialList;
+  late List<T> initialList;
 
   /// Callback to filter the list based on the given search value.
   /// Invoked on changing the text field search if ```searchType == SEARCH_TYPE.onEdit```
   /// or invoked when submiting the text field if ```searchType == SEARCH_TYPE.onSubmit```.
   /// You should return a list of filtered elements.
-  late List<T> Function(String query)? filter;
+  List<T> Function(String query)? filter;
 
   ///Async callback that return list to be displayed with future builder
-  ///when [asyncListCallback] is null you need to provide [initialList]
   ///to filter the [asyncListCallback] result you need provide [asyncListFilter]
   Future<List<T>?> Function()? asyncListCallback;
 
@@ -75,9 +73,10 @@ dependencies:
 
   /// Builder function that generates the ListView items
   /// based on the given index.
-  /// first parameter is the item index in the initial list
+  /// first parameter is the rendered list
   /// second parameter is the item index in the actual list (filtered index)
-  late Widget Function(int initialIndex,int actualIndex)? builder;
+  /// third parameter is the list item that will be rendered
+  late Widget Function(List<T> displayedList, int itemIndex, T item)? builder;
 
   /// Builder function that generates the Expansion listView items
   /// based on the given index.
