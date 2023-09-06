@@ -65,7 +65,7 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: sliverListViewBuilder(),
+              child: renderAsynchSearchableListview(),
             ),
           ),
           Align(
@@ -95,8 +95,8 @@ class _ExampleAppState extends State<ExampleApp> {
         return const Divider();
       },
       style: const TextStyle(fontSize: 25),
-      builder: (initialIndex, actualIndex) {
-        return ActorItem(actor: actors[initialIndex]);
+      builder: (list, index, item) {
+        return ActorItem(actor: item);
       },
       errorWidget: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -149,17 +149,48 @@ class _ExampleAppState extends State<ExampleApp> {
   }
 
   Widget sliverListViewBuilder() {
-    return SearchableList.sliver(
+    return SearchableList<Actor>.sliver(
       initialList: actors,
       filter: (query) {
         return actors.where((element) => element.name.contains(query)).toList();
       },
-      builder: (initialIndex, actualIndex) {
-        return ActorItem(actor: actors[initialIndex]);
+      builder: (list, index, item) {
+        return ActorItem(actor: list[index]);
       },
     );
   }
 
+  Widget renderAsynchSearchableListview() {
+    return SearchableList<Actor>.async(
+      builder: (displayedList, itemIndex, item) {
+        return ActorItem(actor: displayedList[itemIndex]);
+      },
+      asyncListCallback: () async {
+        await Future.delayed(const Duration(seconds: 5));
+        return actors;
+      },
+      asyncListFilter: (query, list) {
+        return actors.where((element) => element.name.contains(query) || element.lastName.contains(query)).toList();
+      },
+      seperatorBuilder: (context, index) {
+        return const Divider();
+      },
+      style: const TextStyle(fontSize: 25),
+      emptyWidget: const EmptyView(),
+      inputDecoration: InputDecoration(
+        labelText: "Search Actor",
+        fillColor: Colors.white,
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            color: Colors.blue,
+            width: 1.0,
+          ),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+    );
+  }
+  
   Widget expansionSearchableList() {
     return SearchableList<Actor>.expansion(
       expansionListData: mapOfActors,
