@@ -21,9 +21,7 @@ class SearchableList<T> extends StatefulWidget {
   SearchableList({
     Key? key,
     required this.initialList,
-    this.asyncListCallback,
     this.filter,
-    this.asyncListFilter,
     this.loadingWidget,
     this.errorWidget,
     required this.builder,
@@ -58,17 +56,59 @@ class SearchableList<T> extends StatefulWidget {
     this.itemExtent,
     this.listViewPadding,
     this.reverse = false,
+    this.seperatorBuilder,
   }) : super(key: key) {
-    if (asyncListCallback == null) {
-      throw ('either initialList or asyncListCallback must be provided');
-    }
-    assert(
-      (asyncListCallback != null && asyncListFilter != null) ||
-          (filter != null),
-    );
     searchTextController ??= TextEditingController();
-    seperatorBuilder = null;
     expansionListBuilder = null;
+    asyncListCallback = null;
+    asyncListFilter = null;
+  }
+
+  SearchableList.async({
+    Key? key,
+    required this.asyncListCallback,
+    required this.asyncListFilter,
+    required this.builder,
+    this.loadingWidget,
+    this.errorWidget,
+    this.searchTextController,
+    this.keyboardAction = TextInputAction.done,
+    this.inputDecoration,
+    this.style,
+    this.onSubmitSearch,
+    this.searchMode = SearchMode.onEdit,
+    this.emptyWidget = const SizedBox.shrink(),
+    this.textInputType = TextInputType.text,
+    this.obscureText = false,
+    this.focusNode,
+    this.searchFieldEnabled = true,
+    this.onItemSelected,
+    this.displayClearIcon = true,
+    this.defaultSuffixIconColor = Colors.grey,
+    this.onRefresh,
+    this.scrollDirection = Axis.vertical,
+    this.searchTextPosition = SearchTextPosition.top,
+    this.onPaginate,
+    this.spaceBetweenSearchAndList = 20,
+    this.cursorColor,
+    this.maxLines,
+    this.maxLength,
+    this.textAlign = TextAlign.start,
+    this.autoCompleteHints = const [],
+    this.autoFocusOnSearch = true,
+    this.secondaryWidget,
+    this.physics,
+    this.shrinkWrap = false,
+    this.itemExtent,
+    this.listViewPadding,
+    this.reverse = false,
+    this.seperatorBuilder,
+  }) : super(key: key) {
+    assert(asyncListCallback != null);
+    searchTextController ??= TextEditingController();
+    expansionListBuilder = null;
+    initialList = [];
+    filter = null;
   }
 
   SearchableList.expansion({
@@ -157,6 +197,7 @@ class SearchableList<T> extends StatefulWidget {
     expansionListBuilder = null;
   }
 
+  @Deprecated('Use default constructor or async constructor with divider options')
   SearchableList.seperated({
     Key? key,
     required this.initialList,
@@ -219,7 +260,7 @@ class SearchableList<T> extends StatefulWidget {
   /// Invoked on changing the text field search if ```searchType == SEARCH_TYPE.onEdit```
   /// or invoked when submiting the text field if ```searchType == SEARCH_TYPE.onSubmit```.
   /// You should return a list of filtered elements.
-  late List<T> Function(String query)? filter;
+  List<T> Function(String query)? filter;
 
   ///Async callback that return list to be displayed with future builder
   ///when [asyncListCallback] is null you need to provide [initialList]
@@ -399,7 +440,6 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   ///create scroll controller instance
   ///attached to the listview widget
   ScrollController scrollController = ScrollController();
-
   List<T> asyncListResult = [];
   List<T> filtredAsyncListResult = [];
 
@@ -571,8 +611,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
             ? RefreshIndicator(
                 triggerMode: RefreshIndicatorTriggerMode.onEdge,
                 onRefresh: widget.onRefresh!,
-                child: widget.displayDividder
-                    ? _renderSeperatedListView()
+                child: widget.seperatorBuilder != null
+                    ? _renderSeperatedListView(list)
                     : ListView.builder(
                         physics: widget.physics,
                         shrinkWrap: widget.shrinkWrap,
@@ -595,8 +635,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         ),
                       ),
               )
-            : widget.displayDividder
-                ? _renderSeperatedListView()
+            : widget.seperatorBuilder != null
+                ? _renderSeperatedListView(list)
                 : ListView.builder(
                     physics: widget.physics,
                     shrinkWrap: widget.shrinkWrap,
@@ -665,11 +705,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   }
 
   ///renders a seperated listview using [ListView.separated]
-  Widget _renderSeperatedListView() {
+  Widget _renderSeperatedListView(List<T> list) {
     return ListView.separated(
       controller: scrollController,
       scrollDirection: widget.scrollDirection,
-      itemCount: widget.initialList.length,
+      itemCount: list.length,
       physics: widget.physics,
       shrinkWrap: widget.shrinkWrap,
       padding: widget.listViewPadding,
@@ -677,12 +717,12 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       itemBuilder: (context, index) => ListItem<T>(
         builder: (item) {
           return widget.builder!(
-            widget.initialList,
-            widget.initialList.indexOf(item),
+            list,
+            list.indexOf(item),
             item
           );
         },
-        item: widget.initialList[index],
+        item: list[index],
         onItemSelected: widget.onItemSelected,
       ),
       separatorBuilder: widget.seperatorBuilder!,

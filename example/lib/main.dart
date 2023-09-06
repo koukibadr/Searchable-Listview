@@ -65,7 +65,7 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: renderSimpleSearchableList(),
+              child: renderAsynchSearchableListview(),
             ),
           ),
           Align(
@@ -96,8 +96,7 @@ class _ExampleAppState extends State<ExampleApp> {
       },
       style: const TextStyle(fontSize: 25),
       builder: (list, index, item) {
-        //return ActorItem(actor: item);
-        return ActorItem(actor: list[index]);
+        return ActorItem(actor: item);
       },
       errorWidget: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -161,6 +160,37 @@ class _ExampleAppState extends State<ExampleApp> {
     );
   }
 
+  Widget renderAsynchSearchableListview() {
+    return SearchableList<Actor>.async(
+      builder: (displayedList, itemIndex, item) {
+        return ActorItem(actor: displayedList[itemIndex]);
+      },
+      asyncListCallback: () async {
+        await Future.delayed(const Duration(seconds: 5));
+        return actors;
+      },
+      asyncListFilter: (query, list) {
+        return actors.where((element) => element.name.contains(query) || element.lastName.contains(query)).toList();
+      },
+      seperatorBuilder: (context, index) {
+        return const Divider();
+      },
+      style: const TextStyle(fontSize: 25),
+      emptyWidget: const EmptyView(),
+      inputDecoration: InputDecoration(
+        labelText: "Search Actor",
+        fillColor: Colors.white,
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            color: Colors.blue,
+            width: 1.0,
+          ),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+    );
+  }
+  
   Widget expansionSearchableList() {
     return SearchableList<Actor>.expansion(
       expansionListData: mapOfActors,
