@@ -1,3 +1,7 @@
+## 2.7.1 - 27/09/2023
+
+- Update package license to MIT license
+
 ## 2.7.0 - 06/09/2023
 
 - Update simple searchable list state management
