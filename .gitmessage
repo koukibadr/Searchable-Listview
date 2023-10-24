@@ -1,0 +1,6 @@
+Subject:
+<type>(<scope>): <description> (max 50 characters)
+Body:
+<insert detailed description of changes made in the commit> (wrap at 72 characters)
+Footer:
+<insert any additional information, such as references or issue numbers>
