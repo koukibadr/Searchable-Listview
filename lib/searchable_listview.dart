@@ -462,49 +462,41 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   @override
   Widget build(BuildContext context) {
     return widget.isExpansionList
-        ? _renderSearchableExpansionList()
+        ? renderSearchableExpansionList()
         : widget.sliverScrollEffect
-            ? _renderSliverEffect()
-            : widget.asyncListCallback != null
-                ? _renderAsyncListView()
-                : _renderSearchableListView(
-                    list: widget.initialList,
-                  );
+            ? renderSliverEffect()
+            : widget.asyncListCallback != null && !dataDownloaded
+                ? renderAsyncListView()
+                : renderSearchableListView();
   }
 
-  Widget _renderAsyncListView() {
-    return dataDownloaded
-        ? _renderSearchableListView(
-            list: filtredAsyncListResult,
-          )
-        : FutureBuilder(
-            future: widget.asyncListCallback!.call(),
-            builder: (context, snapshot) {
-              dataDownloaded =
-                  snapshot.connectionState != ConnectionState.waiting;
-              if (!dataDownloaded) {
-                return widget.loadingWidget ?? const DefaultLoadingWidget();
-              }
-              if (snapshot.data == null) {
-                return widget.errorWidget ?? const DefaultErrorWidget();
-              }
-              asyncListResult = snapshot.data as List<T>;
-              filtredAsyncListResult = asyncListResult;
-              return _renderSearchableListView(
-                list: filtredAsyncListResult,
-              );
-            },
-          );
+  Widget renderAsyncListView() {
+    return FutureBuilder(
+      future: widget.asyncListCallback!.call(),
+      builder: (context, snapshot) {
+        dataDownloaded = snapshot.connectionState != ConnectionState.waiting;
+        if (!dataDownloaded) {
+          return widget.loadingWidget ?? const DefaultLoadingWidget();
+        }
+        if (snapshot.data == null) {
+          return widget.errorWidget ?? const DefaultErrorWidget();
+        }
+        asyncListResult = snapshot.data as List<T>;
+        filtredAsyncListResult = asyncListResult;
+        return renderSearchableListView();
+      },
+    );
   }
 
-  Widget _renderSearchableListView({
-    required List<T> list,
-  }) {
+  Widget renderSearchableListView() {
+    List<T> renderedList = widget.asyncListCallback != null
+        ? filtredAsyncListResult
+        : widget.initialList;
     return Column(
       children: widget.searchTextPosition == SearchTextPosition.top
           ? [
               SearchTextField(
-                filterList: _filterList,
+                filterList: filterList,
                 focusNode: widget.focusNode,
                 inputDecoration: widget.inputDecoration,
                 keyboardAction: widget.keyboardAction,
@@ -528,19 +520,19 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
               SizedBox(
                 height: widget.spaceBetweenSearchAndList,
               ),
-              _renderListView(
-                list: list,
+              renderListView(
+                list: renderedList,
               ),
             ]
           : [
-              _renderListView(
-                list: list,
+              renderListView(
+                list: renderedList,
               ),
               SizedBox(
                 height: widget.spaceBetweenSearchAndList,
               ),
               SearchTextField(
-                filterList: _filterList,
+                filterList: filterList,
                 focusNode: widget.focusNode,
                 inputDecoration: widget.inputDecoration,
                 keyboardAction: widget.keyboardAction,
@@ -565,10 +557,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     );
   }
 
-  Widget _renderSearchableExpansionList() {
+  Widget renderSearchableExpansionList() {
     return Column(children: [
       SearchTextField(
-        filterList: _filterList,
+        filterList: filterList,
         focusNode: widget.focusNode,
         inputDecoration: widget.inputDecoration,
         keyboardAction: widget.keyboardAction,
@@ -592,7 +584,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       SizedBox(
         height: widget.spaceBetweenSearchAndList,
       ),
-      _renderExpansionListView(),
+      renderExpansionListView(),
     ]);
   }
 
@@ -601,7 +593,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   ///if [widget.displayDividder] is true
   /// function will runder [ListView.separated]
   ///else the function will render a normal listview [ListView.builder]
-  Widget _renderListView({
+  Widget renderListView({
     required List<T> list,
   }) {
     if (list.isEmpty) {
@@ -613,7 +605,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 triggerMode: RefreshIndicatorTriggerMode.onEdge,
                 onRefresh: widget.onRefresh!,
                 child: widget.seperatorBuilder != null
-                    ? _renderSeperatedListView(list)
+                    ? renderSeperatedListView(list)
                     : ListView.builder(
                         physics: widget.physics,
                         shrinkWrap: widget.shrinkWrap,
@@ -637,7 +629,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       ),
               )
             : widget.seperatorBuilder != null
-                ? _renderSeperatedListView(list)
+                ? renderSeperatedListView(list)
                 : ListView.builder(
                     physics: widget.physics,
                     shrinkWrap: widget.shrinkWrap,
@@ -663,7 +655,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     }
   }
 
-  Widget _renderExpansionListView() {
+  Widget renderExpansionListView() {
     if (widget.expansionListData.isEmpty) {
       return widget.emptyWidget;
     } else {
@@ -706,7 +698,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   }
 
   ///renders a seperated listview using [ListView.separated]
-  Widget _renderSeperatedListView(List<T> list) {
+  Widget renderSeperatedListView(List<T> list) {
     return ListView.separated(
       controller: scrollController,
       scrollDirection: widget.scrollDirection,
@@ -730,13 +722,13 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   ///if [widget.scrollDirection] set to [Axis.horizontal]
   ///the function will render an horizontal sliver listview
   ///else it will render a vertical listview
-  Widget _renderSliverEffect() {
+  Widget renderSliverEffect() {
     return widget.scrollDirection == Axis.horizontal
         ? Column(
             children: widget.searchTextPosition == SearchTextPosition.top
                 ? [
                     SearchTextField(
-                      filterList: _filterList,
+                      filterList: filterList,
                       focusNode: widget.focusNode,
                       inputDecoration: widget.inputDecoration,
                       keyboardAction: widget.keyboardAction,
@@ -826,7 +818,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       height: widget.spaceBetweenSearchAndList,
                     ),
                     SearchTextField(
-                      filterList: _filterList,
+                      filterList: filterList,
                       focusNode: widget.focusNode,
                       inputDecoration: widget.inputDecoration,
                       keyboardAction: widget.keyboardAction,
@@ -857,7 +849,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     SliverAppBar(
                       backgroundColor: Colors.transparent,
                       flexibleSpace: SearchTextField(
-                        filterList: _filterList,
+                        filterList: filterList,
                         focusNode: widget.focusNode,
                         inputDecoration: widget.inputDecoration,
                         keyboardAction: widget.keyboardAction,
@@ -926,7 +918,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     SliverAppBar(
                       backgroundColor: Colors.transparent,
                       flexibleSpace: SearchTextField(
-                        filterList: _filterList,
+                        filterList: filterList,
                         focusNode: widget.focusNode,
                         inputDecoration: widget.inputDecoration,
                         keyboardAction: widget.keyboardAction,
@@ -952,7 +944,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
           );
   }
 
-  void _filterList(String value) {
+  void filterList(String value) {
     if (widget.isExpansionList) {
       setState(() {
         widget.expansionListData =
