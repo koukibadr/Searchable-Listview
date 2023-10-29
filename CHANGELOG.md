@@ -1,3 +1,9 @@
+## 2.8.0 - 29/10/2023
+
+- **Enhancement**
+    - Remove `seperated` constructor (replace by `seperatorBuilder` attribute in the default constructor and `async` constructor) [PR#78](https://github.com/koukibadr/Searchable-Listview/pull/78)
+    - Refactor `renderAsyncList` callback code [PR#77](https://github.com/koukibadr/Searchable-Listview/pull/77)
+
 ## 2.7.1 - 27/09/2023
 
 - Update package license to MIT license

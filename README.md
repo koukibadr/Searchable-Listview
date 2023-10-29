@@ -37,7 +37,7 @@ In order to add searchable listview package to your project add this line to you
 
 ```yaml
 dependencies:
-	searchable_listview:  2.7.1
+	searchable_listview:  2.8.0
 ```
 
 ## Attributes
@@ -228,8 +228,9 @@ dependencies:
 
 - **If you are using the 1.5.3 version or older and you are using `sliverScrollEffect` parameter, for 1.6.0 version and above this parameter is replaced with a constructor `SearchableList.sliver`**
 
-
 - **If you are migrating to 2.5.0 version you need to change the `builder` callback as now it provide the element index and not the element object**
+
+- **If you are migrating to 2.8.0 version the `seperated` constructor is no longer available instead use `seperatorBuilder` in both default constructor and `async` constructor**
 
 ## Implementation
 
@@ -241,6 +242,14 @@ SearchableList<Object>
 
 Used to create simple listview with search field (with other attributes to customize your own listview)
 
+### Async constructor
+
+```
+SearchableList<Object>.async
+```
+
+Used to render listview from a future callback (it require an async callback that return List of objects)
+
 
 ### Expansion constructor
 
@@ -249,15 +258,6 @@ SearchableList<Object>.expansion
 ```
 
 Used to create expansion listview with search field (with other attributes to customize your own expansion list)
-
-
-### Seperator constructor
-
-```
-SearchableList.seperated
-```
-
-Used to create listview with divider seperation (with other attributes to customize your own listview)
 
 ### Sliver effect constructor
 
@@ -343,7 +343,7 @@ SearchableList<Actor>.expansion(
 ### Async callback build implementation
 
 ```dart
-SearchableList<Actor>(
+SearchableList<Actor>.async(
                 onPaginate: () async {
                   await Future.delayed(const Duration(milliseconds: 1000));
                   setState(() {
