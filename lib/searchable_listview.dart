@@ -197,62 +197,6 @@ class SearchableList<T> extends StatefulWidget {
     expansionListBuilder = null;
   }
 
-  @Deprecated(
-    'Use default constructor or async constructor with divider options `seperatorBuilder`',
-  )
-  SearchableList.seperated({
-    Key? key,
-    required this.initialList,
-    this.asyncListCallback,
-    this.filter,
-    this.asyncListFilter,
-    this.loadingWidget,
-    this.errorWidget,
-    required this.builder,
-    required this.seperatorBuilder,
-    this.searchTextController,
-    this.keyboardAction = TextInputAction.done,
-    this.inputDecoration,
-    this.style,
-    this.onSubmitSearch,
-    this.searchMode = SearchMode.onEdit,
-    this.emptyWidget = const SizedBox.shrink(),
-    this.textInputType = TextInputType.text,
-    this.obscureText = false,
-    this.focusNode,
-    this.searchFieldEnabled = true,
-    this.onItemSelected,
-    this.displayClearIcon = true,
-    this.defaultSuffixIconColor = Colors.grey,
-    this.displayDividder = false,
-    this.onRefresh,
-    this.scrollDirection = Axis.vertical,
-    this.searchTextPosition = SearchTextPosition.top,
-    this.onPaginate,
-    this.spaceBetweenSearchAndList = 20,
-    this.cursorColor,
-    this.maxLines,
-    this.maxLength,
-    this.textAlign = TextAlign.start,
-    this.autoCompleteHints = const [],
-    this.autoFocusOnSearch = true,
-    this.secondaryWidget,
-    this.physics,
-    this.shrinkWrap = false,
-    this.listViewPadding,
-    this.reverse = false,
-  }) : super(key: key) {
-    assert(
-      (asyncListCallback != null && asyncListFilter != null) ||
-          (filter != null),
-    );
-    searchTextController ??= TextEditingController();
-    displayDividder = true;
-    assert(seperatorBuilder != null);
-    itemExtent = null;
-    expansionListBuilder = null;
-  }
-
   /// Initial list of all elements that will be displayed.
   ///to filter the [initialList] you need provide [filter] callback
   late List<T> initialList;
