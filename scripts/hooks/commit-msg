@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+INPUT_FILE=$1
+START_LINE=`head -n1 $INPUT_FILE`
+PATTERN="^(Fix|Feature) #[0-9]+: "
+SECOND_PATTERN="^(WIP) : "
+if ! [[ "$START_LINE" =~ $PATTERN ]] && ! [[ "$START_LINE" =~ $SECOND_PATTERN ]]; then
+  echo "Cannot commit changes, commit messages should follow this format $PATTERN example: <Fix or Feature> #<issue-number>: <description> or $SECOND_PATTERN example WIP : <commit message>" 
+  exit 1
+fi
+exit 0
