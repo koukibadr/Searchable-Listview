@@ -56,6 +56,9 @@ class SearchableList<T> extends StatefulWidget {
     this.itemExtent,
     this.listViewPadding,
     this.reverse = false,
+    this.sortPredicate,
+    this.sortWidget,
+    this.displaySortWidget = true,
     this.seperatorBuilder,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
@@ -95,7 +98,7 @@ class SearchableList<T> extends StatefulWidget {
     this.maxLength,
     this.textAlign = TextAlign.start,
     this.autoCompleteHints = const [],
-    this.autoFocusOnSearch = true,
+    this.autoFocusOnSearch = false,
     this.secondaryWidget,
     this.physics,
     this.shrinkWrap = false,
@@ -103,6 +106,9 @@ class SearchableList<T> extends StatefulWidget {
     this.listViewPadding,
     this.reverse = false,
     this.seperatorBuilder,
+    this.sortPredicate,
+    this.sortWidget,
+    this.displaySortWidget = true,
   }) : super(key: key) {
     assert(asyncListCallback != null);
     searchTextController ??= TextEditingController();
@@ -144,6 +150,7 @@ class SearchableList<T> extends StatefulWidget {
     this.itemExtent,
     this.listViewPadding,
     this.reverse = false,
+    
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
@@ -183,6 +190,9 @@ class SearchableList<T> extends StatefulWidget {
     this.autoFocusOnSearch = true,
     this.secondaryWidget,
     this.physics,
+    this.sortPredicate,
+    this.sortWidget,
+    this.displaySortWidget = true,
   }) : super(key: key) {
     asyncListCallback = null;
     asyncListFilter = null;
@@ -375,6 +385,11 @@ class SearchableList<T> extends StatefulWidget {
   ///not available for sliver listview constructor
   late bool reverse;
 
+  //TODO add sort widgets documentation
+  late int Function(T a, T b)? sortPredicate;
+  bool displaySortWidget = false;
+  late Widget? sortWidget;
+
   bool isExpansionList = false;
 
   @override
@@ -460,6 +475,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 autoCompleteHints: widget.autoCompleteHints,
                 autoFocus: widget.autoFocusOnSearch,
                 secondaryWidget: widget.secondaryWidget,
+                onSortTap: sortList,
+                displaySortWidget: widget.displaySortWidget,
+                sortWidget: widget.sortWidget,
               ),
               SizedBox(
                 height: widget.spaceBetweenSearchAndList,
@@ -496,40 +514,45 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 autoCompleteHints: widget.autoCompleteHints,
                 autoFocus: widget.autoFocusOnSearch,
                 secondaryWidget: widget.secondaryWidget,
+                onSortTap: sortList,
+                sortWidget: widget.sortWidget,
+                displaySortWidget: widget.displaySortWidget,
               ),
             ],
     );
   }
 
   Widget renderSearchableExpansionList() {
-    return Column(children: [
-      SearchTextField(
-        filterList: filterList,
-        focusNode: widget.focusNode,
-        inputDecoration: widget.inputDecoration,
-        keyboardAction: widget.keyboardAction,
-        obscureText: widget.obscureText,
-        onSubmitSearch: widget.onSubmitSearch,
-        searchFieldEnabled: widget.searchFieldEnabled,
-        searchMode: widget.searchMode,
-        searchTextController: widget.searchTextController,
-        textInputType: widget.textInputType,
-        displayClearIcon: widget.displayClearIcon,
-        defaultSuffixIconColor: widget.defaultSuffixIconColor,
-        textStyle: widget.style,
-        cursorColor: widget.cursorColor,
-        maxLength: widget.maxLength,
-        maxLines: widget.maxLines,
-        textAlign: widget.textAlign,
-        autoCompleteHints: widget.autoCompleteHints,
-        autoFocus: widget.autoFocusOnSearch,
-        secondaryWidget: widget.secondaryWidget,
-      ),
-      SizedBox(
-        height: widget.spaceBetweenSearchAndList,
-      ),
-      renderExpansionListView(),
-    ]);
+    return Column(
+      children: [
+        SearchTextField(
+          filterList: filterList,
+          focusNode: widget.focusNode,
+          inputDecoration: widget.inputDecoration,
+          keyboardAction: widget.keyboardAction,
+          obscureText: widget.obscureText,
+          onSubmitSearch: widget.onSubmitSearch,
+          searchFieldEnabled: widget.searchFieldEnabled,
+          searchMode: widget.searchMode,
+          searchTextController: widget.searchTextController,
+          textInputType: widget.textInputType,
+          displayClearIcon: widget.displayClearIcon,
+          defaultSuffixIconColor: widget.defaultSuffixIconColor,
+          textStyle: widget.style,
+          cursorColor: widget.cursorColor,
+          maxLength: widget.maxLength,
+          maxLines: widget.maxLines,
+          textAlign: widget.textAlign,
+          autoCompleteHints: widget.autoCompleteHints,
+          autoFocus: widget.autoFocusOnSearch,
+          secondaryWidget: widget.secondaryWidget,
+        ),
+        SizedBox(
+          height: widget.spaceBetweenSearchAndList,
+        ),
+        renderExpansionListView(),
+      ],
+    );
   }
 
   ///creates listview based on the items passed to the widget
@@ -692,6 +715,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       autoCompleteHints: widget.autoCompleteHints,
                       autoFocus: widget.autoFocusOnSearch,
                       secondaryWidget: widget.secondaryWidget,
+                      onSortTap: sortList,
+                      sortWidget: widget.sortWidget,
+                      displaySortWidget: widget.displaySortWidget,
                     ),
                     SizedBox(
                       height: widget.spaceBetweenSearchAndList,
@@ -782,6 +808,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       autoCompleteHints: widget.autoCompleteHints,
                       autoFocus: widget.autoFocusOnSearch,
                       secondaryWidget: widget.secondaryWidget,
+                      onSortTap: sortList,
+                      sortWidget: widget.sortWidget,
+                      displaySortWidget: widget.displaySortWidget,
                     ),
                   ],
           )
@@ -813,6 +842,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         autoCompleteHints: widget.autoCompleteHints,
                         autoFocus: widget.autoFocusOnSearch,
                         secondaryWidget: widget.secondaryWidget,
+                        onSortTap: sortList,
+                        sortWidget: widget.sortWidget,
+                        displaySortWidget: widget.displaySortWidget,
                       ),
                     ),
                     SliverList(
@@ -882,6 +914,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         autoCompleteHints: widget.autoCompleteHints,
                         autoFocus: widget.autoFocusOnSearch,
                         secondaryWidget: widget.secondaryWidget,
+                        onSortTap: sortList,
+                        sortWidget: widget.sortWidget,
+                        displaySortWidget: widget.displaySortWidget,
                       ),
                     ),
                   ],
@@ -906,5 +941,18 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         widget.initialList = widget.filter!(value);
       });
     }
+  }
+
+  void sortList() {
+    if (widget.asyncListCallback != null) {
+      setState(() {
+        filtredAsyncListResult.sort(widget.sortPredicate);
+      });
+    } else {
+      setState(() {
+        widget.initialList.sort(widget.sortPredicate);
+      });
+    }
+    
   }
 }

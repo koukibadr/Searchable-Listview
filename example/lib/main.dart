@@ -91,6 +91,7 @@ class _ExampleAppState extends State<ExampleApp> {
 
   Widget renderSimpleSearchableList() {
     return SearchableList<Actor>(
+      sortPredicate: (a, b) => a.age.compareTo(b.age),
       seperatorBuilder: (context, index) {
         return const Divider();
       },
@@ -130,21 +131,6 @@ class _ExampleAppState extends State<ExampleApp> {
           borderRadius: BorderRadius.circular(10.0),
         ),
       ),
-      secondaryWidget: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Container(
-          color: Colors.grey[400],
-          child: const Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: 20,
-              horizontal: 10,
-            ),
-            child: Center(
-              child: Icon(Icons.sort),
-            ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -162,6 +148,7 @@ class _ExampleAppState extends State<ExampleApp> {
 
   Widget renderAsynchSearchableListview() {
     return SearchableList<Actor>.async(
+      sortPredicate: (a, b) => a.age.compareTo(b.age),
       builder: (displayedList, itemIndex, item) {
         return ActorItem(actor: displayedList[itemIndex]);
       },
