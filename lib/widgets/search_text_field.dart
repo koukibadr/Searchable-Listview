@@ -104,30 +104,34 @@ class SearchTextField extends StatelessWidget {
                     focusNode: focusNode,
                     enabled: searchFieldEnabled,
                     decoration: inputDecoration?.copyWith(
-                      suffixIcon: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          (inputDecoration?.suffix ??
-                              _renderSuffixIcon())!, //TODO update renderSuffixIcon functions
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          if (displaySortWidget)
-                            InkWell(
-                              onTap: () {
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
-                                onSortTap?.call();
-                              },
-                              child: sortWidget ??
-                                  const Center(
-                                    child: Icon(
+                      suffixIcon: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 5,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            (inputDecoration?.suffix ??
+                                _renderSuffixIcon())!,
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            if (displaySortWidget)
+                              InkWell(
+                                onTap: () {
+                                  FocusScope.of(context).requestFocus(
+                                    FocusNode(),
+                                  );
+                                  onSortTap?.call();
+                                },
+                                child: sortWidget ??
+                                    const Icon(
                                       Icons.sort,
                                     ),
-                                  ),
-                            ),
-                        ],
+                              ),
+                          ],
+                        ),
                       ),
                     ),
                     autofocus: autoFocus,

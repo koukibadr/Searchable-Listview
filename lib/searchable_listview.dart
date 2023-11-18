@@ -6,7 +6,7 @@ import 'package:searchable_listview/widgets/default_error_widget.dart';
 import 'package:searchable_listview/widgets/list_item.dart';
 
 import 'widgets/default_loading_widget.dart';
-import 'widgets/serach_text_field.dart';
+import 'widgets/search_text_field.dart';
 
 class SearchableList<T> extends StatefulWidget {
   ///indicates whether the ssliver scroll effect will be applied
@@ -58,13 +58,16 @@ class SearchableList<T> extends StatefulWidget {
     this.reverse = false,
     this.sortPredicate,
     this.sortWidget,
-    this.displaySortWidget = true,
+    this.displaySortWidget = false,
     this.seperatorBuilder,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     expansionListBuilder = null;
     asyncListCallback = null;
     asyncListFilter = null;
+    if(displaySortWidget) {
+      assert(sortPredicate != null);
+    }
   }
 
   SearchableList.async({
@@ -108,13 +111,16 @@ class SearchableList<T> extends StatefulWidget {
     this.seperatorBuilder,
     this.sortPredicate,
     this.sortWidget,
-    this.displaySortWidget = true,
+    this.displaySortWidget = false,
   }) : super(key: key) {
     assert(asyncListCallback != null);
     searchTextController ??= TextEditingController();
     expansionListBuilder = null;
     initialList = [];
     filter = null;
+    if(displaySortWidget) {
+      assert(sortPredicate != null);
+    }
   }
 
   SearchableList.expansion({
@@ -150,13 +156,13 @@ class SearchableList<T> extends StatefulWidget {
     this.itemExtent,
     this.listViewPadding,
     this.reverse = false,
-    
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
     isExpansionList = true;
     builder = null;
     initialList = [];
+    displaySortWidget = false;
   }
 
   SearchableList.sliver({
@@ -190,9 +196,6 @@ class SearchableList<T> extends StatefulWidget {
     this.autoFocusOnSearch = true,
     this.secondaryWidget,
     this.physics,
-    this.sortPredicate,
-    this.sortWidget,
-    this.displaySortWidget = true,
   }) : super(key: key) {
     asyncListCallback = null;
     asyncListFilter = null;
@@ -205,6 +208,7 @@ class SearchableList<T> extends StatefulWidget {
     listViewPadding = null;
     this.reverse = false;
     expansionListBuilder = null;
+    displaySortWidget = false;
   }
 
   /// Initial list of all elements that will be displayed.
@@ -385,9 +389,16 @@ class SearchableList<T> extends StatefulWidget {
   ///not available for sliver listview constructor
   late bool reverse;
 
-  //TODO add sort widgets documentation
+  ///Predicate callback invoked when sorting list items
+  ///required when `displaySortWidget` is True
   late int Function(T a, T b)? sortPredicate;
-  bool displaySortWidget = false;
+
+  ///Indicate if the sort widget will be displayed or not
+  /// Defaults to false
+  late bool displaySortWidget;
+
+  ///Widget displayed when sorting list
+  /// available only if `displaySortWidget` is True
   late Widget? sortWidget;
 
   bool isExpansionList = false;

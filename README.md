@@ -8,15 +8,17 @@
 
 ## Features
 
-- Filter list view easily
-- Filter async list
-- Filter expansion list
-- Support async callback in rendering list
+- **Filter list view easily**
+- **Filter async list**
+- **Filter expansion list**
+- **Sort list items**
+- **Support async callback in rendering list**
+- **Support pagination**
+- **Pull to refresh list**
+- **Sliver scroll animation effect**
+- Customizable sort widget
 - Customizable loading when async callback is loading
 - Customizable error widget
-- Support pagination
-- Pull to refresh list
-- Sliver scroll animation effect
 - Display custom widget when list is empty
 - Customize search text field
 - Change keyboard input type and keyboard submit button
@@ -37,7 +39,7 @@ In order to add searchable listview package to your project add this line to you
 
 ```yaml
 dependencies:
-	searchable_listview:  2.8.0
+	searchable_listview:  2.9.0
 ```
 
 ## Attributes
@@ -221,6 +223,18 @@ dependencies:
   ///by default `reverse = false`
   ///not available for sliver listview constructor
   late bool reverse;
+
+  ///Predicate callback invoked when sorting list items
+  ///required when `displaySortWidget` is True
+  late int Function(T a, T b)? sortPredicate;
+
+  ///Indicate if the sort widget will be displayed or not
+  /// Defaults to false
+  late bool displaySortWidget;
+
+  ///Widget displayed when sorting list
+  /// available only if `displaySortWidget` is True
+  late Widget? sortWidget;
 
 ````
 
@@ -435,6 +449,37 @@ SearchableList<Actor>.sliver(
 ),
 
 ```
+
+### Searchable list with sort widget
+
+```Dart
+SearchableList<Actor>(
+    displaySortWidget: true,
+    sortPredicate: (a, b) => a.age.compareTo(b.age),
+    builder: (list, index, item) {
+      return ActorItem(actor: item);
+    },
+    initialList: actors,
+    filter: (p0) {
+      return actors.where((element) => element.name.contains(p0)).toList();
+    },
+    inputDecoration: InputDecoration(
+      labelText: "Search Actor",
+      fillColor: Colors.white,
+      focusedBorder: OutlineInputBorder(
+        borderSide: const BorderSide(
+          color: Colors.blue,
+          width: 1.0,
+        ),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+    ),
+)
+```
+
+<p align="center">
+<img src="https://github.com/koukibadr/Searchable-Listview/blob/main/example/Screenshot_1700337103.png?raw=true" width="300">
+</p>
 
 ## Contribution
 

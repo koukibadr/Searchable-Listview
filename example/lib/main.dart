@@ -65,7 +65,7 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: renderAsynchSearchableListview(),
+              child: simpleSearchWithSort(),
             ),
           ),
           Align(
@@ -89,9 +89,34 @@ class _ExampleAppState extends State<ExampleApp> {
     setState(() {});
   }
 
+  
+  Widget simpleSearchWithSort() {
+    return SearchableList<Actor>(
+      displaySortWidget: true,
+      sortPredicate: (a, b) => a.age.compareTo(b.age),
+      builder: (list, index, item) {
+        return ActorItem(actor: item);
+      },
+      initialList: actors,
+      filter: (p0) {
+        return actors.where((element) => element.name.contains(p0)).toList();
+      },
+      inputDecoration: InputDecoration(
+        labelText: "Search Actor",
+        fillColor: Colors.white,
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            color: Colors.blue,
+            width: 1.0,
+          ),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+    );
+  }
+  
   Widget renderSimpleSearchableList() {
     return SearchableList<Actor>(
-      sortPredicate: (a, b) => a.age.compareTo(b.age),
       seperatorBuilder: (context, index) {
         return const Divider();
       },
@@ -148,7 +173,6 @@ class _ExampleAppState extends State<ExampleApp> {
 
   Widget renderAsynchSearchableListview() {
     return SearchableList<Actor>.async(
-      sortPredicate: (a, b) => a.age.compareTo(b.age),
       builder: (displayedList, itemIndex, item) {
         return ActorItem(actor: displayedList[itemIndex]);
       },
