@@ -65,7 +65,7 @@ class SearchableList<T> extends StatefulWidget {
     expansionListBuilder = null;
     asyncListCallback = null;
     asyncListFilter = null;
-    if(displaySortWidget) {
+    if (displaySortWidget) {
       assert(sortPredicate != null);
     }
   }
@@ -118,7 +118,7 @@ class SearchableList<T> extends StatefulWidget {
     expansionListBuilder = null;
     initialList = [];
     filter = null;
-    if(displaySortWidget) {
+    if (displaySortWidget) {
       assert(sortPredicate != null);
     }
   }
@@ -964,6 +964,5 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         widget.initialList.sort(widget.sortPredicate);
       });
     }
-    
   }
 }

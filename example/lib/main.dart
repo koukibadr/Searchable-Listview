@@ -89,7 +89,6 @@ class _ExampleAppState extends State<ExampleApp> {
     setState(() {});
   }
 
-  
   Widget simpleSearchWithSort() {
     return SearchableList<Actor>(
       displaySortWidget: true,
@@ -114,7 +113,7 @@ class _ExampleAppState extends State<ExampleApp> {
       ),
     );
   }
-  
+
   Widget renderSimpleSearchableList() {
     return SearchableList<Actor>(
       seperatorBuilder: (context, index) {

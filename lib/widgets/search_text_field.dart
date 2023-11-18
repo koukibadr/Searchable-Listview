@@ -112,8 +112,7 @@ class SearchTextField extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            (inputDecoration?.suffix ??
-                                _renderSuffixIcon())!,
+                            (inputDecoration?.suffix ?? _renderSuffixIcon())!,
                             const SizedBox(
                               width: 5,
                             ),
