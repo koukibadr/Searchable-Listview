@@ -3,7 +3,6 @@
 - **Enhancement**
     - Add sort list items feature (`displaySortWidget`, `sortWidget` and `sortPredicate`) [PR#78](https://github.com/koukibadr/Searchable-Listview/pull/80)
 
-
 ## 2.8.0 - 29/10/2023
 
 - **Enhancement**
