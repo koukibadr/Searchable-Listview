@@ -65,7 +65,7 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: renderAsynchSearchableListview(),
+              child: simpleSearchWithSort(),
             ),
           ),
           Align(
@@ -89,6 +89,32 @@ class _ExampleAppState extends State<ExampleApp> {
     setState(() {});
   }
 
+  
+  Widget simpleSearchWithSort() {
+    return SearchableList<Actor>(
+      displaySortWidget: true,
+      sortPredicate: (a, b) => a.age.compareTo(b.age),
+      builder: (list, index, item) {
+        return ActorItem(actor: item);
+      },
+      initialList: actors,
+      filter: (p0) {
+        return actors.where((element) => element.name.contains(p0)).toList();
+      },
+      inputDecoration: InputDecoration(
+        labelText: "Search Actor",
+        fillColor: Colors.white,
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            color: Colors.blue,
+            width: 1.0,
+          ),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+    );
+  }
+  
   Widget renderSimpleSearchableList() {
     return SearchableList<Actor>(
       seperatorBuilder: (context, index) {
@@ -128,21 +154,6 @@ class _ExampleAppState extends State<ExampleApp> {
             width: 1.0,
           ),
           borderRadius: BorderRadius.circular(10.0),
-        ),
-      ),
-      secondaryWidget: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Container(
-          color: Colors.grey[400],
-          child: const Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: 20,
-              horizontal: 10,
-            ),
-            child: Center(
-              child: Icon(Icons.sort),
-            ),
-          ),
         ),
       ),
     );

@@ -6,7 +6,7 @@ import 'package:searchable_listview/widgets/default_error_widget.dart';
 import 'package:searchable_listview/widgets/list_item.dart';
 
 import 'widgets/default_loading_widget.dart';
-import 'widgets/serach_text_field.dart';
+import 'widgets/search_text_field.dart';
 
 class SearchableList<T> extends StatefulWidget {
   ///indicates whether the ssliver scroll effect will be applied
@@ -56,12 +56,18 @@ class SearchableList<T> extends StatefulWidget {
     this.itemExtent,
     this.listViewPadding,
     this.reverse = false,
+    this.sortPredicate,
+    this.sortWidget,
+    this.displaySortWidget = false,
     this.seperatorBuilder,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     expansionListBuilder = null;
     asyncListCallback = null;
     asyncListFilter = null;
+    if(displaySortWidget) {
+      assert(sortPredicate != null);
+    }
   }
 
   SearchableList.async({
@@ -95,7 +101,7 @@ class SearchableList<T> extends StatefulWidget {
     this.maxLength,
     this.textAlign = TextAlign.start,
     this.autoCompleteHints = const [],
-    this.autoFocusOnSearch = true,
+    this.autoFocusOnSearch = false,
     this.secondaryWidget,
     this.physics,
     this.shrinkWrap = false,
@@ -103,12 +109,18 @@ class SearchableList<T> extends StatefulWidget {
     this.listViewPadding,
     this.reverse = false,
     this.seperatorBuilder,
+    this.sortPredicate,
+    this.sortWidget,
+    this.displaySortWidget = false,
   }) : super(key: key) {
     assert(asyncListCallback != null);
     searchTextController ??= TextEditingController();
     expansionListBuilder = null;
     initialList = [];
     filter = null;
+    if(displaySortWidget) {
+      assert(sortPredicate != null);
+    }
   }
 
   SearchableList.expansion({
@@ -150,6 +162,7 @@ class SearchableList<T> extends StatefulWidget {
     isExpansionList = true;
     builder = null;
     initialList = [];
+    displaySortWidget = false;
   }
 
   SearchableList.sliver({
@@ -195,6 +208,7 @@ class SearchableList<T> extends StatefulWidget {
     listViewPadding = null;
     this.reverse = false;
     expansionListBuilder = null;
+    displaySortWidget = false;
   }
 
   /// Initial list of all elements that will be displayed.
@@ -375,6 +389,18 @@ class SearchableList<T> extends StatefulWidget {
   ///not available for sliver listview constructor
   late bool reverse;
 
+  ///Predicate callback invoked when sorting list items
+  ///required when `displaySortWidget` is True
+  late int Function(T a, T b)? sortPredicate;
+
+  ///Indicate if the sort widget will be displayed or not
+  /// Defaults to false
+  late bool displaySortWidget;
+
+  ///Widget displayed when sorting list
+  /// available only if `displaySortWidget` is True
+  late Widget? sortWidget;
+
   bool isExpansionList = false;
 
   @override
@@ -460,6 +486,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 autoCompleteHints: widget.autoCompleteHints,
                 autoFocus: widget.autoFocusOnSearch,
                 secondaryWidget: widget.secondaryWidget,
+                onSortTap: sortList,
+                displaySortWidget: widget.displaySortWidget,
+                sortWidget: widget.sortWidget,
               ),
               SizedBox(
                 height: widget.spaceBetweenSearchAndList,
@@ -496,40 +525,45 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 autoCompleteHints: widget.autoCompleteHints,
                 autoFocus: widget.autoFocusOnSearch,
                 secondaryWidget: widget.secondaryWidget,
+                onSortTap: sortList,
+                sortWidget: widget.sortWidget,
+                displaySortWidget: widget.displaySortWidget,
               ),
             ],
     );
   }
 
   Widget renderSearchableExpansionList() {
-    return Column(children: [
-      SearchTextField(
-        filterList: filterList,
-        focusNode: widget.focusNode,
-        inputDecoration: widget.inputDecoration,
-        keyboardAction: widget.keyboardAction,
-        obscureText: widget.obscureText,
-        onSubmitSearch: widget.onSubmitSearch,
-        searchFieldEnabled: widget.searchFieldEnabled,
-        searchMode: widget.searchMode,
-        searchTextController: widget.searchTextController,
-        textInputType: widget.textInputType,
-        displayClearIcon: widget.displayClearIcon,
-        defaultSuffixIconColor: widget.defaultSuffixIconColor,
-        textStyle: widget.style,
-        cursorColor: widget.cursorColor,
-        maxLength: widget.maxLength,
-        maxLines: widget.maxLines,
-        textAlign: widget.textAlign,
-        autoCompleteHints: widget.autoCompleteHints,
-        autoFocus: widget.autoFocusOnSearch,
-        secondaryWidget: widget.secondaryWidget,
-      ),
-      SizedBox(
-        height: widget.spaceBetweenSearchAndList,
-      ),
-      renderExpansionListView(),
-    ]);
+    return Column(
+      children: [
+        SearchTextField(
+          filterList: filterList,
+          focusNode: widget.focusNode,
+          inputDecoration: widget.inputDecoration,
+          keyboardAction: widget.keyboardAction,
+          obscureText: widget.obscureText,
+          onSubmitSearch: widget.onSubmitSearch,
+          searchFieldEnabled: widget.searchFieldEnabled,
+          searchMode: widget.searchMode,
+          searchTextController: widget.searchTextController,
+          textInputType: widget.textInputType,
+          displayClearIcon: widget.displayClearIcon,
+          defaultSuffixIconColor: widget.defaultSuffixIconColor,
+          textStyle: widget.style,
+          cursorColor: widget.cursorColor,
+          maxLength: widget.maxLength,
+          maxLines: widget.maxLines,
+          textAlign: widget.textAlign,
+          autoCompleteHints: widget.autoCompleteHints,
+          autoFocus: widget.autoFocusOnSearch,
+          secondaryWidget: widget.secondaryWidget,
+        ),
+        SizedBox(
+          height: widget.spaceBetweenSearchAndList,
+        ),
+        renderExpansionListView(),
+      ],
+    );
   }
 
   ///creates listview based on the items passed to the widget
@@ -692,6 +726,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       autoCompleteHints: widget.autoCompleteHints,
                       autoFocus: widget.autoFocusOnSearch,
                       secondaryWidget: widget.secondaryWidget,
+                      onSortTap: sortList,
+                      sortWidget: widget.sortWidget,
+                      displaySortWidget: widget.displaySortWidget,
                     ),
                     SizedBox(
                       height: widget.spaceBetweenSearchAndList,
@@ -782,6 +819,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       autoCompleteHints: widget.autoCompleteHints,
                       autoFocus: widget.autoFocusOnSearch,
                       secondaryWidget: widget.secondaryWidget,
+                      onSortTap: sortList,
+                      sortWidget: widget.sortWidget,
+                      displaySortWidget: widget.displaySortWidget,
                     ),
                   ],
           )
@@ -813,6 +853,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         autoCompleteHints: widget.autoCompleteHints,
                         autoFocus: widget.autoFocusOnSearch,
                         secondaryWidget: widget.secondaryWidget,
+                        onSortTap: sortList,
+                        sortWidget: widget.sortWidget,
+                        displaySortWidget: widget.displaySortWidget,
                       ),
                     ),
                     SliverList(
@@ -882,6 +925,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         autoCompleteHints: widget.autoCompleteHints,
                         autoFocus: widget.autoFocusOnSearch,
                         secondaryWidget: widget.secondaryWidget,
+                        onSortTap: sortList,
+                        sortWidget: widget.sortWidget,
+                        displaySortWidget: widget.displaySortWidget,
                       ),
                     ),
                   ],
@@ -906,5 +952,18 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         widget.initialList = widget.filter!(value);
       });
     }
+  }
+
+  void sortList() {
+    if (widget.asyncListCallback != null) {
+      setState(() {
+        filtredAsyncListResult.sort(widget.sortPredicate);
+      });
+    } else {
+      setState(() {
+        widget.initialList.sort(widget.sortPredicate);
+      });
+    }
+    
   }
 }

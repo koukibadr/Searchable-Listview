@@ -22,6 +22,9 @@ class SearchTextField extends StatelessWidget {
   final List<String> autoCompleteHints;
   final bool autoFocus;
   final Widget? secondaryWidget;
+  final Function()? onSortTap;
+  final bool displaySortWidget;
+  final Widget? sortWidget;
 
   const SearchTextField({
     Key? key,
@@ -44,7 +47,10 @@ class SearchTextField extends StatelessWidget {
     required this.textAlign,
     required this.autoCompleteHints,
     required this.autoFocus,
+    this.onSortTap,
     this.secondaryWidget,
+    this.displaySortWidget = false,
+    this.sortWidget,
   }) : super(key: key);
 
   @override
@@ -98,7 +104,35 @@ class SearchTextField extends StatelessWidget {
                     focusNode: focusNode,
                     enabled: searchFieldEnabled,
                     decoration: inputDecoration?.copyWith(
-                      suffix: inputDecoration?.suffix ?? _renderSuffixIcon(),
+                      suffixIcon: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 5,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            (inputDecoration?.suffix ??
+                                _renderSuffixIcon())!,
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            if (displaySortWidget)
+                              InkWell(
+                                onTap: () {
+                                  FocusScope.of(context).requestFocus(
+                                    FocusNode(),
+                                  );
+                                  onSortTap?.call();
+                                },
+                                child: sortWidget ??
+                                    const Icon(
+                                      Icons.sort,
+                                    ),
+                              ),
+                          ],
+                        ),
+                      ),
                     ),
                     autofocus: autoFocus,
                     style: textStyle,
