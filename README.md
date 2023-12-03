@@ -39,7 +39,7 @@ In order to add searchable listview package to your project add this line to you
 
 ```yaml
 dependencies:
-	searchable_listview:  2.9.0
+	searchable_listview:  2.9.1
 ```
 
 ## Attributes

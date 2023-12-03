@@ -1,3 +1,8 @@
+## 2.9.1 - 03/12/2023
+
+- **Bug Fix**
+    - Suffix icon not displayed when suffixIcon not null [PR#83](https://github.com/koukibadr/Searchable-Listview/pull/83)
+
 ## 2.9.0 - 18/11/2023
 
 - **Enhancement**

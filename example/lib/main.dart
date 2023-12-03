@@ -123,9 +123,9 @@ class _ExampleAppState extends State<ExampleApp> {
       builder: (list, index, item) {
         return ActorItem(actor: item);
       },
-      errorWidget: Column(
+      errorWidget: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
+        children: [
           Icon(
             Icons.error,
             color: Colors.red,
@@ -313,9 +313,9 @@ class EmptyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: const [
+      children: [
         Icon(
           Icons.error,
           color: Colors.red,
