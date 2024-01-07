@@ -60,6 +60,8 @@ class SearchableList<T> extends StatefulWidget {
     this.sortWidget,
     this.displaySortWidget = false,
     this.seperatorBuilder,
+    this.scrollController,
+    this.closeKeyboardWhenScrolling = false,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     expansionListBuilder = null;
@@ -112,6 +114,8 @@ class SearchableList<T> extends StatefulWidget {
     this.sortPredicate,
     this.sortWidget,
     this.displaySortWidget = false,
+    this.scrollController,
+    this.closeKeyboardWhenScrolling = false,
   }) : super(key: key) {
     assert(asyncListCallback != null);
     searchTextController ??= TextEditingController();
@@ -156,6 +160,8 @@ class SearchableList<T> extends StatefulWidget {
     this.itemExtent,
     this.listViewPadding,
     this.reverse = false,
+    this.scrollController,
+    this.closeKeyboardWhenScrolling = false,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
@@ -196,6 +202,8 @@ class SearchableList<T> extends StatefulWidget {
     this.autoFocusOnSearch = true,
     this.secondaryWidget,
     this.physics,
+    this.scrollController,
+    this.closeKeyboardWhenScrolling = false,
   }) : super(key: key) {
     asyncListCallback = null;
     asyncListFilter = null;
@@ -401,6 +409,15 @@ class SearchableList<T> extends StatefulWidget {
   /// available only if `displaySortWidget` is True
   late Widget? sortWidget;
 
+  ///Scroll controller passed to listview widget
+  ///by default listview uses scrollcontroller with a listener for pagination if `onPaginate = true`
+  ///or `closeKeyboardWhenScrolling = true` to close keyboard when scrolling
+  ScrollController? scrollController;
+
+  ///indicates whether the keyboard will be closed when scrolling or not
+  ///by default `closeKeyboardWhenScrolling = true`
+  final bool closeKeyboardWhenScrolling;
+
   bool isExpansionList = false;
 
   @override
@@ -410,23 +427,31 @@ class SearchableList<T> extends StatefulWidget {
 class _SearchableListState<T> extends State<SearchableList<T>> {
   ///create scroll controller instance
   ///attached to the listview widget
-  ScrollController scrollController = ScrollController();
+  late ScrollController scrollController =
+      widget.scrollController ?? ScrollController();
   List<T> asyncListResult = [];
   List<T> filtredAsyncListResult = [];
-
   bool dataDownloaded = false;
 
   @override
   void initState() {
     super.initState();
-    if (widget.onPaginate != null) {
-      scrollController.addListener(() {
-        if (scrollController.position.pixels ==
-            scrollController.position.maxScrollExtent) {
-          widget.onPaginate?.call();
-        }
-      });
-    }
+    scrollController.addListener(() {
+      if (widget.closeKeyboardWhenScrolling) {
+        FocusScope.of(context).requestFocus(FocusNode());
+      }
+      if (widget.onPaginate != null &&
+          scrollController.position.pixels ==
+              scrollController.position.maxScrollExtent) {
+        widget.onPaginate?.call();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 
   @override
