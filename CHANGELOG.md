@@ -1,3 +1,9 @@
+## 2.10.0 - 07/01/2024
+
+- **Enhancements**
+    - `closeKeyboardWhenScrolling` added to close automatically keyboard when scrolling [issue-85](https://github.com/koukibadr/Searchable-Listview/issues/85)
+    - `scrollController` added to main widget to control scroll on listview or add listener on scolling
+
 ## 2.9.1 - 03/12/2023
 
 - **Bug Fix**

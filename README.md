@@ -32,6 +32,7 @@
 - Customizable text style in search field
 - Customize autocomplete options
 - Customizable secondary widget alongside search
+- Close automatically keyboard when scrolling on listview
 
 ## Getting Started
 
@@ -39,7 +40,7 @@ In order to add searchable listview package to your project add this line to you
 
 ```yaml
 dependencies:
-	searchable_listview:  2.9.1
+	searchable_listview:  2.10.0
 ```
 
 ## Attributes
@@ -235,6 +236,15 @@ dependencies:
   ///Widget displayed when sorting list
   /// available only if `displaySortWidget` is True
   late Widget? sortWidget;
+
+  ///Scroll controller passed to listview widget
+  ///by default listview uses scrollcontroller with a listener for pagination if `onPaginate = true`
+  ///or `closeKeyboardWhenScrolling = true` to close keyboard when scrolling
+  ScrollController? scrollController;
+
+  ///indicates whether the keyboard will be closed when scrolling or not
+  ///by default `closeKeyboardWhenScrolling = true`
+  final bool closeKeyboardWhenScrolling;
 
 ````
 
@@ -480,6 +490,36 @@ SearchableList<Actor>(
 <p align="center">
 <img src="https://github.com/koukibadr/Searchable-Listview/blob/main/example/Screenshot_1700337103.png?raw=true" width="300">
 </p>
+
+
+### Searchable list with auto closing keyboard when scrolling
+
+```Dart
+SearchableList<Actor>(
+    displaySortWidget: true,
+    sortPredicate: (a, b) => a.age.compareTo(b.age),
+    builder: (list, index, item) {
+      return ActorItem(actor: item);
+    },
+    initialList: actors,
+    filter: (p0) {
+      return actors.where((element) => element.name.contains(p0)).toList();
+    },
+    inputDecoration: InputDecoration(
+      labelText: "Search Actor",
+      fillColor: Colors.white,
+      focusedBorder: OutlineInputBorder(
+        borderSide: const BorderSide(
+          color: Colors.blue,
+          width: 1.0,
+        ),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+    ),
+    closeKeyboardWhenScrolling: true
+)
+```
+
 
 ## Contribution
 

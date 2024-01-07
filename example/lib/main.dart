@@ -155,6 +155,7 @@ class _ExampleAppState extends State<ExampleApp> {
           borderRadius: BorderRadius.circular(10.0),
         ),
       ),
+      closeKeyboardWhenScrolling: true,
     );
   }
 
