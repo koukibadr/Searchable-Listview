@@ -69,7 +69,7 @@ class SearchTextField extends StatelessWidget {
                     },
                     fieldViewBuilder: (
                       context,
-                      textEditingController,
+                      textController,
                       focusNode,
                       onFieldSubmitted,
                     ) {
@@ -83,13 +83,15 @@ class SearchTextField extends StatelessWidget {
                         decoration: inputDecoration?.copyWith(
                           suffix: InkWell(
                               onTap: () {
+                                textController.text = '';
+                                filterList(textController.text);
                                 FocusScope.of(context)
                                     .requestFocus(FocusNode());
                               },
                               child: const Icon(Icons.close)),
                         ),
                         style: textStyle,
-                        controller: textEditingController,
+                        controller: textController,
                         onChanged: (value) {
                           filterList(value);
                         },
@@ -163,7 +165,7 @@ class SearchTextField extends StatelessWidget {
         : searchTextController!.text.isNotEmpty
             ? InkWell(
                 onTap: () {
-                  searchTextController!.clear();
+                  searchTextController?.clear();
                   filterList(searchTextController?.text ?? '');
                 },
                 child: Icon(

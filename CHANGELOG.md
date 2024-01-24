@@ -1,3 +1,9 @@
+## 2.10.1 - 24/01/2024
+
+- **Fix Bug**
+    - Fix field clear button when `autoCompleteHints` is used
+
+
 ## 2.10.0 - 07/01/2024
 
 - **Enhancements**
