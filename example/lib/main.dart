@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:searchable_listview/resources/arrays.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 
 void main() {
@@ -66,7 +65,7 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: expansionSearchableList(),
+              child: renderAsynchSearchableListview(),
             ),
           ),
           Align(
@@ -203,8 +202,6 @@ class _ExampleAppState extends State<ExampleApp> {
           borderRadius: BorderRadius.circular(10.0),
         ),
       ),
-      reverse: true,
-      searchTextPosition: SearchTextPosition.bottom,
     );
   }
 

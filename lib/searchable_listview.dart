@@ -18,8 +18,6 @@ class SearchableList<T> extends StatefulWidget {
   ///if true the listview will be rendered with [ListView.separated] constructor
   bool displayDividder = false;
 
-  Key? formKey;
-
   SearchableList({
     Key? key,
     required this.initialList,
@@ -122,7 +120,6 @@ class SearchableList<T> extends StatefulWidget {
     expansionListBuilder = null;
     initialList = [];
     filter = null;
-    formKey = const Key('search-key');
     if (displaySortWidget) {
       assert(sortPredicate != null);
     }
@@ -481,7 +478,6 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                           onSortTap: sortList,
                           displaySortWidget: widget.displaySortWidget,
                           sortWidget: widget.sortWidget,
-                          formKey: widget.formKey,
                         ),
                         SizedBox(
                           height: widget.spaceBetweenSearchAndList,
@@ -526,7 +522,6 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                           onSortTap: sortList,
                           displaySortWidget: widget.displaySortWidget,
                           sortWidget: widget.sortWidget,
-                          formKey: widget.formKey,
                         ),
                       ],
               );

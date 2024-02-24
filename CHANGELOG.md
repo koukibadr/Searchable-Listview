@@ -1,3 +1,8 @@
+## 2.10.2 - 24/02/2024
+
+- **Fix Bug**
+    - Keep keyboard state when search value is changing (keyboard closing issue fix) [Related PR](https://github.com/koukibadr/Searchable-Listview/pull/92)
+
 ## 2.10.1 - 24/01/2024
 
 - **Fix Bug**

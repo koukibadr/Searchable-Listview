@@ -24,7 +24,6 @@ class SearchTextField extends StatelessWidget {
   final Function()? onSortTap;
   final bool displaySortWidget;
   final Widget? sortWidget;
-  final Key? formKey;
 
   const SearchTextField({
     Key? key,
@@ -50,7 +49,6 @@ class SearchTextField extends StatelessWidget {
     this.secondaryWidget,
     this.displaySortWidget = false,
     this.sortWidget,
-    this.formKey,
   }) : super(key: key);
 
   @override
