@@ -40,7 +40,7 @@ In order to add searchable listview package to your project add this line to you
 
 ```yaml
 dependencies:
-	searchable_listview:  2.10.1
+	searchable_listview: ^2.10.2
 ```
 
 ## Attributes
@@ -186,10 +186,6 @@ dependencies:
   ///List of strings  to display in an auto complete field
   ///by default list is empty so a simple text field is displayed
   final List<String> autoCompleteHints;
-
-  ///indicate whether the search textfield have it's focus on by default or not
-  ///by default [autoFocusOnSearch = true]
-  final bool autoFocusOnSearch;
 
   ///secondary widget will be displayed alongside the search field
   ///by default it's null

@@ -65,7 +65,7 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: renderSimpleSearchableList(),
+              child: renderAsynchSearchableListview(),
             ),
           ),
           Align(
@@ -140,7 +140,6 @@ class _ExampleAppState extends State<ExampleApp> {
       filter: (p0) {
         return actors.where((element) => element.name.contains(p0)).toList();
       },
-      reverse: true,
       emptyWidget: const EmptyView(),
       onRefresh: () async {},
       onItemSelected: (Actor item) {},

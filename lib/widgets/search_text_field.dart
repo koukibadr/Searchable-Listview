@@ -20,7 +20,6 @@ class SearchTextField extends StatelessWidget {
   final int? maxLength;
   final TextAlign textAlign;
   final List<String> autoCompleteHints;
-  final bool autoFocus;
   final Widget? secondaryWidget;
   final Function()? onSortTap;
   final bool displaySortWidget;
@@ -46,7 +45,6 @@ class SearchTextField extends StatelessWidget {
     required this.maxLength,
     required this.textAlign,
     required this.autoCompleteHints,
-    required this.autoFocus,
     this.onSortTap,
     this.secondaryWidget,
     this.displaySortWidget = false,
@@ -136,7 +134,6 @@ class SearchTextField extends StatelessWidget {
                         ),
                       ),
                     ),
-                    autofocus: autoFocus,
                     style: textStyle,
                     controller: searchTextController,
                     textInputAction: keyboardAction,

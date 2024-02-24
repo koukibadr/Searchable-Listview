@@ -49,7 +49,6 @@ class SearchableList<T> extends StatefulWidget {
     this.maxLength,
     this.textAlign = TextAlign.start,
     this.autoCompleteHints = const [],
-    this.autoFocusOnSearch = true,
     this.secondaryWidget,
     this.physics,
     this.shrinkWrap = false,
@@ -103,7 +102,6 @@ class SearchableList<T> extends StatefulWidget {
     this.maxLength,
     this.textAlign = TextAlign.start,
     this.autoCompleteHints = const [],
-    this.autoFocusOnSearch = false,
     this.secondaryWidget,
     this.physics,
     this.shrinkWrap = false,
@@ -153,7 +151,6 @@ class SearchableList<T> extends StatefulWidget {
     this.maxLength,
     this.textAlign = TextAlign.start,
     this.autoCompleteHints = const [],
-    this.autoFocusOnSearch = true,
     this.secondaryWidget,
     this.physics,
     this.shrinkWrap = false,
@@ -199,7 +196,6 @@ class SearchableList<T> extends StatefulWidget {
     this.maxLength,
     this.textAlign = TextAlign.start,
     this.autoCompleteHints = const [],
-    this.autoFocusOnSearch = true,
     this.secondaryWidget,
     this.physics,
     this.scrollController,
@@ -359,10 +355,6 @@ class SearchableList<T> extends StatefulWidget {
   ///by default list is empty so a simple text field is displayed
   final List<String> autoCompleteHints;
 
-  ///indicate whether the search textfield have it's focus on by default or not
-  ///by default [autoFocusOnSearch = true]
-  final bool autoFocusOnSearch;
-
   ///secondary widget will be displayed alongside the search field
   ///by default it's null
   final Widget? secondaryWidget;
@@ -460,9 +452,79 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         ? renderSearchableExpansionList()
         : widget.sliverScrollEffect
             ? renderSliverEffect()
-            : widget.asyncListCallback != null && !dataDownloaded
-                ? renderAsyncListView()
-                : renderSearchableListView();
+            : Column(
+                children: widget.searchTextPosition == SearchTextPosition.top
+                    ? [
+                        SearchTextField(
+                          filterList: filterList,
+                          focusNode: widget.focusNode,
+                          inputDecoration: widget.inputDecoration,
+                          keyboardAction: widget.keyboardAction,
+                          obscureText: widget.obscureText,
+                          onSubmitSearch: widget.onSubmitSearch,
+                          searchFieldEnabled: widget.searchFieldEnabled,
+                          searchMode: widget.searchMode,
+                          searchTextController: widget.searchTextController,
+                          textInputType: widget.textInputType,
+                          displayClearIcon: widget.displayClearIcon,
+                          defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                          textStyle: widget.style,
+                          cursorColor: widget.cursorColor,
+                          maxLength: widget.maxLength,
+                          maxLines: widget.maxLines,
+                          textAlign: widget.textAlign,
+                          autoCompleteHints: widget.autoCompleteHints,
+                          secondaryWidget: widget.secondaryWidget,
+                          onSortTap: sortList,
+                          displaySortWidget: widget.displaySortWidget,
+                          sortWidget: widget.sortWidget,
+                        ),
+                        SizedBox(
+                          height: widget.spaceBetweenSearchAndList,
+                        ),
+                        Expanded(
+                          child: widget.asyncListCallback != null &&
+                                  !dataDownloaded
+                              ? renderAsyncListView()
+                              : renderSearchableListView(),
+                        ),
+                      ]
+                    : [
+                        Expanded(
+                          child: widget.asyncListCallback != null &&
+                                  !dataDownloaded
+                              ? renderAsyncListView()
+                              : renderSearchableListView(),
+                        ),
+                        SizedBox(
+                          height: widget.spaceBetweenSearchAndList,
+                        ),
+                        SearchTextField(
+                          filterList: filterList,
+                          focusNode: widget.focusNode,
+                          inputDecoration: widget.inputDecoration,
+                          keyboardAction: widget.keyboardAction,
+                          obscureText: widget.obscureText,
+                          onSubmitSearch: widget.onSubmitSearch,
+                          searchFieldEnabled: widget.searchFieldEnabled,
+                          searchMode: widget.searchMode,
+                          searchTextController: widget.searchTextController,
+                          textInputType: widget.textInputType,
+                          displayClearIcon: widget.displayClearIcon,
+                          defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                          textStyle: widget.style,
+                          cursorColor: widget.cursorColor,
+                          maxLength: widget.maxLength,
+                          maxLines: widget.maxLines,
+                          textAlign: widget.textAlign,
+                          autoCompleteHints: widget.autoCompleteHints,
+                          secondaryWidget: widget.secondaryWidget,
+                          onSortTap: sortList,
+                          displaySortWidget: widget.displaySortWidget,
+                          sortWidget: widget.sortWidget,
+                        ),
+                      ],
+              );
   }
 
   Widget renderAsyncListView() {
@@ -487,74 +549,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     List<T> renderedList = widget.asyncListCallback != null
         ? filtredAsyncListResult
         : widget.initialList;
-    return Column(
-      children: widget.searchTextPosition == SearchTextPosition.top
-          ? [
-              SearchTextField(
-                filterList: filterList,
-                focusNode: widget.focusNode,
-                inputDecoration: widget.inputDecoration,
-                keyboardAction: widget.keyboardAction,
-                obscureText: widget.obscureText,
-                onSubmitSearch: widget.onSubmitSearch,
-                searchFieldEnabled: widget.searchFieldEnabled,
-                searchMode: widget.searchMode,
-                searchTextController: widget.searchTextController,
-                textInputType: widget.textInputType,
-                displayClearIcon: widget.displayClearIcon,
-                defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                textStyle: widget.style,
-                cursorColor: widget.cursorColor,
-                maxLength: widget.maxLength,
-                maxLines: widget.maxLines,
-                textAlign: widget.textAlign,
-                autoCompleteHints: widget.autoCompleteHints,
-                autoFocus: widget.autoFocusOnSearch,
-                secondaryWidget: widget.secondaryWidget,
-                onSortTap: sortList,
-                displaySortWidget: widget.displaySortWidget,
-                sortWidget: widget.sortWidget,
-              ),
-              SizedBox(
-                height: widget.spaceBetweenSearchAndList,
-              ),
-              renderListView(
-                list: renderedList,
-              ),
-            ]
-          : [
-              renderListView(
-                list: renderedList,
-              ),
-              SizedBox(
-                height: widget.spaceBetweenSearchAndList,
-              ),
-              SearchTextField(
-                filterList: filterList,
-                focusNode: widget.focusNode,
-                inputDecoration: widget.inputDecoration,
-                keyboardAction: widget.keyboardAction,
-                obscureText: widget.obscureText,
-                onSubmitSearch: widget.onSubmitSearch,
-                searchFieldEnabled: widget.searchFieldEnabled,
-                searchMode: widget.searchMode,
-                searchTextController: widget.searchTextController,
-                textInputType: widget.textInputType,
-                displayClearIcon: widget.displayClearIcon,
-                defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                textStyle: widget.style,
-                cursorColor: widget.cursorColor,
-                maxLength: widget.maxLength,
-                maxLines: widget.maxLines,
-                textAlign: widget.textAlign,
-                autoCompleteHints: widget.autoCompleteHints,
-                autoFocus: widget.autoFocusOnSearch,
-                secondaryWidget: widget.secondaryWidget,
-                onSortTap: sortList,
-                sortWidget: widget.sortWidget,
-                displaySortWidget: widget.displaySortWidget,
-              ),
-            ],
+    return renderListView(
+      list: renderedList,
     );
   }
 
@@ -580,7 +576,6 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
           maxLines: widget.maxLines,
           textAlign: widget.textAlign,
           autoCompleteHints: widget.autoCompleteHints,
-          autoFocus: widget.autoFocusOnSearch,
           secondaryWidget: widget.secondaryWidget,
         ),
         SizedBox(
@@ -602,59 +597,57 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     if (list.isEmpty) {
       return widget.emptyWidget;
     } else {
-      return Expanded(
-        child: widget.onRefresh != null
-            ? RefreshIndicator(
-                triggerMode: RefreshIndicatorTriggerMode.onEdge,
-                onRefresh: widget.onRefresh!,
-                child: widget.seperatorBuilder != null
-                    ? renderSeperatedListView(list)
-                    : ListView.builder(
-                        physics: widget.physics,
-                        shrinkWrap: widget.shrinkWrap,
-                        itemExtent: widget.itemExtent,
-                        padding: widget.listViewPadding,
-                        reverse: widget.reverse,
-                        controller: scrollController,
-                        scrollDirection: widget.scrollDirection,
-                        itemCount: list.length,
-                        itemBuilder: (context, index) => ListItem<T>(
-                          builder: (item) {
-                            return widget.builder!(
-                              list,
-                              list.indexOf(item),
-                              item,
-                            );
-                          },
-                          item: list[index],
-                          onItemSelected: widget.onItemSelected,
-                        ),
+      return widget.onRefresh != null
+          ? RefreshIndicator(
+              triggerMode: RefreshIndicatorTriggerMode.onEdge,
+              onRefresh: widget.onRefresh!,
+              child: widget.seperatorBuilder != null
+                  ? renderSeperatedListView(list)
+                  : ListView.builder(
+                      physics: widget.physics,
+                      shrinkWrap: widget.shrinkWrap,
+                      itemExtent: widget.itemExtent,
+                      padding: widget.listViewPadding,
+                      reverse: widget.reverse,
+                      controller: scrollController,
+                      scrollDirection: widget.scrollDirection,
+                      itemCount: list.length,
+                      itemBuilder: (context, index) => ListItem<T>(
+                        builder: (item) {
+                          return widget.builder!(
+                            list,
+                            list.indexOf(item),
+                            item,
+                          );
+                        },
+                        item: list[index],
+                        onItemSelected: widget.onItemSelected,
                       ),
-              )
-            : widget.seperatorBuilder != null
-                ? renderSeperatedListView(list)
-                : ListView.builder(
-                    physics: widget.physics,
-                    shrinkWrap: widget.shrinkWrap,
-                    itemExtent: widget.itemExtent,
-                    padding: widget.listViewPadding,
-                    reverse: widget.reverse,
-                    controller: scrollController,
-                    scrollDirection: widget.scrollDirection,
-                    itemCount: list.length,
-                    itemBuilder: (context, index) => ListItem<T>(
-                      builder: (item) {
-                        return widget.builder!(
-                          list,
-                          list.indexOf(item),
-                          item,
-                        );
-                      },
-                      item: list[index],
-                      onItemSelected: widget.onItemSelected,
                     ),
+            )
+          : widget.seperatorBuilder != null
+              ? renderSeperatedListView(list)
+              : ListView.builder(
+                  physics: widget.physics,
+                  shrinkWrap: widget.shrinkWrap,
+                  itemExtent: widget.itemExtent,
+                  padding: widget.listViewPadding,
+                  reverse: widget.reverse,
+                  controller: scrollController,
+                  scrollDirection: widget.scrollDirection,
+                  itemCount: list.length,
+                  itemBuilder: (context, index) => ListItem<T>(
+                    builder: (item) {
+                      return widget.builder!(
+                        list,
+                        list.indexOf(item),
+                        item,
+                      );
+                    },
+                    item: list[index],
+                    onItemSelected: widget.onItemSelected,
                   ),
-      );
+                );
     }
   }
 
@@ -749,7 +742,6 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       maxLines: widget.maxLines,
                       textAlign: widget.textAlign,
                       autoCompleteHints: widget.autoCompleteHints,
-                      autoFocus: widget.autoFocusOnSearch,
                       secondaryWidget: widget.secondaryWidget,
                       onSortTap: sortList,
                       sortWidget: widget.sortWidget,
@@ -842,7 +834,6 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       maxLines: widget.maxLines,
                       textAlign: widget.textAlign,
                       autoCompleteHints: widget.autoCompleteHints,
-                      autoFocus: widget.autoFocusOnSearch,
                       secondaryWidget: widget.secondaryWidget,
                       onSortTap: sortList,
                       sortWidget: widget.sortWidget,
@@ -876,7 +867,6 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         maxLines: widget.maxLines,
                         textAlign: widget.textAlign,
                         autoCompleteHints: widget.autoCompleteHints,
-                        autoFocus: widget.autoFocusOnSearch,
                         secondaryWidget: widget.secondaryWidget,
                         onSortTap: sortList,
                         sortWidget: widget.sortWidget,
@@ -948,7 +938,6 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         maxLines: widget.maxLines,
                         textAlign: widget.textAlign,
                         autoCompleteHints: widget.autoCompleteHints,
-                        autoFocus: widget.autoFocusOnSearch,
                         secondaryWidget: widget.secondaryWidget,
                         onSortTap: sortList,
                         sortWidget: widget.sortWidget,
