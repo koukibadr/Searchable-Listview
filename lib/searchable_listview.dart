@@ -252,7 +252,7 @@ class SearchableList<T> extends StatefulWidget {
   /// Builder function that generates the Expansion listView items
   /// based on the given item model.
   /// Used only for expansion list constructor
-  late Widget Function(T item)? expansionListBuilder;
+  late Widget Function(int expansionGroupIndex,T listItem)? expansionListBuilder;
 
   /// The widget to be displayed when the filter returns an empty list.
   /// Defaults to `const SizedBox.shrink()`.
@@ -673,12 +673,12 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
               children: entryValueList?.map(
                     (listItem) {
                       return widget.onItemSelected == null
-                          ? widget.expansionListBuilder!(listItem)
+                          ? widget.expansionListBuilder!(index,listItem)
                           : InkWell(
                               onTap: () {
                                 widget.onItemSelected?.call(listItem);
                               },
-                              child: widget.expansionListBuilder!(listItem),
+                              child: widget.expansionListBuilder!(index,listItem),
                             );
                     },
                   ).toList() ??

@@ -225,9 +225,12 @@ class _ExampleAppState extends State<ExampleApp> {
         return filteredMap;
       },
       style: const TextStyle(fontSize: 25),
-      expansionListBuilder: (Actor _actor) => ActorItem(
-        actor: _actor,
-      ),
+      expansionListBuilder: (int index, Actor _actor) {
+        print(index);
+        return ActorItem(
+          actor: _actor,
+        );
+      },
       emptyWidget: const EmptyView(),
       inputDecoration: InputDecoration(
         labelText: "Search Actor",
