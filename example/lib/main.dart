@@ -65,7 +65,7 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: renderAsynchSearchableListview(),
+              child: expansionSearchableList(),
             ),
           ),
           Align(
@@ -97,9 +97,6 @@ class _ExampleAppState extends State<ExampleApp> {
         return ActorItem(actor: item);
       },
       initialList: actors,
-      filter: (p0) {
-        return actors.where((element) => element.name.contains(p0)).toList();
-      },
       inputDecoration: InputDecoration(
         labelText: "Search Actor",
         fillColor: Colors.white,
@@ -123,9 +120,9 @@ class _ExampleAppState extends State<ExampleApp> {
       builder: (list, index, item) {
         return ActorItem(actor: item);
       },
-      errorWidget: Column(
+      errorWidget: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
+        children: [
           Icon(
             Icons.error,
             color: Colors.red,
@@ -228,7 +225,9 @@ class _ExampleAppState extends State<ExampleApp> {
         return filteredMap;
       },
       style: const TextStyle(fontSize: 25),
-      expansionListBuilder: (int index) => ActorItem(actor: actors[index]),
+      expansionListBuilder: (Actor _actor) => ActorItem(
+        actor: _actor,
+      ),
       emptyWidget: const EmptyView(),
       inputDecoration: InputDecoration(
         labelText: "Search Actor",
@@ -313,9 +312,9 @@ class EmptyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: const [
+      children: [
         Icon(
           Icons.error,
           color: Colors.red,
