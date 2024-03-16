@@ -159,6 +159,8 @@ class SearchableList<T> extends StatefulWidget {
     this.reverse = false,
     this.scrollController,
     this.closeKeyboardWhenScrolling = false,
+    this.hideEmptyExpansionItems = false,
+    this.expansionTileEnabled = true,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
@@ -252,7 +254,9 @@ class SearchableList<T> extends StatefulWidget {
   /// Builder function that generates the Expansion listView items
   /// based on the given item model.
   /// Used only for expansion list constructor
-  late Widget Function(int expansionGroupIndex,T listItem)? expansionListBuilder;
+  /// TODO update documentation
+  late Widget Function(int expansionGroupIndex, T listItem)?
+      expansionListBuilder;
 
   /// The widget to be displayed when the filter returns an empty list.
   /// Defaults to `const SizedBox.shrink()`.
@@ -409,6 +413,10 @@ class SearchableList<T> extends StatefulWidget {
   ///indicates whether the keyboard will be closed when scrolling or not
   ///by default `closeKeyboardWhenScrolling = true`
   final bool closeKeyboardWhenScrolling;
+
+  // TODO update documentation
+  late bool hideEmptyExpansionItems = false;
+  late bool expansionTileEnabled = true;
 
   bool isExpansionList = false;
 
@@ -652,9 +660,13 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   }
 
   Widget renderExpansionListView() {
-    if (widget.expansionListData.isEmpty) {
+    if (widget.expansionListData.isEmpty ||
+        widget.expansionListData.values.every((element) => element.isEmpty)) {
       return widget.emptyWidget;
     } else {
+      if (widget.hideEmptyExpansionItems) {
+        widget.expansionListData.removeWhere((key, value) => value.isEmpty);
+      }
       return Expanded(
         child: ListView.builder(
           controller: scrollController,
@@ -670,15 +682,17 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
             var entryValueList = widget.expansionListData[entryKey];
             return ExpansionTile(
               title: widget.expansionTitleBuilder.call(entryKey),
+              enabled: widget.expansionTileEnabled,
               children: entryValueList?.map(
                     (listItem) {
                       return widget.onItemSelected == null
-                          ? widget.expansionListBuilder!(index,listItem)
+                          ? widget.expansionListBuilder!(index, listItem)
                           : InkWell(
                               onTap: () {
                                 widget.onItemSelected?.call(listItem);
                               },
-                              child: widget.expansionListBuilder!(index,listItem),
+                              child:
+                                  widget.expansionListBuilder!(index, listItem),
                             );
                     },
                   ).toList() ??
