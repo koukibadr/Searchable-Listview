@@ -226,11 +226,11 @@ class _ExampleAppState extends State<ExampleApp> {
       },
       style: const TextStyle(fontSize: 25),
       expansionListBuilder: (int index, Actor _actor) {
-        print(index);
         return ActorItem(
           actor: _actor,
         );
       },
+      hideEmptyExpansionItems: true,
       emptyWidget: const EmptyView(),
       inputDecoration: InputDecoration(
         labelText: "Search Actor",
