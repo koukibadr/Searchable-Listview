@@ -252,9 +252,9 @@ class SearchableList<T> extends StatefulWidget {
   late Widget Function(List<T> displayedList, int itemIndex, T item)? builder;
 
   /// Builder function that generates the Expansion listView items
-  /// based on the given item model.
+  /// [expansionGroupIndex] : expansion group index
+  /// [listItem] the current item model that will be rendered.
   /// Used only for expansion list constructor
-  /// TODO update documentation
   late Widget Function(int expansionGroupIndex, T listItem)?
       expansionListBuilder;
 
@@ -414,8 +414,10 @@ class SearchableList<T> extends StatefulWidget {
   ///by default `closeKeyboardWhenScrolling = true`
   final bool closeKeyboardWhenScrolling;
 
-  // TODO update documentation
+  ///indicate whether the expansion will be shown or not when the expansion group is empty
   late bool hideEmptyExpansionItems = false;
+
+  ///Indicate whether the expansion tile will be enabled or not
   late bool expansionTileEnabled = true;
 
   bool isExpansionList = false;
