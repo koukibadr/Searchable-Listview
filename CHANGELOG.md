@@ -1,3 +1,8 @@
+## 2.11.1 - 16/03/2024
+
+* **Fix Bug**
+    - Update rendering clear icon when `displayClearIcon == false` and `inputDecoration != null` [Issue#90](https://github.com/koukibadr/Searchable-Listview/issues/90)
+
 ## 2.11.0 - 16/03/2024
 
 * **Enhancements**
