@@ -65,7 +65,7 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: expansionSearchableList(),
+              child: renderSimpleSearchableList(),
             ),
           ),
           Align(
@@ -113,6 +113,7 @@ class _ExampleAppState extends State<ExampleApp> {
 
   Widget renderSimpleSearchableList() {
     return SearchableList<Actor>(
+      displayClearIcon: false,
       seperatorBuilder: (context, index) {
         return const Divider();
       },

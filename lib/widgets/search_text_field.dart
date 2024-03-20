@@ -104,35 +104,35 @@ class SearchTextField extends StatelessWidget {
                     focusNode: focusNode,
                     enabled: searchFieldEnabled,
                     decoration: inputDecoration?.copyWith(
-                      suffixIcon: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 5,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            (inputDecoration?.suffixIcon ??
-                                _renderSuffixIcon())!,
-                            const SizedBox(
-                              width: 5,
+                      suffixIcon: inputDecoration?.suffixIcon ??
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 5,
                             ),
-                            if (displaySortWidget)
-                              InkWell(
-                                onTap: () {
-                                  FocusScope.of(context).requestFocus(
-                                    FocusNode(),
-                                  );
-                                  onSortTap?.call();
-                                },
-                                child: sortWidget ??
-                                    const Icon(
-                                      Icons.sort,
-                                    ),
-                              ),
-                          ],
-                        ),
-                      ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (displayClearIcon) renderClearIcon(),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                if (displaySortWidget)
+                                  InkWell(
+                                    onTap: () {
+                                      FocusScope.of(context).requestFocus(
+                                        FocusNode(),
+                                      );
+                                      onSortTap?.call();
+                                    },
+                                    child: sortWidget ??
+                                        const Icon(
+                                          Icons.sort,
+                                        ),
+                                  ),
+                              ],
+                            ),
+                          ),
                     ),
                     style: textStyle,
                     controller: searchTextController,
@@ -156,23 +156,23 @@ class SearchTextField extends StatelessWidget {
     );
   }
 
-  Widget? _renderSuffixIcon() {
-    return !displayClearIcon
-        ? null
-        : searchTextController!.text.isNotEmpty
-            ? InkWell(
-                onTap: () {
-                  searchTextController?.clear();
-                  filterList(searchTextController?.text ?? '');
-                },
-                child: Icon(
-                  Icons.clear,
-                  color: defaultSuffixIconColor,
-                ),
-              )
-            : Icon(
-                Icons.search,
-                color: defaultSuffixIconColor,
-              );
+  Widget renderClearIcon() {
+    if (searchTextController!.text.isNotEmpty) {
+      return InkWell(
+        onTap: () {
+          searchTextController?.clear();
+          filterList(searchTextController?.text ?? '');
+        },
+        child: Icon(
+          Icons.clear,
+          color: defaultSuffixIconColor,
+        ),
+      );
+    } else {
+      return Icon(
+        Icons.search,
+        color: defaultSuffixIconColor,
+      );
+    }
   }
 }
