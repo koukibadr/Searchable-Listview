@@ -65,7 +65,7 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: renderSimpleSearchableList(),
+              child: sliverListViewBuilder(),
             ),
           ),
           Align(
@@ -91,7 +91,6 @@ class _ExampleAppState extends State<ExampleApp> {
 
   Widget simpleSearchWithSort() {
     return SearchableList<Actor>(
-      displaySortWidget: true,
       sortPredicate: (a, b) => a.age.compareTo(b.age),
       builder: (list, index, item) {
         return ActorItem(actor: item);
@@ -159,11 +158,26 @@ class _ExampleAppState extends State<ExampleApp> {
   Widget sliverListViewBuilder() {
     return SearchableList<Actor>.sliver(
       initialList: actors,
+      inputDecoration: InputDecoration(
+        labelText: "Search Actor",
+        fillColor: Colors.white,
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            color: Colors.blue,
+            width: 1.0,
+          ),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
       filter: (query) {
         return actors.where((element) => element.name.contains(query)).toList();
       },
       builder: (list, index, item) {
         return ActorItem(actor: list[index]);
+      },
+      sortWidget: const Icon(Icons.sort),
+      sortPredicate: (a, b) {
+        return a.age.compareTo(b.age);
       },
     );
   }
