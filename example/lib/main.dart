@@ -55,7 +55,7 @@ class _ExampleAppState extends State<ExampleApp> {
     ]
   };
 
-  final TextEditingController searchTextController  = TextEditingController();
+  final TextEditingController searchTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {

@@ -1,3 +1,9 @@
+## 2.11.2 - 13/04/2024
+
+* **Fix Bug**
+    - Update sort widget display : remove `displaySortWidget` and add `sortWidget` to expansion and sliver constructors [Issue#89](https://github.com/koukibadr/Searchable-Listview/issues/89) [PR#99](https://github.com/koukibadr/Searchable-Listview/pull/99)
+    - Add listener to search text field controller [Issue#87](https://github.com/koukibadr/Searchable-Listview/issues/87) [PR#100](https://github.com/koukibadr/Searchable-Listview/pull/100)
+
 ## 2.11.1 - 20/03/2024
 
 * **Fix Bug**
