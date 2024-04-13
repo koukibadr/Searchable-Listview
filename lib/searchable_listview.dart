@@ -57,7 +57,6 @@ class SearchableList<T> extends StatefulWidget {
     this.reverse = false,
     this.sortPredicate,
     this.sortWidget,
-    this.displaySortWidget = false,
     this.seperatorBuilder,
     this.scrollController,
     this.closeKeyboardWhenScrolling = false,
@@ -66,7 +65,7 @@ class SearchableList<T> extends StatefulWidget {
     expansionListBuilder = null;
     asyncListCallback = null;
     asyncListFilter = null;
-    if (displaySortWidget) {
+    if (sortWidget != null) {
       assert(sortPredicate != null);
     }
   }
@@ -111,7 +110,6 @@ class SearchableList<T> extends StatefulWidget {
     this.seperatorBuilder,
     this.sortPredicate,
     this.sortWidget,
-    this.displaySortWidget = false,
     this.scrollController,
     this.closeKeyboardWhenScrolling = false,
   }) : super(key: key) {
@@ -120,7 +118,7 @@ class SearchableList<T> extends StatefulWidget {
     expansionListBuilder = null;
     initialList = [];
     filter = null;
-    if (displaySortWidget) {
+    if (sortWidget != null) {
       assert(sortPredicate != null);
     }
   }
@@ -161,13 +159,17 @@ class SearchableList<T> extends StatefulWidget {
     this.closeKeyboardWhenScrolling = false,
     this.hideEmptyExpansionItems = false,
     this.expansionTileEnabled = true,
+    this.sortWidget,
+    this.sortPredicate
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
     isExpansionList = true;
     builder = null;
     initialList = [];
-    displaySortWidget = false;
+    if (sortWidget != null) {
+      assert(sortPredicate != null);
+    }
   }
 
   SearchableList.sliver({
@@ -202,6 +204,8 @@ class SearchableList<T> extends StatefulWidget {
     this.physics,
     this.scrollController,
     this.closeKeyboardWhenScrolling = false,
+    this.sortWidget,
+    this.sortPredicate,
   }) : super(key: key) {
     asyncListCallback = null;
     asyncListFilter = null;
@@ -214,7 +218,9 @@ class SearchableList<T> extends StatefulWidget {
     listViewPadding = null;
     this.reverse = false;
     expansionListBuilder = null;
-    displaySortWidget = false;
+    if (sortWidget != null) {
+      assert(sortPredicate != null);
+    }
   }
 
   /// Initial list of all elements that will be displayed.
@@ -397,10 +403,6 @@ class SearchableList<T> extends StatefulWidget {
   ///required when `displaySortWidget` is True
   late int Function(T a, T b)? sortPredicate;
 
-  ///Indicate if the sort widget will be displayed or not
-  /// Defaults to false
-  late bool displaySortWidget;
-
   ///Widget displayed when sorting list
   /// available only if `displaySortWidget` is True
   late Widget? sortWidget;
@@ -486,7 +488,6 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                           autoCompleteHints: widget.autoCompleteHints,
                           secondaryWidget: widget.secondaryWidget,
                           onSortTap: sortList,
-                          displaySortWidget: widget.displaySortWidget,
                           sortWidget: widget.sortWidget,
                         ),
                         SizedBox(
@@ -530,7 +531,6 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                           autoCompleteHints: widget.autoCompleteHints,
                           secondaryWidget: widget.secondaryWidget,
                           onSortTap: sortList,
-                          displaySortWidget: widget.displaySortWidget,
                           sortWidget: widget.sortWidget,
                         ),
                       ],
@@ -758,7 +758,6 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       secondaryWidget: widget.secondaryWidget,
                       onSortTap: sortList,
                       sortWidget: widget.sortWidget,
-                      displaySortWidget: widget.displaySortWidget,
                     ),
                     SizedBox(
                       height: widget.spaceBetweenSearchAndList,
@@ -850,7 +849,6 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       secondaryWidget: widget.secondaryWidget,
                       onSortTap: sortList,
                       sortWidget: widget.sortWidget,
-                      displaySortWidget: widget.displaySortWidget,
                     ),
                   ],
           )
@@ -883,7 +881,6 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         secondaryWidget: widget.secondaryWidget,
                         onSortTap: sortList,
                         sortWidget: widget.sortWidget,
-                        displaySortWidget: widget.displaySortWidget,
                       ),
                     ),
                     SliverList(
@@ -954,7 +951,6 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         secondaryWidget: widget.secondaryWidget,
                         onSortTap: sortList,
                         sortWidget: widget.sortWidget,
-                        displaySortWidget: widget.displaySortWidget,
                       ),
                     ),
                   ],

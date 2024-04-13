@@ -22,7 +22,6 @@ class SearchTextField extends StatelessWidget {
   final List<String> autoCompleteHints;
   final Widget? secondaryWidget;
   final Function()? onSortTap;
-  final bool displaySortWidget;
   final Widget? sortWidget;
 
   const SearchTextField({
@@ -47,7 +46,6 @@ class SearchTextField extends StatelessWidget {
     required this.autoCompleteHints,
     this.onSortTap,
     this.secondaryWidget,
-    this.displaySortWidget = false,
     this.sortWidget,
   }) : super(key: key);
 
@@ -103,37 +101,8 @@ class SearchTextField extends StatelessWidget {
                     textAlign: textAlign,
                     focusNode: focusNode,
                     enabled: searchFieldEnabled,
-                    decoration: inputDecoration?.copyWith(
-                      suffixIcon: inputDecoration?.suffixIcon ??
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 5,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (displayClearIcon) renderClearIcon(),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                if (displaySortWidget)
-                                  InkWell(
-                                    onTap: () {
-                                      FocusScope.of(context).requestFocus(
-                                        FocusNode(),
-                                      );
-                                      onSortTap?.call();
-                                    },
-                                    child: sortWidget ??
-                                        const Icon(
-                                          Icons.sort,
-                                        ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                    ),
+                    decoration: (inputDecoration ?? const InputDecoration())
+                        .copyWith(suffix: renderSuffixWidget(context)),
                     style: textStyle,
                     controller: searchTextController,
                     textInputAction: keyboardAction,
@@ -153,6 +122,34 @@ class SearchTextField extends StatelessWidget {
                   )),
         if (secondaryWidget != null) secondaryWidget!,
       ],
+    );
+  }
+
+  Widget renderSuffixWidget(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 5,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (displayClearIcon) renderClearIcon(),
+          const SizedBox(
+            width: 5,
+          ),
+          if (sortWidget != null)
+            InkWell(
+              onTap: () {
+                FocusScope.of(context).requestFocus(
+                  FocusNode(),
+                );
+                onSortTap?.call();
+              },
+              child: sortWidget,
+            ),
+        ],
+      ),
     );
   }
 
