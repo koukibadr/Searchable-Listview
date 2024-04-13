@@ -450,6 +450,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         widget.onPaginate?.call();
       }
     });
+    widget.searchTextController?.addListener(() {
+      filterList(widget.searchTextController?.text ?? '');
+    });
   }
 
   @override
