@@ -3,10 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:searchable_listview/resources/arrays.dart';
 import 'package:searchable_listview/widgets/default_error_widget.dart';
+import 'package:searchable_listview/widgets/default_loading_widget.dart';
 import 'package:searchable_listview/widgets/list_item.dart';
-
-import 'widgets/default_loading_widget.dart';
-import 'widgets/search_text_field.dart';
+import 'package:searchable_listview/widgets/search_text_field.dart';
 
 class SearchableList<T> extends StatefulWidget {
   ///indicates whether the ssliver scroll effect will be applied
@@ -123,45 +122,45 @@ class SearchableList<T> extends StatefulWidget {
     }
   }
 
-  SearchableList.expansion(
-      {Key? key,
-      required this.expansionListData,
-      required this.expansionTitleBuilder,
-      required this.filterExpansionData,
-      required this.expansionListBuilder,
-      this.searchTextController,
-      this.keyboardAction = TextInputAction.done,
-      this.inputDecoration,
-      this.style,
-      this.onSubmitSearch,
-      this.searchMode = SearchMode.onEdit,
-      this.emptyWidget = const SizedBox.shrink(),
-      this.textInputType = TextInputType.text,
-      this.obscureText = false,
-      this.focusNode,
-      this.searchFieldEnabled = true,
-      this.onItemSelected,
-      this.displayClearIcon = true,
-      this.defaultSuffixIconColor = Colors.grey,
-      this.spaceBetweenSearchAndList = 20,
-      this.cursorColor,
-      this.maxLines,
-      this.maxLength,
-      this.textAlign = TextAlign.start,
-      this.autoCompleteHints = const [],
-      this.secondaryWidget,
-      this.physics,
-      this.shrinkWrap = false,
-      this.itemExtent,
-      this.listViewPadding,
-      this.reverse = false,
-      this.scrollController,
-      this.closeKeyboardWhenScrolling = false,
-      this.hideEmptyExpansionItems = false,
-      this.expansionTileEnabled = true,
-      this.sortWidget,
-      this.sortPredicate})
-      : super(key: key) {
+  SearchableList.expansion({
+    Key? key,
+    required this.expansionListData,
+    required this.expansionTitleBuilder,
+    required this.filterExpansionData,
+    required this.expansionListBuilder,
+    this.searchTextController,
+    this.keyboardAction = TextInputAction.done,
+    this.inputDecoration,
+    this.style,
+    this.onSubmitSearch,
+    this.searchMode = SearchMode.onEdit,
+    this.emptyWidget = const SizedBox.shrink(),
+    this.textInputType = TextInputType.text,
+    this.obscureText = false,
+    this.focusNode,
+    this.searchFieldEnabled = true,
+    this.onItemSelected,
+    this.displayClearIcon = true,
+    this.defaultSuffixIconColor = Colors.grey,
+    this.spaceBetweenSearchAndList = 20,
+    this.cursorColor,
+    this.maxLines,
+    this.maxLength,
+    this.textAlign = TextAlign.start,
+    this.autoCompleteHints = const [],
+    this.secondaryWidget,
+    this.physics,
+    this.shrinkWrap = false,
+    this.itemExtent,
+    this.listViewPadding,
+    this.reverse = false,
+    this.scrollController,
+    this.closeKeyboardWhenScrolling = false,
+    this.hideEmptyExpansionItems = false,
+    this.expansionTileEnabled = true,
+    this.sortWidget,
+    this.sortPredicate,
+  }) : super(key: key) {
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
     isExpansionList = true;
@@ -791,7 +790,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                                     ),
                                     childCount: widget.initialList.length,
                                   ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -823,7 +822,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                                     ),
                                     childCount: widget.initialList.length,
                                   ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -906,7 +905,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                               ),
                               childCount: widget.initialList.length,
                             ),
-                    )
+                    ),
                   ]
                 : [
                     SliverList(

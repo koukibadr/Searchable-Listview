@@ -54,72 +54,73 @@ class SearchTextField extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-            child: autoCompleteHints.isNotEmpty
-                ? Autocomplete(
-                    optionsBuilder: (textEditingValue) {
-                      return autoCompleteHints;
-                    },
-                    onSelected: (option) {
-                      filterList(option.toString());
-                      FocusScope.of(context).requestFocus(FocusNode());
-                    },
-                    fieldViewBuilder: (
-                      context,
-                      textController,
-                      focusNode,
-                      onFieldSubmitted,
-                    ) {
-                      return TextField(
-                        cursorColor: cursorColor,
-                        maxLength: maxLength,
-                        maxLines: maxLines,
-                        textAlign: textAlign,
-                        focusNode: focusNode,
-                        enabled: searchFieldEnabled,
-                        decoration: inputDecoration?.copyWith(
-                          suffix: InkWell(
-                              onTap: () {
-                                textController.text = '';
-                                filterList(textController.text);
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
-                              },
-                              child: const Icon(Icons.close)),
+          child: autoCompleteHints.isNotEmpty
+              ? Autocomplete(
+                  optionsBuilder: (textEditingValue) {
+                    return autoCompleteHints;
+                  },
+                  onSelected: (option) {
+                    filterList(option.toString());
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
+                  fieldViewBuilder: (
+                    context,
+                    textController,
+                    focusNode,
+                    onFieldSubmitted,
+                  ) {
+                    return TextField(
+                      cursorColor: cursorColor,
+                      maxLength: maxLength,
+                      maxLines: maxLines,
+                      textAlign: textAlign,
+                      focusNode: focusNode,
+                      enabled: searchFieldEnabled,
+                      decoration: inputDecoration?.copyWith(
+                        suffix: InkWell(
+                          onTap: () {
+                            textController.text = '';
+                            filterList(textController.text);
+                            FocusScope.of(context).requestFocus(FocusNode());
+                          },
+                          child: const Icon(Icons.close),
                         ),
-                        style: textStyle,
-                        controller: textController,
-                        onChanged: (value) {
-                          filterList(value);
-                        },
-                      );
-                    },
-                  )
-                : TextField(
-                    cursorColor: cursorColor,
-                    maxLength: maxLength,
-                    maxLines: maxLines,
-                    textAlign: textAlign,
-                    focusNode: focusNode,
-                    enabled: searchFieldEnabled,
-                    decoration: (inputDecoration ?? const InputDecoration())
-                        .copyWith(suffix: renderSuffixWidget(context)),
-                    style: textStyle,
-                    controller: searchTextController,
-                    textInputAction: keyboardAction,
-                    keyboardType: textInputType,
-                    obscureText: obscureText,
-                    onSubmitted: (value) {
-                      onSubmitSearch?.call(value);
-                      if (searchMode == SearchMode.onSubmit) {
+                      ),
+                      style: textStyle,
+                      controller: textController,
+                      onChanged: (value) {
                         filterList(value);
-                      }
-                    },
-                    onChanged: (value) {
-                      if (searchMode == SearchMode.onEdit) {
-                        filterList(value);
-                      }
-                    },
-                  )),
+                      },
+                    );
+                  },
+                )
+              : TextField(
+                  cursorColor: cursorColor,
+                  maxLength: maxLength,
+                  maxLines: maxLines,
+                  textAlign: textAlign,
+                  focusNode: focusNode,
+                  enabled: searchFieldEnabled,
+                  decoration: (inputDecoration ?? const InputDecoration())
+                      .copyWith(suffix: renderSuffixWidget(context)),
+                  style: textStyle,
+                  controller: searchTextController,
+                  textInputAction: keyboardAction,
+                  keyboardType: textInputType,
+                  obscureText: obscureText,
+                  onSubmitted: (value) {
+                    onSubmitSearch?.call(value);
+                    if (searchMode == SearchMode.onSubmit) {
+                      filterList(value);
+                    }
+                  },
+                  onChanged: (value) {
+                    if (searchMode == SearchMode.onEdit) {
+                      filterList(value);
+                    }
+                  },
+                ),
+        ),
         if (secondaryWidget != null) secondaryWidget!,
       ],
     );
