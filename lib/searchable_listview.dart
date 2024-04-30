@@ -182,7 +182,7 @@ class SearchableList<T> extends StatefulWidget {
   SearchableList.sliver({
     Key? key,
     required this.initialList,
-    required this.filter,
+    this.filter,
     this.itemBuilder,
     @Deprecated('use itemBuilder instead, will be removed in the next version')
     this.builder,
@@ -233,6 +233,8 @@ class SearchableList<T> extends StatefulWidget {
     }
   }
 
+  late Widget Function(List<T> displayedList, int itemIndex, T item)? builder;
+
   /// Initial list of all elements that will be displayed.
   ///to filter the [initialList] you need provide [filter] callback
   late List<T> initialList;
@@ -242,7 +244,7 @@ class SearchableList<T> extends StatefulWidget {
   /// or invoked when submiting the text field if ```searchType == SEARCH_TYPE.onSubmit```.
   /// You should return a list of filtered elements.
   List<T> Function(String query)? filter;
-
+  
   ///Async callback that return list to be displayed with future builder
   ///to filter the [asyncListCallback] result you need provide [asyncListFilter]
   Future<List<T>?> Function()? asyncListCallback;
@@ -259,13 +261,9 @@ class SearchableList<T> extends StatefulWidget {
   ///error widget displayed when [asyncListCallback] result is null
   ///if nothing is provided in [errorWidget] searchable list will display a [Icon]
   Widget? errorWidget;
-
+  
   /// Builder function that generates the ListView items
-  /// based on the given index.
-  /// first parameter is the rendered list
-  /// second parameter is the item index in the actual list (filtered index)
-  /// third parameter is the list item that will be rendered
-  late Widget Function(List<T> displayedList,int itemIndex, T item)? builder;
+  /// based on the returned <T> type item
   late Widget Function(T item)? itemBuilder;
 
   /// Builder function that generates the Expansion listView items
