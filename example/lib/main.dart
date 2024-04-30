@@ -94,7 +94,7 @@ class _ExampleAppState extends State<ExampleApp> {
   Widget simpleSearchWithSort() {
     return SearchableList<Actor>(
       sortPredicate: (a, b) => a.age.compareTo(b.age),
-      builder: (list, index, item) {
+      itemBuilder: (item) {
         return ActorItem(actor: item);
       },
       initialList: actors,
@@ -119,8 +119,8 @@ class _ExampleAppState extends State<ExampleApp> {
         return const Divider();
       },
       style: const TextStyle(fontSize: 25),
-      builder: (list, index, item) {
-        return ActorItem(actor: item);
+      builder: (_, __, actorItem) {
+        return ActorItem(actor: actorItem);
       },
       errorWidget: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -174,8 +174,8 @@ class _ExampleAppState extends State<ExampleApp> {
       filter: (query) {
         return actors.where((element) => element.name.contains(query)).toList();
       },
-      builder: (list, index, item) {
-        return ActorItem(actor: list[index]);
+      itemBuilder: (Actor actorItem) {
+        return ActorItem(actor: actorItem);
       },
       sortWidget: const Icon(Icons.sort),
       sortPredicate: (a, b) {
@@ -186,8 +186,8 @@ class _ExampleAppState extends State<ExampleApp> {
 
   Widget renderAsynchSearchableListview() {
     return SearchableList<Actor>.async(
-      builder: (displayedList, itemIndex, item) {
-        return ActorItem(actor: displayedList[itemIndex]);
+      itemBuilder: (Actor item) {
+        return ActorItem(actor: item);
       },
       asyncListCallback: () async {
         await Future.delayed(const Duration(seconds: 5));
