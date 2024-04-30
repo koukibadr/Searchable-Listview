@@ -63,6 +63,7 @@ class SearchableList<T> extends StatefulWidget {
     this.closeKeyboardWhenScrolling = false,
   }) : super(key: key) {
     assert(itemBuilder != null || builder != null);
+    assert(itemBuilder != null || builder != null);
     searchTextController ??= TextEditingController();
     expansionListBuilder = null;
     asyncListCallback = null;
@@ -117,6 +118,7 @@ class SearchableList<T> extends StatefulWidget {
     this.scrollController,
     this.closeKeyboardWhenScrolling = false,
   }) : super(key: key) {
+    assert(itemBuilder != null || builder != null);
     assert(itemBuilder != null || builder != null);
     assert(asyncListCallback != null);
     searchTextController ??= TextEditingController();
@@ -173,6 +175,8 @@ class SearchableList<T> extends StatefulWidget {
     builder = null;
     //! use itemBuiler instead of expansionTitleBuilder and expansionListBuilder
     itemBuilder = null;
+    //! use itemBuiler instead of expansionTitleBuilder and expansionListBuilder
+    itemBuilder = null;
     initialList = [];
     if (sortWidget != null) {
       assert(sortPredicate != null);
@@ -182,7 +186,7 @@ class SearchableList<T> extends StatefulWidget {
   SearchableList.sliver({
     Key? key,
     required this.initialList,
-    required this.filter,
+    this.filter,
     this.itemBuilder,
     @Deprecated('use itemBuilder instead, will be removed in the next version')
     this.builder,
@@ -217,6 +221,7 @@ class SearchableList<T> extends StatefulWidget {
     this.sortPredicate,
   }) : super(key: key) {
     assert(itemBuilder != null || builder != null);
+    assert(itemBuilder != null || builder != null);
     asyncListCallback = null;
     asyncListFilter = null;
     searchTextController ??= TextEditingController();
@@ -232,6 +237,8 @@ class SearchableList<T> extends StatefulWidget {
       assert(sortPredicate != null);
     }
   }
+
+  late Widget Function(List<T> displayedList, int itemIndex, T item)? builder;
 
   /// Initial list of all elements that will be displayed.
   ///to filter the [initialList] you need provide [filter] callback
@@ -261,11 +268,7 @@ class SearchableList<T> extends StatefulWidget {
   Widget? errorWidget;
 
   /// Builder function that generates the ListView items
-  /// based on the given index.
-  /// first parameter is the rendered list
-  /// second parameter is the item index in the actual list (filtered index)
-  /// third parameter is the list item that will be rendered
-  late Widget Function(List<T> displayedList,int itemIndex, T item)? builder;
+  /// based on the returned <T> type item
   late Widget Function(T item)? itemBuilder;
 
   /// Builder function that generates the Expansion listView items
@@ -643,6 +646,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                               item,
                             );
                           }
+                          if (widget.itemBuilder != null) {
+                            return widget.itemBuilder!(
+                              item,
+                            );
+                          }
                           return widget.builder!(
                             list,
                             list.indexOf(item),
@@ -667,6 +675,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                   itemCount: list.length,
                   itemBuilder: (context, index) => ListItem<T>(
                     builder: (item) {
+                      if (widget.itemBuilder != null) {
+                        return widget.itemBuilder!(
+                          item,
+                        );
+                      }
                       if (widget.itemBuilder != null) {
                         return widget.itemBuilder!(
                           item,
@@ -747,6 +760,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
               item,
             );
           }
+          if (widget.itemBuilder != null) {
+            return widget.itemBuilder!(
+              item,
+            );
+          }
           return widget.builder!(list, list.indexOf(item), item);
         },
         item: list[index],
@@ -811,6 +829,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                                             item,
                                           );
                                         }
+                                        if (widget.itemBuilder != null) {
+                                          return widget.itemBuilder!(
+                                            item,
+                                          );
+                                        }
                                         return widget.builder!(
                                           widget.initialList,
                                           widget.initialList.indexOf(item),
@@ -843,6 +866,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                                 : SliverChildBuilderDelegate(
                                     (context, index) => ListItem<T>(
                                       builder: (item) {
+                                        if (widget.itemBuilder != null) {
+                                          return widget.itemBuilder!(
+                                            item,
+                                          );
+                                        }
                                         if (widget.itemBuilder != null) {
                                           return widget.itemBuilder!(
                                             item,
@@ -936,6 +964,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                                       item,
                                     );
                                   }
+                                  if (widget.itemBuilder != null) {
+                                    return widget.itemBuilder!(
+                                      item,
+                                    );
+                                  }
                                   return widget.builder!(
                                     widget.initialList,
                                     widget.initialList.indexOf(item),
@@ -959,6 +992,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                           : SliverChildBuilderDelegate(
                               (context, index) => ListItem<T>(
                                 builder: (item) {
+                                  if (widget.itemBuilder != null) {
+                                    return widget.itemBuilder!(
+                                      item,
+                                    );
+                                  }
                                   if (widget.itemBuilder != null) {
                                     return widget.itemBuilder!(
                                       item,

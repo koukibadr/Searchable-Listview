@@ -1,3 +1,8 @@
+## 2.12.0 - 30/04/2024
+
+* **Enhancements**
+    - Mark `builder` callback as deprecated and introduced `itemBuilder` attribute 
+
 ## 2.11.2 - 13/04/2024
 
 * **Fix Bug**

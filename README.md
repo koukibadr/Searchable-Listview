@@ -58,7 +58,7 @@ dependencies:
   /// or invoked when submiting the text field if ```searchType == SEARCH_TYPE.onSubmit```.
   /// You should return a list of filtered elements.
   List<T> Function(String query)? filter;
-
+  
   ///Async callback that return list to be displayed with future builder
   ///to filter the [asyncListCallback] result you need provide [asyncListFilter]
   Future<List<T>?> Function()? asyncListCallback;
@@ -75,13 +75,10 @@ dependencies:
   ///error widget displayed when [asyncListCallback] result is null
   ///if nothing is provided in [errorWidget] searchable list will display a [Icon]
   Widget? errorWidget;
-
+  
   /// Builder function that generates the ListView items
-  /// based on the given index.
-  /// first parameter is the rendered list
-  /// second parameter is the item index in the actual list (filtered index)
-  /// third parameter is the list item that will be rendered
-  late Widget Function(List<T> displayedList, int itemIndex, T item)? builder;
+  /// based on the returned <T> type item
+  late Widget Function(T item)? itemBuilder;
 
   /// Builder function that generates the Expansion listView items
   /// [expansionGroupIndex] : expansion group index
@@ -307,7 +304,7 @@ Used to create a listview with sliver scrolling effect (with other attributes to
 ```dart
 SearchableList<Actor>(
   initialList: actors,
-  builder: (Actor user) => UserItem(user: user),
+  itemBuilder: (Actor user) => UserItem(user: user),
   filter: (value) => actors.where((element) => element.name.toLowerCase().contains(value),).toList(),
   emptyWidget:  const EmptyView(),
   inputDecoration: InputDecoration(
@@ -394,7 +391,7 @@ SearchableList<Actor>.async(
                     ]);
                   });
                 },
-                builder: (Actor actor) => ActorItem(actor: actor),
+                itemBuilder: (Actor actor) => ActorItem(actor: actor),
                 loadingWidget: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
@@ -458,7 +455,7 @@ SearchableList<Actor>.async(
 ```dart
 SearchableList<Actor>.sliver(
   initialList: actors,
-  builder: (Actor user) => UserItem(user: user),
+  itemBuilder: (Actor user) => UserItem(user: user),
   filter: (value) => actors.where((element) => element.name.toLowerCase().contains(value),).toList(),
   emptyWidget:  const EmptyView(),
   inputDecoration: InputDecoration(
@@ -482,7 +479,7 @@ SearchableList<Actor>.sliver(
 SearchableList<Actor>(
     sortWidget: Icon(Icons.sort),
     sortPredicate: (a, b) => a.age.compareTo(b.age),
-    builder: (list, index, item) {
+    itemBuilder: (item) {
       return ActorItem(actor: item);
     },
     initialList: actors,
@@ -513,7 +510,7 @@ SearchableList<Actor>(
 SearchableList<Actor>(
     sortWidget: Icon(Icons.sort),
     sortPredicate: (a, b) => a.age.compareTo(b.age),
-    builder: (list, index, item) {
+    itemBuilder: (item) {
       return ActorItem(actor: item);
     },
     initialList: actors,

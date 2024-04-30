@@ -119,8 +119,8 @@ class _ExampleAppState extends State<ExampleApp> {
         return const Divider();
       },
       style: const TextStyle(fontSize: 25),
-      builder: (_, __, actorItem) {
-        return ActorItem(actor: actorItem);
+      itemBuilder: (item) {
+        return ActorItem(actor: item);
       },
       errorWidget: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
