@@ -95,6 +95,7 @@ class _ExampleAppState extends State<ExampleApp> {
     return SearchableList<Actor>(
       sortPredicate: (a, b) => a.age.compareTo(b.age),
       itemBuilder: (item) {
+      itemBuilder: (item) {
         return ActorItem(actor: item);
       },
       initialList: actors,
@@ -176,6 +177,8 @@ class _ExampleAppState extends State<ExampleApp> {
       },
       itemBuilder: (Actor actorItem) {
         return ActorItem(actor: actorItem);
+      itemBuilder: (Actor actorItem) {
+        return ActorItem(actor: actorItem);
       },
       sortWidget: const Icon(Icons.sort),
       sortPredicate: (a, b) {
@@ -186,6 +189,8 @@ class _ExampleAppState extends State<ExampleApp> {
 
   Widget renderAsynchSearchableListview() {
     return SearchableList<Actor>.async(
+      itemBuilder: (Actor item) {
+        return ActorItem(actor: item);
       itemBuilder: (Actor item) {
         return ActorItem(actor: item);
       },

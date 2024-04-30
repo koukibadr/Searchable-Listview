@@ -21,9 +21,12 @@ class SearchableList<T> extends StatefulWidget {
     Key? key,
     required this.initialList,
     this.itemBuilder,
+    this.itemBuilder,
     this.filter,
     this.loadingWidget,
     this.errorWidget,
+    @Deprecated('use itemBuilder instead, will be removed in the next version')
+    this.builder,
     @Deprecated('use itemBuilder instead, will be removed in the next version')
     this.builder,
     this.searchTextController,
@@ -63,6 +66,7 @@ class SearchableList<T> extends StatefulWidget {
     this.closeKeyboardWhenScrolling = false,
   }) : super(key: key) {
     assert(itemBuilder != null || builder != null);
+    assert(itemBuilder != null || builder != null);
     searchTextController ??= TextEditingController();
     expansionListBuilder = null;
     asyncListCallback = null;
@@ -76,6 +80,9 @@ class SearchableList<T> extends StatefulWidget {
     Key? key,
     required this.asyncListCallback,
     required this.asyncListFilter,
+    this.itemBuilder,
+    @Deprecated('use itemBuilder instead, will be removed in the next version')
+    this.builder,
     this.itemBuilder,
     @Deprecated('use itemBuilder instead, will be removed in the next version')
     this.builder,
@@ -117,6 +124,7 @@ class SearchableList<T> extends StatefulWidget {
     this.scrollController,
     this.closeKeyboardWhenScrolling = false,
   }) : super(key: key) {
+    assert(itemBuilder != null || builder != null);
     assert(itemBuilder != null || builder != null);
     assert(asyncListCallback != null);
     searchTextController ??= TextEditingController();
@@ -173,6 +181,8 @@ class SearchableList<T> extends StatefulWidget {
     builder = null;
     //! use itemBuiler instead of expansionTitleBuilder and expansionListBuilder
     itemBuilder = null;
+    //! use itemBuiler instead of expansionTitleBuilder and expansionListBuilder
+    itemBuilder = null;
     initialList = [];
     if (sortWidget != null) {
       assert(sortPredicate != null);
@@ -216,6 +226,7 @@ class SearchableList<T> extends StatefulWidget {
     this.sortWidget,
     this.sortPredicate,
   }) : super(key: key) {
+    assert(itemBuilder != null || builder != null);
     assert(itemBuilder != null || builder != null);
     asyncListCallback = null;
     asyncListFilter = null;
@@ -641,6 +652,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                               item,
                             );
                           }
+                          if (widget.itemBuilder != null) {
+                            return widget.itemBuilder!(
+                              item,
+                            );
+                          }
                           return widget.builder!(
                             list,
                             list.indexOf(item),
@@ -665,6 +681,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                   itemCount: list.length,
                   itemBuilder: (context, index) => ListItem<T>(
                     builder: (item) {
+                      if (widget.itemBuilder != null) {
+                        return widget.itemBuilder!(
+                          item,
+                        );
+                      }
                       if (widget.itemBuilder != null) {
                         return widget.itemBuilder!(
                           item,
@@ -745,6 +766,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
               item,
             );
           }
+          if (widget.itemBuilder != null) {
+            return widget.itemBuilder!(
+              item,
+            );
+          }
           return widget.builder!(list, list.indexOf(item), item);
         },
         item: list[index],
@@ -809,6 +835,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                                             item,
                                           );
                                         }
+                                        if (widget.itemBuilder != null) {
+                                          return widget.itemBuilder!(
+                                            item,
+                                          );
+                                        }
                                         return widget.builder!(
                                           widget.initialList,
                                           widget.initialList.indexOf(item),
@@ -841,6 +872,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                                 : SliverChildBuilderDelegate(
                                     (context, index) => ListItem<T>(
                                       builder: (item) {
+                                        if (widget.itemBuilder != null) {
+                                          return widget.itemBuilder!(
+                                            item,
+                                          );
+                                        }
                                         if (widget.itemBuilder != null) {
                                           return widget.itemBuilder!(
                                             item,
@@ -934,6 +970,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                                       item,
                                     );
                                   }
+                                  if (widget.itemBuilder != null) {
+                                    return widget.itemBuilder!(
+                                      item,
+                                    );
+                                  }
                                   return widget.builder!(
                                     widget.initialList,
                                     widget.initialList.indexOf(item),
@@ -957,6 +998,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                           : SliverChildBuilderDelegate(
                               (context, index) => ListItem<T>(
                                 builder: (item) {
+                                  if (widget.itemBuilder != null) {
+                                    return widget.itemBuilder!(
+                                      item,
+                                    );
+                                  }
                                   if (widget.itemBuilder != null) {
                                     return widget.itemBuilder!(
                                       item,
