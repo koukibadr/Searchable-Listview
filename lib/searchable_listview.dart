@@ -21,12 +21,9 @@ class SearchableList<T> extends StatefulWidget {
     Key? key,
     required this.initialList,
     this.itemBuilder,
-    this.itemBuilder,
     this.filter,
     this.loadingWidget,
     this.errorWidget,
-    @Deprecated('use itemBuilder instead, will be removed in the next version')
-    this.builder,
     @Deprecated('use itemBuilder instead, will be removed in the next version')
     this.builder,
     this.searchTextController,
@@ -80,9 +77,6 @@ class SearchableList<T> extends StatefulWidget {
     Key? key,
     required this.asyncListCallback,
     required this.asyncListFilter,
-    this.itemBuilder,
-    @Deprecated('use itemBuilder instead, will be removed in the next version')
-    this.builder,
     this.itemBuilder,
     @Deprecated('use itemBuilder instead, will be removed in the next version')
     this.builder,
