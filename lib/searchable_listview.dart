@@ -249,7 +249,7 @@ class SearchableList<T> extends StatefulWidget {
   /// or invoked when submiting the text field if ```searchType == SEARCH_TYPE.onSubmit```.
   /// You should return a list of filtered elements.
   List<T> Function(String query)? filter;
-  
+
   ///Async callback that return list to be displayed with future builder
   ///to filter the [asyncListCallback] result you need provide [asyncListFilter]
   Future<List<T>?> Function()? asyncListCallback;
@@ -266,7 +266,7 @@ class SearchableList<T> extends StatefulWidget {
   ///error widget displayed when [asyncListCallback] result is null
   ///if nothing is provided in [errorWidget] searchable list will display a [Icon]
   Widget? errorWidget;
-  
+
   /// Builder function that generates the ListView items
   /// based on the returned <T> type item
   late Widget Function(T item)? itemBuilder;
