@@ -21,7 +21,7 @@
     },
     "peacock.color": "#2F0601",
     "editor.codeActionsOnSave": {
-        "source.fixAll": true,
-        "source.organizeImports": true
+        "source.fixAll": "explicit",
+        "source.organizeImports": "explicit"
     }
 }
