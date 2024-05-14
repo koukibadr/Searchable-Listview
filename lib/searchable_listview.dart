@@ -485,7 +485,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: widget.searchTextPosition == SearchTextPosition.top
                     ? [
-                        Container(
+                        SizedBox(
                           width: widget.searchFieldMaxWidth,
                           child: SearchTextField(
                             filterList: filterList,
@@ -529,7 +529,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         SizedBox(
                           height: widget.spaceBetweenSearchAndList,
                         ),
-                        Container(
+                        SizedBox(
                           width: widget.searchFieldMaxWidth,
                           child: SearchTextField(
                             filterList: filterList,
