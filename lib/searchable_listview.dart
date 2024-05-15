@@ -24,7 +24,8 @@ class SearchableList<T> extends StatefulWidget {
     this.filter,
     this.loadingWidget,
     this.errorWidget,
-    @Deprecated('use itemBuilder instead, will be removed in the next version') this.builder,
+    @Deprecated('use itemBuilder instead, will be removed in the next version') 
+    this.builder,
     this.searchTextController,
     this.keyboardAction = TextInputAction.done,
     this.inputDecoration,
@@ -80,7 +81,8 @@ class SearchableList<T> extends StatefulWidget {
     required this.asyncListCallback,
     required this.asyncListFilter,
     this.itemBuilder,
-    @Deprecated('use itemBuilder instead, will be removed in the next version') this.builder,
+    @Deprecated('use itemBuilder instead, will be removed in the next version') 
+    this.builder,
     this.loadingWidget,
     this.errorWidget,
     this.searchTextController,
@@ -195,7 +197,8 @@ class SearchableList<T> extends StatefulWidget {
     required this.initialList,
     this.filter,
     this.itemBuilder,
-    @Deprecated('use itemBuilder instead, will be removed in the next version') this.builder,
+    @Deprecated('use itemBuilder instead, will be removed in the next version') 
+    this.builder,
     this.searchTextController,
     this.keyboardAction = TextInputAction.done,
     this.inputDecoration,
@@ -355,6 +358,10 @@ class SearchableList<T> extends StatefulWidget {
   /// The color applied on the suffix icon (if `displayClearIcon = true`).
   /// Defaults to [Colors.grey].
   final Color defaultSuffixIconColor;
+
+  /// The size of the suffix icon (if `displayClearIcon = true`).
+  /// Defaults to 24.
+  final double defaultSuffixIconSize = 24;
 
   ///An async callback invoked when dragging down the list
   ///if onRefresh is nullable the drag to refresh is not applied
@@ -518,6 +525,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                             displayClearIcon: widget.displayClearIcon,
                             displaySearchIcon: widget.displaySearchIcon,
                             defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                            defaultSuffixIconSize: widget.defaultSuffixIconSize,
                             textStyle: widget.style,
                             cursorColor: widget.cursorColor,
                             maxLength: widget.maxLength,
@@ -564,6 +572,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                             displayClearIcon: widget.displayClearIcon,
                             displaySearchIcon: widget.displaySearchIcon,
                             defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                            defaultSuffixIconSize: widget.defaultSuffixIconSize,
                             textStyle: widget.style,
                             cursorColor: widget.cursorColor,
                             maxLength: widget.maxLength,
@@ -625,6 +634,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
             displayClearIcon: widget.displayClearIcon,
             displaySearchIcon: widget.displaySearchIcon,
             defaultSuffixIconColor: widget.defaultSuffixIconColor,
+            defaultSuffixIconSize: widget.defaultSuffixIconSize,
             textStyle: widget.style,
             cursorColor: widget.cursorColor,
             maxLength: widget.maxLength,
@@ -827,6 +837,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         displayClearIcon: widget.displayClearIcon,
                         displaySearchIcon: widget.displaySearchIcon,
                         defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                        defaultSuffixIconSize: widget.defaultSuffixIconSize,
                         textStyle: widget.style,
                         cursorColor: widget.cursorColor,
                         maxLength: widget.maxLength,
@@ -942,6 +953,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         displayClearIcon: widget.displayClearIcon,
                         displaySearchIcon: widget.displaySearchIcon,
                         defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                        defaultSuffixIconSize: widget.defaultSuffixIconSize,
                         textStyle: widget.style,
                         cursorColor: widget.cursorColor,
                         maxLength: widget.maxLength,
@@ -976,6 +988,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         displayClearIcon: widget.displayClearIcon,
                         displaySearchIcon: widget.displaySearchIcon,
                         defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                        defaultSuffixIconSize: widget.defaultSuffixIconSize,
                         textStyle: widget.style,
                         cursorColor: widget.cursorColor,
                         maxLength: widget.maxLength,
@@ -1067,6 +1080,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         displayClearIcon: widget.displayClearIcon,
                         displaySearchIcon: widget.displaySearchIcon,
                         defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                        defaultSuffixIconSize: widget.defaultSuffixIconSize,
                         textStyle: widget.style,
                         cursorColor: widget.cursorColor,
                         maxLength: widget.maxLength,

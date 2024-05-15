@@ -15,6 +15,7 @@ class SearchTextField extends StatelessWidget {
   final bool displayClearIcon;
   final bool displaySearchIcon;
   final Color defaultSuffixIconColor;
+  final double defaultSuffixIconSize;
   final TextStyle? textStyle;
   final Color? cursorColor;
   final int? maxLines;
@@ -40,6 +41,7 @@ class SearchTextField extends StatelessWidget {
     required this.displayClearIcon,
     required this.displaySearchIcon,
     required this.defaultSuffixIconColor,
+    required this.defaultSuffixIconSize,
     required this.textStyle,
     required this.cursorColor,
     required this.maxLines,
@@ -165,7 +167,7 @@ class SearchTextField extends StatelessWidget {
         },
         child: Icon(
           Icons.clear,
-          size: 15,
+          size: defaultSuffixIconSize,
           color: defaultSuffixIconColor,
         ),
       );
@@ -173,7 +175,7 @@ class SearchTextField extends StatelessWidget {
       return displaySearchIcon
           ? Icon(
                 Icons.search,
-                size: 15,
+                size: defaultSuffixIconSize,
                 color: defaultSuffixIconColor,
             )
           : Container();
