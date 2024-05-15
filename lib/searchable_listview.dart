@@ -43,6 +43,7 @@ class SearchableList<T> extends StatefulWidget {
     this.displayClearIcon = true,
     this.displaySearchIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
+    this.defaultSuffixIconSize  = 24,
     this.onRefresh,
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
@@ -102,6 +103,7 @@ class SearchableList<T> extends StatefulWidget {
     this.displayClearIcon = true,
     this.displaySearchIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
+    this.defaultSuffixIconSize = 24,
     this.onRefresh,
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
@@ -159,6 +161,7 @@ class SearchableList<T> extends StatefulWidget {
     this.displayClearIcon = true,
     this.displaySearchIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
+    this.defaultSuffixIconSize = 24,
     this.spaceBetweenSearchAndList = 20,
     this.cursorColor,
     this.maxLines,
@@ -216,6 +219,7 @@ class SearchableList<T> extends StatefulWidget {
     this.displayClearIcon = true,
     this.displaySearchIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
+    this.defaultSuffixIconSize = 24,
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
@@ -361,7 +365,7 @@ class SearchableList<T> extends StatefulWidget {
 
   /// The size of the suffix icon (if `displayClearIcon = true`).
   /// Defaults to 24.
-  final double defaultSuffixIconSize = 24;
+  final double defaultSuffixIconSize;
 
   ///An async callback invoked when dragging down the list
   ///if onRefresh is nullable the drag to refresh is not applied
