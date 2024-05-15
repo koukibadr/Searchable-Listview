@@ -13,6 +13,7 @@ class SearchTextField extends StatelessWidget {
   final Function(String) filterList;
   final Function(String)? onSubmitSearch;
   final bool displayClearIcon;
+  final bool displaySearchIcon;
   final Color defaultSuffixIconColor;
   final TextStyle? textStyle;
   final Color? cursorColor;
@@ -37,6 +38,7 @@ class SearchTextField extends StatelessWidget {
     required this.searchTextController,
     required this.textInputType,
     required this.displayClearIcon,
+    required this.displaySearchIcon,
     required this.defaultSuffixIconColor,
     required this.textStyle,
     required this.cursorColor,
@@ -101,8 +103,8 @@ class SearchTextField extends StatelessWidget {
                   textAlign: textAlign,
                   focusNode: focusNode,
                   enabled: searchFieldEnabled,
-                  decoration: (inputDecoration ?? const InputDecoration())
-                      .copyWith(suffix: renderSuffixWidget(context)),
+                  decoration:
+                      (inputDecoration ?? const InputDecoration()).copyWith(suffix: renderSuffixWidget(context)),
                   style: textStyle,
                   controller: searchTextController,
                   textInputAction: keyboardAction,
@@ -167,13 +169,15 @@ class SearchTextField extends StatelessWidget {
         ),
       );
     } else {
-      return Padding(
-        padding: const EdgeInsets.only(top: 1),
-        child: Icon(
-          Icons.search,
-          color: defaultSuffixIconColor,
-        ),
-      );
+      return displaySearchIcon
+          ? Padding(
+              padding: const EdgeInsets.only(top: 1),
+              child: Icon(
+                Icons.search,
+                color: defaultSuffixIconColor,
+              ),
+            )
+          : Container();
     }
   }
 }

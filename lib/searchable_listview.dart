@@ -24,8 +24,7 @@ class SearchableList<T> extends StatefulWidget {
     this.filter,
     this.loadingWidget,
     this.errorWidget,
-    @Deprecated('use itemBuilder instead, will be removed in the next version') 
-    this.builder,
+    @Deprecated('use itemBuilder instead, will be removed in the next version') this.builder,
     this.searchTextController,
     this.keyboardAction = TextInputAction.done,
     this.inputDecoration,
@@ -41,6 +40,7 @@ class SearchableList<T> extends StatefulWidget {
     this.searchFieldHeight,
     this.onItemSelected,
     this.displayClearIcon = true,
+    this.displaySearchIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
     this.onRefresh,
     this.scrollDirection = Axis.vertical,
@@ -80,8 +80,7 @@ class SearchableList<T> extends StatefulWidget {
     required this.asyncListCallback,
     required this.asyncListFilter,
     this.itemBuilder,
-    @Deprecated('use itemBuilder instead, will be removed in the next version') 
-    this.builder,
+    @Deprecated('use itemBuilder instead, will be removed in the next version') this.builder,
     this.loadingWidget,
     this.errorWidget,
     this.searchTextController,
@@ -99,6 +98,7 @@ class SearchableList<T> extends StatefulWidget {
     this.searchFieldHeight,
     this.onItemSelected,
     this.displayClearIcon = true,
+    this.displaySearchIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
     this.onRefresh,
     this.scrollDirection = Axis.vertical,
@@ -155,6 +155,7 @@ class SearchableList<T> extends StatefulWidget {
     this.searchFieldHeight,
     this.onItemSelected,
     this.displayClearIcon = true,
+    this.displaySearchIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
     this.spaceBetweenSearchAndList = 20,
     this.cursorColor,
@@ -194,8 +195,7 @@ class SearchableList<T> extends StatefulWidget {
     required this.initialList,
     this.filter,
     this.itemBuilder,
-    @Deprecated('use itemBuilder instead, will be removed in the next version') 
-    this.builder,
+    @Deprecated('use itemBuilder instead, will be removed in the next version') this.builder,
     this.searchTextController,
     this.keyboardAction = TextInputAction.done,
     this.inputDecoration,
@@ -211,6 +211,7 @@ class SearchableList<T> extends StatefulWidget {
     this.searchFieldHeight,
     this.onItemSelected,
     this.displayClearIcon = true,
+    this.displaySearchIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
@@ -331,7 +332,7 @@ class SearchableList<T> extends StatefulWidget {
   /// max width of search text field
   final double? searchFieldWidth;
 
-    /// height of search text field
+  /// height of search text field
   final double? searchFieldHeight;
 
   /// The focus node applied on the search text field
@@ -341,10 +342,15 @@ class SearchableList<T> extends StatefulWidget {
   /// Defaults to null
   final void Function(T)? onItemSelected;
 
-  /// Indicate whether the clear icon will be displayed or not
+  /// Indicate whether the clear and search icons will be displayed or not
   /// by default it's true, to display the clear icon the inputDecoration should not contains suffix icon
   /// otherwise the initial suffix icon will be displayed
   final bool displayClearIcon;
+
+  /// Indicate whether the search icon will be displayed or not
+  /// by default it's true, to display the search icon the inputDecoration should not contains suffix icon
+  /// otherwise the initial suffix icon will be displayed
+  final bool displaySearchIcon;
 
   /// The color applied on the suffix icon (if `displayClearIcon = true`).
   /// Defaults to [Colors.grey].
@@ -510,6 +516,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                             searchTextController: widget.searchTextController,
                             textInputType: widget.textInputType,
                             displayClearIcon: widget.displayClearIcon,
+                            displaySearchIcon: widget.displaySearchIcon,
                             defaultSuffixIconColor: widget.defaultSuffixIconColor,
                             textStyle: widget.style,
                             cursorColor: widget.cursorColor,
@@ -555,6 +562,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                             searchTextController: widget.searchTextController,
                             textInputType: widget.textInputType,
                             displayClearIcon: widget.displayClearIcon,
+                            displaySearchIcon: widget.displaySearchIcon,
                             defaultSuffixIconColor: widget.defaultSuffixIconColor,
                             textStyle: widget.style,
                             cursorColor: widget.cursorColor,
@@ -615,6 +623,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
             searchTextController: widget.searchTextController,
             textInputType: widget.textInputType,
             displayClearIcon: widget.displayClearIcon,
+            displaySearchIcon: widget.displaySearchIcon,
             defaultSuffixIconColor: widget.defaultSuffixIconColor,
             textStyle: widget.style,
             cursorColor: widget.cursorColor,
@@ -816,6 +825,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         searchTextController: widget.searchTextController,
                         textInputType: widget.textInputType,
                         displayClearIcon: widget.displayClearIcon,
+                        displaySearchIcon: widget.displaySearchIcon,
                         defaultSuffixIconColor: widget.defaultSuffixIconColor,
                         textStyle: widget.style,
                         cursorColor: widget.cursorColor,
@@ -930,6 +940,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         searchTextController: widget.searchTextController,
                         textInputType: widget.textInputType,
                         displayClearIcon: widget.displayClearIcon,
+                        displaySearchIcon: widget.displaySearchIcon,
                         defaultSuffixIconColor: widget.defaultSuffixIconColor,
                         textStyle: widget.style,
                         cursorColor: widget.cursorColor,
@@ -963,6 +974,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         searchTextController: widget.searchTextController,
                         textInputType: widget.textInputType,
                         displayClearIcon: widget.displayClearIcon,
+                        displaySearchIcon: widget.displaySearchIcon,
                         defaultSuffixIconColor: widget.defaultSuffixIconColor,
                         textStyle: widget.style,
                         cursorColor: widget.cursorColor,
@@ -1053,6 +1065,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         searchTextController: widget.searchTextController,
                         textInputType: widget.textInputType,
                         displayClearIcon: widget.displayClearIcon,
+                        displaySearchIcon: widget.displaySearchIcon,
                         defaultSuffixIconColor: widget.defaultSuffixIconColor,
                         textStyle: widget.style,
                         cursorColor: widget.cursorColor,
