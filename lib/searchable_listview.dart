@@ -24,7 +24,8 @@ class SearchableList<T> extends StatefulWidget {
     this.filter,
     this.loadingWidget,
     this.errorWidget,
-    @Deprecated('use itemBuilder instead, will be removed in the next version') this.builder,
+    @Deprecated('use itemBuilder instead, will be removed in the next version') 
+    this.builder,
     this.searchTextController,
     this.keyboardAction = TextInputAction.done,
     this.inputDecoration,
@@ -36,7 +37,8 @@ class SearchableList<T> extends StatefulWidget {
     this.obscureText = false,
     this.focusNode,
     this.searchFieldEnabled = true,
-    this.searchFieldMaxWidth,
+    this.searchFieldWidth,
+    this.searchFieldHeight,
     this.onItemSelected,
     this.displayClearIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
@@ -78,7 +80,8 @@ class SearchableList<T> extends StatefulWidget {
     required this.asyncListCallback,
     required this.asyncListFilter,
     this.itemBuilder,
-    @Deprecated('use itemBuilder instead, will be removed in the next version') this.builder,
+    @Deprecated('use itemBuilder instead, will be removed in the next version') 
+    this.builder,
     this.loadingWidget,
     this.errorWidget,
     this.searchTextController,
@@ -92,7 +95,8 @@ class SearchableList<T> extends StatefulWidget {
     this.obscureText = false,
     this.focusNode,
     this.searchFieldEnabled = true,
-    this.searchFieldMaxWidth,
+    this.searchFieldWidth,
+    this.searchFieldHeight,
     this.onItemSelected,
     this.displayClearIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
@@ -147,7 +151,8 @@ class SearchableList<T> extends StatefulWidget {
     this.obscureText = false,
     this.focusNode,
     this.searchFieldEnabled = true,
-    this.searchFieldMaxWidth,
+    this.searchFieldWidth,
+    this.searchFieldHeight,
     this.onItemSelected,
     this.displayClearIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
@@ -189,7 +194,8 @@ class SearchableList<T> extends StatefulWidget {
     required this.initialList,
     this.filter,
     this.itemBuilder,
-    @Deprecated('use itemBuilder instead, will be removed in the next version') this.builder,
+    @Deprecated('use itemBuilder instead, will be removed in the next version') 
+    this.builder,
     this.searchTextController,
     this.keyboardAction = TextInputAction.done,
     this.inputDecoration,
@@ -201,7 +207,8 @@ class SearchableList<T> extends StatefulWidget {
     this.obscureText = false,
     this.focusNode,
     this.searchFieldEnabled = true,
-    this.searchFieldMaxWidth,
+    this.searchFieldWidth,
+    this.searchFieldHeight,
     this.onItemSelected,
     this.displayClearIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
@@ -322,7 +329,10 @@ class SearchableList<T> extends StatefulWidget {
   final bool searchFieldEnabled;
 
   /// max width of search text field
-  final double? searchFieldMaxWidth;
+  final double? searchFieldWidth;
+
+    /// height of search text field
+  final double? searchFieldHeight;
 
   /// The focus node applied on the search text field
   final FocusNode? focusNode;
@@ -486,7 +496,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 children: widget.searchTextPosition == SearchTextPosition.top
                     ? [
                         SizedBox(
-                          width: widget.searchFieldMaxWidth,
+                          width: widget.searchFieldWidth,
+                          height: widget.searchFieldHeight,
                           child: SearchTextField(
                             filterList: filterList,
                             focusNode: widget.focusNode,
@@ -530,7 +541,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                           height: widget.spaceBetweenSearchAndList,
                         ),
                         SizedBox(
-                          width: widget.searchFieldMaxWidth,
+                          width: widget.searchFieldWidth,
+                          height: widget.searchFieldHeight,
                           child: SearchTextField(
                             filterList: filterList,
                             focusNode: widget.focusNode,
@@ -589,7 +601,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: widget.searchFieldMaxWidth,
+          width: widget.searchFieldWidth,
+          height: widget.searchFieldHeight,
           child: SearchTextField(
             filterList: filterList,
             focusNode: widget.focusNode,
@@ -790,7 +803,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
             children: widget.searchTextPosition == SearchTextPosition.top
                 ? [
                     SizedBox(
-                      width: widget.searchFieldMaxWidth,
+                      width: widget.searchFieldWidth,
                       child: SearchTextField(
                         filterList: filterList,
                         focusNode: widget.focusNode,
@@ -904,7 +917,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                       height: widget.spaceBetweenSearchAndList,
                     ),
                     SizedBox(
-                      width: widget.searchFieldMaxWidth,
+                      width: widget.searchFieldWidth,
                       child: SearchTextField(
                         filterList: filterList,
                         focusNode: widget.focusNode,
