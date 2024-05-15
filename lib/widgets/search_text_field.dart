@@ -167,9 +167,12 @@ class SearchTextField extends StatelessWidget {
         ),
       );
     } else {
-      return Icon(
-        Icons.search,
-        color: defaultSuffixIconColor,
+      return Padding(
+        padding: const EdgeInsets.only(top: 1),
+        child: Icon(
+          Icons.search,
+          color: defaultSuffixIconColor,
+        ),
       );
     }
   }
