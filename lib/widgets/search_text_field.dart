@@ -171,13 +171,10 @@ class SearchTextField extends StatelessWidget {
       );
     } else {
       return displaySearchIcon
-          ? Padding(
-              padding: const EdgeInsets.only(top: 1),
-              child: Icon(
+          ? Icon(
                 Icons.search,
                 size: 15,
                 color: defaultSuffixIconColor,
-              ),
             )
           : Container();
     }
