@@ -165,6 +165,7 @@ class SearchTextField extends StatelessWidget {
         },
         child: Icon(
           Icons.clear,
+          size: 15,
           color: defaultSuffixIconColor,
         ),
       );
@@ -174,6 +175,7 @@ class SearchTextField extends StatelessWidget {
               padding: const EdgeInsets.only(top: 1),
               child: Icon(
                 Icons.search,
+                size: 15,
                 color: defaultSuffixIconColor,
               ),
             )
