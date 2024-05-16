@@ -24,7 +24,7 @@ class SearchableList<T> extends StatefulWidget {
     this.filter,
     this.loadingWidget,
     this.errorWidget,
-    @Deprecated('use itemBuilder instead, will be removed in the next version')
+    @Deprecated('use itemBuilder instead, will be removed in the next version') 
     this.builder,
     this.searchTextController,
     this.keyboardAction = TextInputAction.done,
@@ -37,9 +37,13 @@ class SearchableList<T> extends StatefulWidget {
     this.obscureText = false,
     this.focusNode,
     this.searchFieldEnabled = true,
+    this.searchFieldWidth,
+    this.searchFieldHeight,
     this.onItemSelected,
     this.displayClearIcon = true,
+    this.displaySearchIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
+    this.defaultSuffixIconSize  = 24,
     this.onRefresh,
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
@@ -78,7 +82,7 @@ class SearchableList<T> extends StatefulWidget {
     required this.asyncListCallback,
     required this.asyncListFilter,
     this.itemBuilder,
-    @Deprecated('use itemBuilder instead, will be removed in the next version')
+    @Deprecated('use itemBuilder instead, will be removed in the next version') 
     this.builder,
     this.loadingWidget,
     this.errorWidget,
@@ -93,9 +97,13 @@ class SearchableList<T> extends StatefulWidget {
     this.obscureText = false,
     this.focusNode,
     this.searchFieldEnabled = true,
+    this.searchFieldWidth,
+    this.searchFieldHeight,
     this.onItemSelected,
     this.displayClearIcon = true,
+    this.displaySearchIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
+    this.defaultSuffixIconSize = 24,
     this.onRefresh,
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
@@ -147,9 +155,13 @@ class SearchableList<T> extends StatefulWidget {
     this.obscureText = false,
     this.focusNode,
     this.searchFieldEnabled = true,
+    this.searchFieldWidth,
+    this.searchFieldHeight,
     this.onItemSelected,
     this.displayClearIcon = true,
+    this.displaySearchIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
+    this.defaultSuffixIconSize = 24,
     this.spaceBetweenSearchAndList = 20,
     this.cursorColor,
     this.maxLines,
@@ -188,7 +200,7 @@ class SearchableList<T> extends StatefulWidget {
     required this.initialList,
     this.filter,
     this.itemBuilder,
-    @Deprecated('use itemBuilder instead, will be removed in the next version')
+    @Deprecated('use itemBuilder instead, will be removed in the next version') 
     this.builder,
     this.searchTextController,
     this.keyboardAction = TextInputAction.done,
@@ -201,9 +213,13 @@ class SearchableList<T> extends StatefulWidget {
     this.obscureText = false,
     this.focusNode,
     this.searchFieldEnabled = true,
+    this.searchFieldWidth,
+    this.searchFieldHeight,
     this.onItemSelected,
     this.displayClearIcon = true,
+    this.displaySearchIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
+    this.defaultSuffixIconSize = 24,
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
@@ -275,8 +291,7 @@ class SearchableList<T> extends StatefulWidget {
   /// [expansionGroupIndex] : expansion group index
   /// [listItem] the current item model that will be rendered.
   /// Used only for expansion list constructor
-  late Widget Function(int expansionGroupIndex, T listItem)?
-      expansionListBuilder;
+  late Widget Function(int expansionGroupIndex, T listItem)? expansionListBuilder;
 
   /// The widget to be displayed when the filter returns an empty list.
   /// Defaults to `const SizedBox.shrink()`.
@@ -321,6 +336,12 @@ class SearchableList<T> extends StatefulWidget {
   /// Defaults to `true`.
   final bool searchFieldEnabled;
 
+  /// max width of search text field
+  final double? searchFieldWidth;
+
+  /// height of search text field
+  final double? searchFieldHeight;
+
   /// The focus node applied on the search text field
   final FocusNode? focusNode;
 
@@ -328,14 +349,23 @@ class SearchableList<T> extends StatefulWidget {
   /// Defaults to null
   final void Function(T)? onItemSelected;
 
-  /// Indicate whether the clear icon will be displayed or not
+  /// Indicate whether the clear and search icons will be displayed or not
   /// by default it's true, to display the clear icon the inputDecoration should not contains suffix icon
   /// otherwise the initial suffix icon will be displayed
   final bool displayClearIcon;
 
+  /// Indicate whether the search icon will be displayed or not
+  /// by default it's true, to display the search icon the inputDecoration should not contains suffix icon
+  /// otherwise the initial suffix icon will be displayed
+  final bool displaySearchIcon;
+
   /// The color applied on the suffix icon (if `displayClearIcon = true`).
   /// Defaults to [Colors.grey].
   final Color defaultSuffixIconColor;
+
+  /// The size of the suffix icon (if `displayClearIcon = true`).
+  /// Defaults to 24.
+  final double defaultSuffixIconSize;
 
   ///An async callback invoked when dragging down the list
   ///if onRefresh is nullable the drag to refresh is not applied
@@ -445,8 +475,7 @@ class SearchableList<T> extends StatefulWidget {
 class _SearchableListState<T> extends State<SearchableList<T>> {
   ///create scroll controller instance
   ///attached to the listview widget
-  late ScrollController scrollController =
-      widget.scrollController ?? ScrollController();
+  late ScrollController scrollController = widget.scrollController ?? ScrollController();
   List<T> asyncListResult = [];
   List<T> filtredAsyncListResult = [];
   bool dataDownloaded = false;
@@ -458,9 +487,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       if (widget.closeKeyboardWhenScrolling) {
         FocusScope.of(context).requestFocus(FocusNode());
       }
-      if (widget.onPaginate != null &&
-          scrollController.position.pixels ==
-              scrollController.position.maxScrollExtent) {
+      if (widget.onPaginate != null && scrollController.position.pixels == scrollController.position.maxScrollExtent) {
         widget.onPaginate?.call();
       }
     });
@@ -482,73 +509,84 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         : widget.sliverScrollEffect
             ? renderSliverEffect()
             : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: widget.searchTextPosition == SearchTextPosition.top
                     ? [
-                        SearchTextField(
-                          filterList: filterList,
-                          focusNode: widget.focusNode,
-                          inputDecoration: widget.inputDecoration,
-                          keyboardAction: widget.keyboardAction,
-                          obscureText: widget.obscureText,
-                          onSubmitSearch: widget.onSubmitSearch,
-                          searchFieldEnabled: widget.searchFieldEnabled,
-                          searchMode: widget.searchMode,
-                          searchTextController: widget.searchTextController,
-                          textInputType: widget.textInputType,
-                          displayClearIcon: widget.displayClearIcon,
-                          defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                          textStyle: widget.style,
-                          cursorColor: widget.cursorColor,
-                          maxLength: widget.maxLength,
-                          maxLines: widget.maxLines,
-                          textAlign: widget.textAlign,
-                          autoCompleteHints: widget.autoCompleteHints,
-                          secondaryWidget: widget.secondaryWidget,
-                          onSortTap: sortList,
-                          sortWidget: widget.sortWidget,
+                        SizedBox(
+                          width: widget.searchFieldWidth,
+                          height: widget.searchFieldHeight,
+                          child: SearchTextField(
+                            filterList: filterList,
+                            focusNode: widget.focusNode,
+                            inputDecoration: widget.inputDecoration,
+                            keyboardAction: widget.keyboardAction,
+                            obscureText: widget.obscureText,
+                            onSubmitSearch: widget.onSubmitSearch,
+                            searchFieldEnabled: widget.searchFieldEnabled,
+                            searchMode: widget.searchMode,
+                            searchTextController: widget.searchTextController,
+                            textInputType: widget.textInputType,
+                            displayClearIcon: widget.displayClearIcon,
+                            displaySearchIcon: widget.displaySearchIcon,
+                            defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                            defaultSuffixIconSize: widget.defaultSuffixIconSize,
+                            textStyle: widget.style,
+                            cursorColor: widget.cursorColor,
+                            maxLength: widget.maxLength,
+                            maxLines: widget.maxLines,
+                            textAlign: widget.textAlign,
+                            autoCompleteHints: widget.autoCompleteHints,
+                            secondaryWidget: widget.secondaryWidget,
+                            onSortTap: sortList,
+                            sortWidget: widget.sortWidget,
+                          ),
                         ),
                         SizedBox(
                           height: widget.spaceBetweenSearchAndList,
                         ),
                         Expanded(
-                          child: widget.asyncListCallback != null &&
-                                  !dataDownloaded
+                          child: widget.asyncListCallback != null && !dataDownloaded
                               ? renderAsyncListView()
                               : renderSearchableListView(),
                         ),
                       ]
                     : [
                         Expanded(
-                          child: widget.asyncListCallback != null &&
-                                  !dataDownloaded
+                          child: widget.asyncListCallback != null && !dataDownloaded
                               ? renderAsyncListView()
                               : renderSearchableListView(),
                         ),
                         SizedBox(
                           height: widget.spaceBetweenSearchAndList,
                         ),
-                        SearchTextField(
-                          filterList: filterList,
-                          focusNode: widget.focusNode,
-                          inputDecoration: widget.inputDecoration,
-                          keyboardAction: widget.keyboardAction,
-                          obscureText: widget.obscureText,
-                          onSubmitSearch: widget.onSubmitSearch,
-                          searchFieldEnabled: widget.searchFieldEnabled,
-                          searchMode: widget.searchMode,
-                          searchTextController: widget.searchTextController,
-                          textInputType: widget.textInputType,
-                          displayClearIcon: widget.displayClearIcon,
-                          defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                          textStyle: widget.style,
-                          cursorColor: widget.cursorColor,
-                          maxLength: widget.maxLength,
-                          maxLines: widget.maxLines,
-                          textAlign: widget.textAlign,
-                          autoCompleteHints: widget.autoCompleteHints,
-                          secondaryWidget: widget.secondaryWidget,
-                          onSortTap: sortList,
-                          sortWidget: widget.sortWidget,
+                        SizedBox(
+                          width: widget.searchFieldWidth,
+                          height: widget.searchFieldHeight,
+                          child: SearchTextField(
+                            filterList: filterList,
+                            focusNode: widget.focusNode,
+                            inputDecoration: widget.inputDecoration,
+                            keyboardAction: widget.keyboardAction,
+                            obscureText: widget.obscureText,
+                            onSubmitSearch: widget.onSubmitSearch,
+                            searchFieldEnabled: widget.searchFieldEnabled,
+                            searchMode: widget.searchMode,
+                            searchTextController: widget.searchTextController,
+                            textInputType: widget.textInputType,
+                            displayClearIcon: widget.displayClearIcon,
+                            displaySearchIcon: widget.displaySearchIcon,
+                            defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                            defaultSuffixIconSize: widget.defaultSuffixIconSize,
+                            textStyle: widget.style,
+                            cursorColor: widget.cursorColor,
+                            maxLength: widget.maxLength,
+                            maxLines: widget.maxLines,
+                            textAlign: widget.textAlign,
+                            autoCompleteHints: widget.autoCompleteHints,
+                            secondaryWidget: widget.secondaryWidget,
+                            onSortTap: sortList,
+                            sortWidget: widget.sortWidget,
+                          ),
                         ),
                       ],
               );
@@ -573,9 +611,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   }
 
   Widget renderSearchableListView() {
-    List<T> renderedList = widget.asyncListCallback != null
-        ? filtredAsyncListResult
-        : widget.initialList;
+    List<T> renderedList = widget.asyncListCallback != null ? filtredAsyncListResult : widget.initialList;
     return renderListView(
       list: renderedList,
     );
@@ -583,27 +619,34 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
 
   Widget renderSearchableExpansionList() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SearchTextField(
-          filterList: filterList,
-          focusNode: widget.focusNode,
-          inputDecoration: widget.inputDecoration,
-          keyboardAction: widget.keyboardAction,
-          obscureText: widget.obscureText,
-          onSubmitSearch: widget.onSubmitSearch,
-          searchFieldEnabled: widget.searchFieldEnabled,
-          searchMode: widget.searchMode,
-          searchTextController: widget.searchTextController,
-          textInputType: widget.textInputType,
-          displayClearIcon: widget.displayClearIcon,
-          defaultSuffixIconColor: widget.defaultSuffixIconColor,
-          textStyle: widget.style,
-          cursorColor: widget.cursorColor,
-          maxLength: widget.maxLength,
-          maxLines: widget.maxLines,
-          textAlign: widget.textAlign,
-          autoCompleteHints: widget.autoCompleteHints,
-          secondaryWidget: widget.secondaryWidget,
+        SizedBox(
+          width: widget.searchFieldWidth,
+          height: widget.searchFieldHeight,
+          child: SearchTextField(
+            filterList: filterList,
+            focusNode: widget.focusNode,
+            inputDecoration: widget.inputDecoration,
+            keyboardAction: widget.keyboardAction,
+            obscureText: widget.obscureText,
+            onSubmitSearch: widget.onSubmitSearch,
+            searchFieldEnabled: widget.searchFieldEnabled,
+            searchMode: widget.searchMode,
+            searchTextController: widget.searchTextController,
+            textInputType: widget.textInputType,
+            displayClearIcon: widget.displayClearIcon,
+            displaySearchIcon: widget.displaySearchIcon,
+            defaultSuffixIconColor: widget.defaultSuffixIconColor,
+            defaultSuffixIconSize: widget.defaultSuffixIconSize,
+            textStyle: widget.style,
+            cursorColor: widget.cursorColor,
+            maxLength: widget.maxLength,
+            maxLines: widget.maxLines,
+            textAlign: widget.textAlign,
+            autoCompleteHints: widget.autoCompleteHints,
+            secondaryWidget: widget.secondaryWidget,
+          ),
         ),
         SizedBox(
           height: widget.spaceBetweenSearchAndList,
@@ -699,8 +742,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   }
 
   Widget renderExpansionListView() {
-    if (widget.expansionListData.isEmpty ||
-        widget.expansionListData.values.every((element) => element.isEmpty)) {
+    if (widget.expansionListData.isEmpty || widget.expansionListData.values.every((element) => element.isEmpty)) {
       return widget.emptyWidget;
     } else {
       if (widget.hideEmptyExpansionItems) {
@@ -730,8 +772,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                               onTap: () {
                                 widget.onItemSelected?.call(listItem);
                               },
-                              child:
-                                  widget.expansionListBuilder!(index, listItem),
+                              child: widget.expansionListBuilder!(index, listItem),
                             );
                     },
                   ).toList() ??
@@ -781,30 +822,36 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   Widget renderSliverEffect() {
     return widget.scrollDirection == Axis.horizontal
         ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: widget.searchTextPosition == SearchTextPosition.top
                 ? [
-                    SearchTextField(
-                      filterList: filterList,
-                      focusNode: widget.focusNode,
-                      inputDecoration: widget.inputDecoration,
-                      keyboardAction: widget.keyboardAction,
-                      obscureText: widget.obscureText,
-                      onSubmitSearch: widget.onSubmitSearch,
-                      searchFieldEnabled: widget.searchFieldEnabled,
-                      searchMode: widget.searchMode,
-                      searchTextController: widget.searchTextController,
-                      textInputType: widget.textInputType,
-                      displayClearIcon: widget.displayClearIcon,
-                      defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                      textStyle: widget.style,
-                      cursorColor: widget.cursorColor,
-                      maxLength: widget.maxLength,
-                      maxLines: widget.maxLines,
-                      textAlign: widget.textAlign,
-                      autoCompleteHints: widget.autoCompleteHints,
-                      secondaryWidget: widget.secondaryWidget,
-                      onSortTap: sortList,
-                      sortWidget: widget.sortWidget,
+                    SizedBox(
+                      width: widget.searchFieldWidth,
+                      child: SearchTextField(
+                        filterList: filterList,
+                        focusNode: widget.focusNode,
+                        inputDecoration: widget.inputDecoration,
+                        keyboardAction: widget.keyboardAction,
+                        obscureText: widget.obscureText,
+                        onSubmitSearch: widget.onSubmitSearch,
+                        searchFieldEnabled: widget.searchFieldEnabled,
+                        searchMode: widget.searchMode,
+                        searchTextController: widget.searchTextController,
+                        textInputType: widget.textInputType,
+                        displayClearIcon: widget.displayClearIcon,
+                        displaySearchIcon: widget.displaySearchIcon,
+                        defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                        defaultSuffixIconSize: widget.defaultSuffixIconSize,
+                        textStyle: widget.style,
+                        cursorColor: widget.cursorColor,
+                        maxLength: widget.maxLength,
+                        maxLines: widget.maxLines,
+                        textAlign: widget.textAlign,
+                        autoCompleteHints: widget.autoCompleteHints,
+                        secondaryWidget: widget.secondaryWidget,
+                        onSortTap: sortList,
+                        sortWidget: widget.sortWidget,
+                      ),
                     ),
                     SizedBox(
                       height: widget.spaceBetweenSearchAndList,
@@ -894,28 +941,33 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     SizedBox(
                       height: widget.spaceBetweenSearchAndList,
                     ),
-                    SearchTextField(
-                      filterList: filterList,
-                      focusNode: widget.focusNode,
-                      inputDecoration: widget.inputDecoration,
-                      keyboardAction: widget.keyboardAction,
-                      obscureText: widget.obscureText,
-                      onSubmitSearch: widget.onSubmitSearch,
-                      searchFieldEnabled: widget.searchFieldEnabled,
-                      searchMode: widget.searchMode,
-                      searchTextController: widget.searchTextController,
-                      textInputType: widget.textInputType,
-                      displayClearIcon: widget.displayClearIcon,
-                      defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                      textStyle: widget.style,
-                      cursorColor: widget.cursorColor,
-                      maxLength: widget.maxLength,
-                      maxLines: widget.maxLines,
-                      textAlign: widget.textAlign,
-                      autoCompleteHints: widget.autoCompleteHints,
-                      secondaryWidget: widget.secondaryWidget,
-                      onSortTap: sortList,
-                      sortWidget: widget.sortWidget,
+                    SizedBox(
+                      width: widget.searchFieldWidth,
+                      child: SearchTextField(
+                        filterList: filterList,
+                        focusNode: widget.focusNode,
+                        inputDecoration: widget.inputDecoration,
+                        keyboardAction: widget.keyboardAction,
+                        obscureText: widget.obscureText,
+                        onSubmitSearch: widget.onSubmitSearch,
+                        searchFieldEnabled: widget.searchFieldEnabled,
+                        searchMode: widget.searchMode,
+                        searchTextController: widget.searchTextController,
+                        textInputType: widget.textInputType,
+                        displayClearIcon: widget.displayClearIcon,
+                        displaySearchIcon: widget.displaySearchIcon,
+                        defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                        defaultSuffixIconSize: widget.defaultSuffixIconSize,
+                        textStyle: widget.style,
+                        cursorColor: widget.cursorColor,
+                        maxLength: widget.maxLength,
+                        maxLines: widget.maxLines,
+                        textAlign: widget.textAlign,
+                        autoCompleteHints: widget.autoCompleteHints,
+                        secondaryWidget: widget.secondaryWidget,
+                        onSortTap: sortList,
+                        sortWidget: widget.sortWidget,
+                      ),
                     ),
                   ],
           )
@@ -938,7 +990,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         searchTextController: widget.searchTextController,
                         textInputType: widget.textInputType,
                         displayClearIcon: widget.displayClearIcon,
+                        displaySearchIcon: widget.displaySearchIcon,
                         defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                        defaultSuffixIconSize: widget.defaultSuffixIconSize,
                         textStyle: widget.style,
                         cursorColor: widget.cursorColor,
                         maxLength: widget.maxLength,
@@ -1028,7 +1082,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         searchTextController: widget.searchTextController,
                         textInputType: widget.textInputType,
                         displayClearIcon: widget.displayClearIcon,
+                        displaySearchIcon: widget.displaySearchIcon,
                         defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                        defaultSuffixIconSize: widget.defaultSuffixIconSize,
                         textStyle: widget.style,
                         cursorColor: widget.cursorColor,
                         maxLength: widget.maxLength,
@@ -1047,8 +1103,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   void filterList(String value) {
     if (widget.isExpansionList) {
       setState(() {
-        widget.expansionListData =
-            widget.filterExpansionData?.call(value) ?? {};
+        widget.expansionListData = widget.filterExpansionData?.call(value) ?? {};
       });
     } else if (widget.asyncListCallback != null) {
       setState(() {
