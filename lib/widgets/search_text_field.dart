@@ -105,8 +105,8 @@ class SearchTextField extends StatelessWidget {
                   textAlign: textAlign,
                   focusNode: focusNode,
                   enabled: searchFieldEnabled,
-                  decoration:
-                      (inputDecoration ?? const InputDecoration()).copyWith(suffix: renderSuffixWidget(context)),
+                  decoration: (inputDecoration ?? const InputDecoration())
+                      .copyWith(suffix: renderSuffixWidget(context)),
                   style: textStyle,
                   controller: searchTextController,
                   textInputAction: keyboardAction,
@@ -131,6 +131,7 @@ class SearchTextField extends StatelessWidget {
   }
 
   Widget renderSuffixWidget(BuildContext context) {
+    var clearIcon = renderClearIcon();
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 5,
@@ -139,10 +140,13 @@ class SearchTextField extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (displayClearIcon) renderClearIcon(),
-          const SizedBox(
-            width: 5,
-          ),
+          if (displayClearIcon && clearIcon != null)
+            Padding(
+              padding: const EdgeInsets.only(
+                right: 5,
+              ),
+              child: clearIcon,
+            ),
           if (sortWidget != null)
             InkWell(
               onTap: () {
@@ -158,7 +162,7 @@ class SearchTextField extends StatelessWidget {
     );
   }
 
-  Widget renderClearIcon() {
+  Widget? renderClearIcon() {
     if (searchTextController!.text.isNotEmpty) {
       return InkWell(
         onTap: () {
@@ -171,14 +175,13 @@ class SearchTextField extends StatelessWidget {
           color: defaultSuffixIconColor,
         ),
       );
-    } else {
-      return displaySearchIcon
-          ? Icon(
-                Icons.search,
-                size: defaultSuffixIconSize,
-                color: defaultSuffixIconColor,
-            )
-          : Container();
+    } else if (displaySearchIcon) {
+      return Icon(
+        Icons.search,
+        size: defaultSuffixIconSize,
+        color: defaultSuffixIconColor,
+      );
     }
+    return null;
   }
 }

@@ -39,9 +39,6 @@ class SearchableList<T> extends StatefulWidget {
     this.searchFieldHeight,
     this.onItemSelected,
     this.displayClearIcon = true,
-    this.displaySearchIcon = true,
-    this.defaultSuffixIconColor = Colors.grey,
-    this.defaultSuffixIconSize = 24,
     this.onRefresh,
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
@@ -63,6 +60,9 @@ class SearchableList<T> extends StatefulWidget {
     this.seperatorBuilder,
     this.scrollController,
     this.closeKeyboardWhenScrolling = false,
+    this.displaySearchIcon = true,
+    this.defaultSuffixIconColor = Colors.grey,
+    this.defaultSuffixIconSize = 24,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     expansionListBuilder = null;
@@ -95,9 +95,6 @@ class SearchableList<T> extends StatefulWidget {
     this.searchFieldHeight,
     this.onItemSelected,
     this.displayClearIcon = true,
-    this.displaySearchIcon = true,
-    this.defaultSuffixIconColor = Colors.grey,
-    this.defaultSuffixIconSize = 24,
     this.onRefresh,
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
@@ -119,6 +116,9 @@ class SearchableList<T> extends StatefulWidget {
     this.sortWidget,
     this.scrollController,
     this.closeKeyboardWhenScrolling = false,
+    this.displaySearchIcon = true,
+    this.defaultSuffixIconColor = Colors.grey,
+    this.defaultSuffixIconSize = 24,
   }) : super(key: key) {
     assert(asyncListCallback != null);
     searchTextController ??= TextEditingController();
@@ -151,9 +151,6 @@ class SearchableList<T> extends StatefulWidget {
     this.searchFieldHeight,
     this.onItemSelected,
     this.displayClearIcon = true,
-    this.displaySearchIcon = true,
-    this.defaultSuffixIconColor = Colors.grey,
-    this.defaultSuffixIconSize = 24,
     this.spaceBetweenSearchAndList = 20,
     this.cursorColor,
     this.maxLines,
@@ -172,6 +169,9 @@ class SearchableList<T> extends StatefulWidget {
     this.expansionTileEnabled = true,
     this.sortWidget,
     this.sortPredicate,
+    this.displaySearchIcon = true,
+    this.defaultSuffixIconColor = Colors.grey,
+    this.defaultSuffixIconSize = 24,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
@@ -204,9 +204,6 @@ class SearchableList<T> extends StatefulWidget {
     this.searchFieldHeight,
     this.onItemSelected,
     this.displayClearIcon = true,
-    this.displaySearchIcon = true,
-    this.defaultSuffixIconColor = Colors.grey,
-    this.defaultSuffixIconSize = 24,
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
@@ -222,6 +219,9 @@ class SearchableList<T> extends StatefulWidget {
     this.closeKeyboardWhenScrolling = false,
     this.sortWidget,
     this.sortPredicate,
+    this.displaySearchIcon = true,
+    this.defaultSuffixIconColor = Colors.grey,
+    this.defaultSuffixIconSize = 24,
   }) : super(key: key) {
     asyncListCallback = null;
     asyncListFilter = null;
@@ -319,12 +319,6 @@ class SearchableList<T> extends StatefulWidget {
   /// Indicate if the search text field is enabled or not.
   /// Defaults to `true`.
   final bool searchFieldEnabled;
-
-  /// max width of search text field
-  final double? searchFieldWidth;
-
-  /// height of search text field
-  final double? searchFieldHeight;
 
   /// The focus node applied on the search text field
   final FocusNode? focusNode;
@@ -449,6 +443,12 @@ class SearchableList<T> extends StatefulWidget {
 
   ///Indicate whether the expansion tile will be enabled or not
   late bool expansionTileEnabled = true;
+
+  /// max width of search text field
+  final double? searchFieldWidth;
+
+  /// height of search text field
+  final double? searchFieldHeight;
 
   bool isExpansionList = false;
 

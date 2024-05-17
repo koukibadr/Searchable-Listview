@@ -114,7 +114,6 @@ class _ExampleAppState extends State<ExampleApp> {
 
   Widget renderSimpleSearchableList() {
     return SearchableList<Actor>(
-      displayClearIcon: false,
       seperatorBuilder: (context, index) {
         return const Divider();
       },
