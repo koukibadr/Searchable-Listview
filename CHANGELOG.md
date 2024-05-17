@@ -1,3 +1,12 @@
+## 2.13.0 - 17/05/2024
+
+* **Enhancements**
+    - Remove `builder` callback attribute and replace it with `itemBuilder`
+    - Add `displaySearchIcon` attribute
+    - Add `clearIconSize` attribute
+    - Add `searchFieldHeight` and `searchFieldWidth` constraints as attributes
+    - Improve widget tree rendering for textfield widget when `displayClearIcon` and `displaySearchIcon` are enabled.
+
 ## 2.12.0 - 30/04/2024
 
 * **Enhancements**

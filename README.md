@@ -40,7 +40,7 @@ In order to add searchable listview package to your project add this line to you
 
 ```yaml
 dependencies:
-	searchable_listview: ^2.11.2
+	searchable_listview: ^2.13.0
 ```
 
 ## Attributes
@@ -58,7 +58,7 @@ dependencies:
   /// or invoked when submiting the text field if ```searchType == SEARCH_TYPE.onSubmit```.
   /// You should return a list of filtered elements.
   List<T> Function(String query)? filter;
-  
+
   ///Async callback that return list to be displayed with future builder
   ///to filter the [asyncListCallback] result you need provide [asyncListFilter]
   Future<List<T>?> Function()? asyncListCallback;
@@ -75,7 +75,7 @@ dependencies:
   ///error widget displayed when [asyncListCallback] result is null
   ///if nothing is provided in [errorWidget] searchable list will display a [Icon]
   Widget? errorWidget;
-  
+
   /// Builder function that generates the ListView items
   /// based on the returned <T> type item
   late Widget Function(T item)? itemBuilder;
@@ -137,14 +137,23 @@ dependencies:
   /// Defaults to null
   final void Function(T)? onItemSelected;
 
-  /// Indicate whether the clear icon will be displayed or not
+  /// Indicate whether the clear and search icons will be displayed or not
   /// by default it's true, to display the clear icon the inputDecoration should not contains suffix icon
   /// otherwise the initial suffix icon will be displayed
   final bool displayClearIcon;
 
+  /// Indicate whether the search icon will be displayed or not
+  /// by default it's true, to display the search icon the inputDecoration should not contains suffix icon
+  /// otherwise the initial suffix icon will be displayed
+  final bool displaySearchIcon;
+
   /// The color applied on the suffix icon (if `displayClearIcon = true`).
   /// Defaults to [Colors.grey].
   final Color defaultSuffixIconColor;
+
+  /// The size of the suffix icon (if `displayClearIcon = true`).
+  /// Defaults to 24.
+  final double defaultSuffixIconSize;
 
   ///An async callback invoked when dragging down the list
   ///if onRefresh is nullable the drag to refresh is not applied
@@ -245,17 +254,15 @@ dependencies:
   ///Indicate whether the expansion tile will be enabled or not
   late bool expansionTileEnabled = true;
 
+  /// max width of search text field
+  final double? searchFieldWidth;
+
+  /// height of search text field
+  final double? searchFieldHeight;
+
 `
 
 ```
-
-### Migration:
-
-- **If you are using the 1.5.3 version or older and you are using `sliverScrollEffect` parameter, for 1.6.0 version and above this parameter is replaced with a constructor `SearchableList.sliver`**
-
-- **If you are migrating to 2.5.0 version you need to change the `builder` callback as now it provide the element index and not the element object**
-
-- **If you are migrating to 2.8.0 version the `seperated` constructor is no longer available instead use `seperatorBuilder` in both default constructor and `async` constructor**
 
 ## Implementation
 
