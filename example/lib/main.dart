@@ -67,7 +67,7 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: renderSimpleSearchableList(),
+              child: expansionSearchableList(),
             ),
           ),
           Align(
