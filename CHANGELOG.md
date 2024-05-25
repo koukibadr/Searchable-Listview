@@ -1,3 +1,8 @@
+## 2.14.0 - 25/05/2024
+
+* **Enhancements**
+    - Expand all expansion tiles when searching [PR#108](https://github.com/koukibadr/Searchable-Listview/pull/108)
+
 ## 2.13.0 - 17/05/2024
 
 * **Enhancements**
