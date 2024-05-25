@@ -708,8 +708,12 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         widget.expansionListData.values.every((element) => element.isEmpty)) {
       return widget.emptyWidget;
     } else {
-      expansionTileControllers.addAll(List.generate(
-          widget.expansionListData.length, (e) => ExpansionTileController()));
+      expansionTileControllers.addAll(
+        List.generate(
+          widget.expansionListData.length,
+          (e) => ExpansionTileController(),
+        ),
+      );
       if (widget.hideEmptyExpansionItems) {
         widget.expansionListData.removeWhere((key, value) => value.isEmpty);
       }
