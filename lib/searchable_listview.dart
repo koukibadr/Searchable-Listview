@@ -708,6 +708,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         widget.expansionListData.values.every((element) => element.isEmpty)) {
       return widget.emptyWidget;
     } else {
+      expansionTileControllers.addAll(List.generate(
+          widget.expansionListData.length, (e) => ExpansionTileController()));
       if (widget.hideEmptyExpansionItems) {
         widget.expansionListData.removeWhere((key, value) => value.isEmpty);
       }
@@ -727,7 +729,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
             return ExpansionTile(
               title: widget.expansionTitleBuilder.call(entryKey),
               enabled: widget.expansionTileEnabled,
-              initiallyExpanded: true,
+              controller: expansionTileControllers[index],
               children: entryValueList?.map(
                     (listItem) {
                       return widget.onItemSelected == null
@@ -994,6 +996,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       setState(() {
         widget.expansionListData =
             widget.filterExpansionData?.call(value) ?? {};
+      });
+      expansionTileControllers.every((controller) {
+        controller.expand();
+        return true;
       });
     } else if (widget.asyncListCallback != null) {
       setState(() {
