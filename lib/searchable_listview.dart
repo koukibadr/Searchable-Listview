@@ -464,6 +464,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   List<T> asyncListResult = [];
   List<T> filtredAsyncListResult = [];
   bool dataDownloaded = false;
+  List<ExpansionTileController> expansionTileControllers = [];
 
   @override
   void initState() {
@@ -726,6 +727,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
             return ExpansionTile(
               title: widget.expansionTitleBuilder.call(entryKey),
               enabled: widget.expansionTileEnabled,
+              initiallyExpanded: true,
               children: entryValueList?.map(
                     (listItem) {
                       return widget.onItemSelected == null
