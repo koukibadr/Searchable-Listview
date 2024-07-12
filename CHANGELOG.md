@@ -1,3 +1,8 @@
+## 2.14.1 - 12/07/2024
+
+* **Enhancements**
+    - Set `onItemSelected` as deprecated and will be removed in the next release [PR](https://github.com/koukibadr/Searchable-Listview/pull/110)
+
 ## 2.14.0 - 25/05/2024
 
 * **Enhancements**
