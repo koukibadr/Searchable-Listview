@@ -1,3 +1,12 @@
+## 2.15.0- 06/08/2024
+
+* **Changes**
+    - Remove `onItemSelected` as it's set deprecated [PR](https://github.com/koukibadr/Searchable-Listview/pull/110)
+
+* **Enhancements**
+    - Update pagination rendering with setState when onPaginate is triggered [PR](https://github.com/koukibadr/Searchable-Listview/pull/114)
+
+
 ## 2.14.1 - 12/07/2024
 
 * **Enhancements**

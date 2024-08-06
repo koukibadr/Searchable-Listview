@@ -40,7 +40,7 @@ In order to add searchable listview package to your project add this line to you
 
 ```yaml
 dependencies:
-	searchable_listview: ^2.14.1
+	searchable_listview: ^2.15.0
 ```
 
 ## Attributes
@@ -132,10 +132,6 @@ dependencies:
 
   /// The focus node applied on the search text field
   final FocusNode? focusNode;
-
-  /// Function invoked when pressing on item
-  /// Defaults to null
-  final void Function(T)? onItemSelected;
 
   /// Indicate whether the clear and search icons will be displayed or not
   /// by default it's true, to display the clear icon the inputDecoration should not contains suffix icon
