@@ -36,7 +36,6 @@ class SearchableList<T> extends StatefulWidget {
     this.searchFieldEnabled = true,
     this.searchFieldWidth,
     this.searchFieldHeight,
-    @Deprecated('Will be removed in the next release') this.onItemSelected,
     this.displayClearIcon = true,
     this.onRefresh,
     this.scrollDirection = Axis.vertical,
@@ -92,7 +91,6 @@ class SearchableList<T> extends StatefulWidget {
     this.searchFieldEnabled = true,
     this.searchFieldWidth,
     this.searchFieldHeight,
-    @Deprecated('Will be removed in the next release') this.onItemSelected,
     this.displayClearIcon = true,
     this.onRefresh,
     this.scrollDirection = Axis.vertical,
@@ -148,7 +146,6 @@ class SearchableList<T> extends StatefulWidget {
     this.searchFieldEnabled = true,
     this.searchFieldWidth,
     this.searchFieldHeight,
-    @Deprecated('Will be removed in the next release') this.onItemSelected,
     this.displayClearIcon = true,
     this.spaceBetweenSearchAndList = 20,
     this.cursorColor,
@@ -201,7 +198,6 @@ class SearchableList<T> extends StatefulWidget {
     this.searchFieldEnabled = true,
     this.searchFieldWidth,
     this.searchFieldHeight,
-    @Deprecated('Will be removed in the next release') this.onItemSelected,
     this.displayClearIcon = true,
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
@@ -321,10 +317,6 @@ class SearchableList<T> extends StatefulWidget {
 
   /// The focus node applied on the search text field
   final FocusNode? focusNode;
-
-  /// Function invoked when pressing on item
-  /// Defaults to null
-  final void Function(T)? onItemSelected;
 
   /// Indicate whether the clear and search icons will be displayed or not
   /// by default it's true, to display the clear icon the inputDecoration should not contains suffix icon

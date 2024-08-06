@@ -140,7 +140,6 @@ class _ExampleAppState extends State<ExampleApp> {
       },
       emptyWidget: const EmptyView(),
       onRefresh: () async {},
-      onItemSelected: (Actor item) {},
       inputDecoration: InputDecoration(
         labelText: "Search Actor",
         fillColor: Colors.white,
