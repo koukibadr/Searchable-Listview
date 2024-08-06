@@ -475,7 +475,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       if (widget.onPaginate != null &&
           scrollController.position.pixels ==
               scrollController.position.maxScrollExtent) {
-        widget.onPaginate?.call();
+        setState(() {
+          widget.onPaginate?.call();
+        });
       }
     });
     widget.searchTextController?.addListener(() {
