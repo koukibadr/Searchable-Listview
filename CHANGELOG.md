@@ -1,3 +1,8 @@
+## 2.15.1- 21/08/2024
+
+* **Enhancements**
+    - Unregister from text controller listener when disposing the searchable listview widget [PR](https://github.com/koukibadr/Searchable-Listview/pull/117)
+
 ## 2.15.0- 06/08/2024
 
 * **Changes**
