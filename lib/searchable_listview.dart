@@ -472,14 +472,13 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         });
       }
     });
-    widget.searchTextController?.addListener(() {
-      filterList(widget.searchTextController?.text ?? '');
-    });
+    widget.searchTextController?.addListener(_textControllerListener);
   }
 
   @override
   void dispose() {
     scrollController.dispose();
+    widget.searchTextController?.removeListener(_textControllerListener);
     super.dispose();
   }
 
@@ -994,5 +993,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         widget.initialList.sort(widget.sortPredicate);
       });
     }
+  }
+
+  void _textControllerListener() {
+    filterList(widget.searchTextController?.text ?? '');
   }
 }
