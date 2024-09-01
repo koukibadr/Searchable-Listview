@@ -965,10 +965,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         widget.expansionListData =
             widget.filterExpansionData?.call(value) ?? {};
       });
-      expansionTileControllers.every((controller) {
-        controller.expand();
-        return true;
-      });
+      for (var controller in expansionTileControllers) {
+        try {
+          controller.expand();
+        } catch (e) {} 
+      }
     } else if (widget.asyncListCallback != null) {
       setState(() {
         filtredAsyncListResult = widget.asyncListFilter!(
