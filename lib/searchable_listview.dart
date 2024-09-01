@@ -968,7 +968,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       for (var controller in expansionTileControllers) {
         try {
           controller.expand();
-        } catch (e) {} 
+        } catch (e) {}
       }
     } else if (widget.asyncListCallback != null) {
       setState(() {
