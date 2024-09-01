@@ -1,7 +1,7 @@
 ## 2.15.2- 01/09/2024
 
-* **Enhancements**
-    - Unregister from text controller listener when disposing the searchable listview widget [PR](https://github.com/koukibadr/Searchable-Listview/pull/117)
+* **Bug Fix**
+    - Handle expansion controller error when controller state is null (expansion item not shown in the screen) [PR](https://github.com/koukibadr/Searchable-Listview/pull/119)
 
 
 ## 2.15.1- 21/08/2024
