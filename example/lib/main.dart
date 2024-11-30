@@ -117,7 +117,7 @@ class _ExampleAppState extends State<ExampleApp> {
       seperatorBuilder: (context, index) {
         return const Divider();
       },
-      style: const TextStyle(fontSize: 25),
+      textStyle: const TextStyle(fontSize: 25),
       itemBuilder: (item) {
         return ActorItem(actor: item);
       },
@@ -201,7 +201,7 @@ class _ExampleAppState extends State<ExampleApp> {
       seperatorBuilder: (context, index) {
         return const Divider();
       },
-      style: const TextStyle(fontSize: 25),
+      textStyle: const TextStyle(fontSize: 25),
       emptyWidget: const EmptyView(),
       inputDecoration: InputDecoration(
         labelText: "Search Actor",
@@ -239,7 +239,7 @@ class _ExampleAppState extends State<ExampleApp> {
         };
         return filteredMap;
       },
-      style: const TextStyle(fontSize: 25),
+      textStyle: const TextStyle(fontSize: 25),
       expansionListBuilder: (int index, Actor _actor) {
         return ActorItem(
           actor: _actor,

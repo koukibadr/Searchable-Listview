@@ -14,7 +14,7 @@ class SearchableList<T> extends StatefulWidget {
 
   ///indicate if the divider will be displayed or not
   ///if true the listview will be rendered with [ListView.separated] constructor
-  bool displayDividder = false;
+  bool displayDivider = false;
 
   SearchableList({
     Key? key,
@@ -26,10 +26,10 @@ class SearchableList<T> extends StatefulWidget {
     this.searchTextController,
     this.keyboardAction = TextInputAction.done,
     this.inputDecoration,
-    this.style,
+    this.textStyle,
     this.onSubmitSearch,
     this.searchMode = SearchMode.onEdit,
-    this.emptyWidget = const SizedBox.shrink(),
+    this.emptyWidget,
     this.textInputType = TextInputType.text,
     this.obscureText = false,
     this.focusNode,
@@ -41,7 +41,11 @@ class SearchableList<T> extends StatefulWidget {
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
+    @Deprecated(
+      'Deprecated will be removed in the next release, use searchFieldPadding instead',
+    )
     this.spaceBetweenSearchAndList = 20,
+    this.searchFieldPadding,
     this.cursorColor,
     this.maxLines,
     this.maxLength,
@@ -61,6 +65,7 @@ class SearchableList<T> extends StatefulWidget {
     this.displaySearchIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
     this.defaultSuffixIconSize = 24,
+    this.lazyLoadingEnabled = true,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     expansionListBuilder = null;
@@ -81,7 +86,7 @@ class SearchableList<T> extends StatefulWidget {
     this.searchTextController,
     this.keyboardAction = TextInputAction.done,
     this.inputDecoration,
-    this.style,
+    this.textStyle,
     this.onSubmitSearch,
     this.searchMode = SearchMode.onEdit,
     this.emptyWidget = const SizedBox.shrink(),
@@ -96,7 +101,11 @@ class SearchableList<T> extends StatefulWidget {
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
+    @Deprecated(
+      'Deprecated will be removed in the next release, use searchFieldPadding instead',
+    )
     this.spaceBetweenSearchAndList = 20,
+    this.searchFieldPadding,
     this.cursorColor,
     this.maxLines,
     this.maxLength,
@@ -116,6 +125,7 @@ class SearchableList<T> extends StatefulWidget {
     this.displaySearchIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
     this.defaultSuffixIconSize = 24,
+    this.lazyLoadingEnabled = true,
   }) : super(key: key) {
     assert(asyncListCallback != null);
     searchTextController ??= TextEditingController();
@@ -136,7 +146,7 @@ class SearchableList<T> extends StatefulWidget {
     this.searchTextController,
     this.keyboardAction = TextInputAction.done,
     this.inputDecoration,
-    this.style,
+    this.textStyle,
     this.onSubmitSearch,
     this.searchMode = SearchMode.onEdit,
     this.emptyWidget = const SizedBox.shrink(),
@@ -147,7 +157,11 @@ class SearchableList<T> extends StatefulWidget {
     this.searchFieldWidth,
     this.searchFieldHeight,
     this.displayClearIcon = true,
+    @Deprecated(
+      'Deprecated will be removed in the next release, use searchFieldPadding instead',
+    )
     this.spaceBetweenSearchAndList = 20,
+    this.searchFieldPadding,
     this.cursorColor,
     this.maxLines,
     this.maxLength,
@@ -168,6 +182,7 @@ class SearchableList<T> extends StatefulWidget {
     this.displaySearchIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
     this.defaultSuffixIconSize = 24,
+    this.lazyLoadingEnabled = true,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
@@ -188,7 +203,7 @@ class SearchableList<T> extends StatefulWidget {
     this.searchTextController,
     this.keyboardAction = TextInputAction.done,
     this.inputDecoration,
-    this.style,
+    this.textStyle,
     this.onSubmitSearch,
     this.searchMode = SearchMode.onEdit,
     this.emptyWidget = const SizedBox.shrink(),
@@ -202,7 +217,11 @@ class SearchableList<T> extends StatefulWidget {
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
+    @Deprecated(
+      'Deprecated will be removed in the next release, use searchFieldPadding instead',
+    )
     this.spaceBetweenSearchAndList = 20,
+    this.searchFieldPadding,
     this.cursorColor,
     this.maxLines,
     this.maxLength,
@@ -217,6 +236,7 @@ class SearchableList<T> extends StatefulWidget {
     this.displaySearchIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
     this.defaultSuffixIconSize = 24,
+    this.lazyLoadingEnabled = true,
   }) : super(key: key) {
     asyncListCallback = null;
     asyncListFilter = null;
@@ -274,7 +294,7 @@ class SearchableList<T> extends StatefulWidget {
 
   /// The widget to be displayed when the filter returns an empty list.
   /// Defaults to `const SizedBox.shrink()`.
-  final Widget emptyWidget;
+  final Widget? emptyWidget;
 
   /// Text editing controller applied on the search field.
   /// Defaults to null.
@@ -290,7 +310,7 @@ class SearchableList<T> extends StatefulWidget {
 
   /// The style for the input text field
   /// Defaults to null.
-  final TextStyle? style;
+  final TextStyle? textStyle;
 
   /// The keyboard text input type
   /// Defaults to [TextInputType.text]
@@ -359,7 +379,11 @@ class SearchableList<T> extends StatefulWidget {
 
   ///space between the search textfield and the list
   ///by default the padding is set to 20
+  @Deprecated('')
   final double spaceBetweenSearchAndList;
+
+  //TODO add documentation
+  final Padding? searchFieldPadding;
 
   ///cusor color used in the search textfield
   final Color? cursorColor;
@@ -441,6 +465,9 @@ class SearchableList<T> extends StatefulWidget {
   /// height of search text field
   final double? searchFieldHeight;
 
+  //TODO add documentation
+  final bool lazyLoadingEnabled;
+
   bool isExpansionList = false;
 
   @override
@@ -511,7 +538,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                             defaultSuffixIconColor:
                                 widget.defaultSuffixIconColor,
                             defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                            textStyle: widget.style,
+                            textStyle: widget.textStyle,
                             cursorColor: widget.cursorColor,
                             maxLength: widget.maxLength,
                             maxLines: widget.maxLines,
@@ -561,7 +588,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                             defaultSuffixIconColor:
                                 widget.defaultSuffixIconColor,
                             defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                            textStyle: widget.style,
+                            textStyle: widget.textStyle,
                             cursorColor: widget.cursorColor,
                             maxLength: widget.maxLength,
                             maxLines: widget.maxLines,
@@ -625,7 +652,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
             displaySearchIcon: widget.displaySearchIcon,
             defaultSuffixIconColor: widget.defaultSuffixIconColor,
             defaultSuffixIconSize: widget.defaultSuffixIconSize,
-            textStyle: widget.style,
+            textStyle: widget.textStyle,
             cursorColor: widget.cursorColor,
             maxLength: widget.maxLength,
             maxLines: widget.maxLines,
@@ -651,7 +678,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     required List<T> list,
   }) {
     if (list.isEmpty) {
-      return widget.emptyWidget;
+      return widget.emptyWidget ?? const SizedBox.shrink();
     } else {
       return widget.onRefresh != null
           ? RefreshIndicator(
@@ -692,7 +719,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   Widget renderExpansionListView() {
     if (widget.expansionListData.isEmpty ||
         widget.expansionListData.values.every((element) => element.isEmpty)) {
-      return widget.emptyWidget;
+      return widget.emptyWidget ?? const SizedBox.shrink();
     } else {
       expansionTileControllers.addAll(
         List.generate(
@@ -775,7 +802,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         displaySearchIcon: widget.displaySearchIcon,
                         defaultSuffixIconColor: widget.defaultSuffixIconColor,
                         defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                        textStyle: widget.style,
+                        textStyle: widget.textStyle,
                         cursorColor: widget.cursorColor,
                         maxLength: widget.maxLength,
                         maxLines: widget.maxLines,
@@ -855,7 +882,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         displaySearchIcon: widget.displaySearchIcon,
                         defaultSuffixIconColor: widget.defaultSuffixIconColor,
                         defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                        textStyle: widget.style,
+                        textStyle: widget.textStyle,
                         cursorColor: widget.cursorColor,
                         maxLength: widget.maxLength,
                         maxLines: widget.maxLines,
@@ -890,7 +917,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         displaySearchIcon: widget.displaySearchIcon,
                         defaultSuffixIconColor: widget.defaultSuffixIconColor,
                         defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                        textStyle: widget.style,
+                        textStyle: widget.textStyle,
                         cursorColor: widget.cursorColor,
                         maxLength: widget.maxLength,
                         maxLines: widget.maxLines,
@@ -944,7 +971,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         displaySearchIcon: widget.displaySearchIcon,
                         defaultSuffixIconColor: widget.defaultSuffixIconColor,
                         defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                        textStyle: widget.style,
+                        textStyle: widget.textStyle,
                         cursorColor: widget.cursorColor,
                         maxLength: widget.maxLength,
                         maxLines: widget.maxLines,
