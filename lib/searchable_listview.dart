@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:searchable_listview/resources/arrays.dart';
 import 'package:searchable_listview/widgets/default_error_widget.dart';
 import 'package:searchable_listview/widgets/default_loading_widget.dart';
+import 'package:searchable_listview/widgets/list_view_rendering.dart';
 import 'package:searchable_listview/widgets/search_text_field.dart';
 
 class SearchableList<T> extends StatefulWidget {
@@ -686,32 +687,32 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
               onRefresh: widget.onRefresh!,
               child: widget.seperatorBuilder != null
                   ? renderSeperatedListView(list)
-                  : ListView.builder(
+                  : ListViewRendering(
                       physics: widget.physics,
                       shrinkWrap: widget.shrinkWrap,
                       itemExtent: widget.itemExtent,
                       padding: widget.listViewPadding,
                       reverse: widget.reverse,
-                      controller: scrollController,
+                      scrollController: scrollController,
                       scrollDirection: widget.scrollDirection,
-                      itemCount: list.length,
-                      itemBuilder: (context, index) =>
-                          widget.itemBuilder!(list[index]),
+                      isLazyLoadingEnabled: widget.lazyLoadingEnabled,
+                      list: list,
+                      itemBuilder: widget.itemBuilder,
                     ),
             )
           : widget.seperatorBuilder != null
               ? renderSeperatedListView(list)
-              : ListView.builder(
+              : ListViewRendering(
                   physics: widget.physics,
                   shrinkWrap: widget.shrinkWrap,
                   itemExtent: widget.itemExtent,
                   padding: widget.listViewPadding,
                   reverse: widget.reverse,
-                  controller: scrollController,
+                  scrollController: scrollController,
                   scrollDirection: widget.scrollDirection,
-                  itemCount: list.length,
-                  itemBuilder: (context, index) =>
-                      widget.itemBuilder!(list[index]),
+                  isLazyLoadingEnabled: widget.lazyLoadingEnabled,
+                  list: list,
+                  itemBuilder: widget.itemBuilder,
                 );
     }
   }

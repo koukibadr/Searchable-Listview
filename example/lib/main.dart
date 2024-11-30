@@ -67,7 +67,7 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: expansionSearchableList(),
+              child: simpleSearchWithSort(),
             ),
           ),
           Align(
@@ -93,11 +93,15 @@ class _ExampleAppState extends State<ExampleApp> {
 
   Widget simpleSearchWithSort() {
     return SearchableList<Actor>(
+      lazyLoadingEnabled: false,
       sortPredicate: (a, b) => a.age.compareTo(b.age),
       itemBuilder: (item) {
         return ActorItem(actor: item);
       },
-      initialList: actors,
+      initialList: List.generate(
+        200,
+        (index) => Actor(age: 47, name: 'Leonardo', lastName: 'DiCaprio'),
+      ),
       inputDecoration: InputDecoration(
         labelText: "Search Actor",
         fillColor: Colors.white,
