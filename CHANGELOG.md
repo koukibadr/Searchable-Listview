@@ -1,3 +1,14 @@
+## 2.16.0- 02/12/2024
+
+* **Enhancement**
+    - Add rendering with simple `Listview` with `lazyLoadingEnabled` attribute that indicates whether searchable listview will use `Listview.builder` or simple `Listview`
+    - new attribute `searchFieldPadding` of type `EdgeInsets` replace `spaceBetweenSearchAndList` with more Padding options.
+
+* **Changes**
+    - Empty widget attribute is now nullable, when it's nullable a `Sizedbox.shrink()` will be rendered when the list is empty
+    - Renaming `style` attribute to `textStyle`
+
+
 ## 2.15.2- 01/09/2024
 
 * **Bug Fix**

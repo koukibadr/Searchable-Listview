@@ -40,7 +40,7 @@ In order to add searchable listview package to your project add this line to you
 
 ```yaml
 dependencies:
-	searchable_listview: ^2.15.2
+	searchable_listview: ^2.16.0
 ```
 
 ## Attributes
@@ -50,7 +50,7 @@ dependencies:
 ```dart
 
   /// Initial list of all elements that will be displayed.
-  ///to filter the [initialList] you need provide [filter] callback
+  /// to filter the [initialList] you need provide [filter] callback
   late List<T> initialList;
 
   /// Callback to filter the list based on the given search value.
@@ -59,21 +59,21 @@ dependencies:
   /// You should return a list of filtered elements.
   List<T> Function(String query)? filter;
 
-  ///Async callback that return list to be displayed with future builder
-  ///to filter the [asyncListCallback] result you need provide [asyncListFilter]
+  /// Async callback that return list to be displayed with future builder
+  /// to filter the [asyncListCallback] result you need provide [asyncListFilter]
   Future<List<T>?> Function()? asyncListCallback;
 
-  ///Callback invoked when filtring the searchable list
-  ///used when providing [asyncListCallback]
-  ///can't be null when [asyncListCallback] isn't null
+  /// Callback invoked when filtring the searchable list
+  /// used when providing [asyncListCallback]
+  /// can't be null when [asyncListCallback] isn't null
   late List<T> Function(String, List<T>)? asyncListFilter;
 
-  ///Loading widget displayed when [asyncListCallback] is loading
-  ///if nothing is provided in [loadingWidget] searchable list will display a [CircularProgressIndicator]
+  /// Loading widget displayed when [asyncListCallback] is loading
+  /// if nothing is provided in [loadingWidget] searchable list will display a [CircularProgressIndicator]
   Widget? loadingWidget;
 
-  ///error widget displayed when [asyncListCallback] result is null
-  ///if nothing is provided in [errorWidget] searchable list will display a [Icon]
+  /// Error widget displayed when [asyncListCallback] result is null
+  /// if nothing is provided in [errorWidget] searchable list will display a [Icon]
   Widget? errorWidget;
 
   /// Builder function that generates the ListView items
@@ -89,7 +89,7 @@ dependencies:
 
   /// The widget to be displayed when the filter returns an empty list.
   /// Defaults to `const SizedBox.shrink()`.
-  final Widget emptyWidget;
+  final Widget? emptyWidget;
 
   /// Text editing controller applied on the search field.
   /// Defaults to null.
@@ -105,7 +105,7 @@ dependencies:
 
   /// The style for the input text field
   /// Defaults to null.
-  final TextStyle? style;
+  final TextStyle? textStyle;
 
   /// The keyboard text input type
   /// Defaults to [TextInputType.text]
@@ -115,10 +115,10 @@ dependencies:
   final Function(String?)? onSubmitSearch;
 
   /// The search type on submiting text field or when changing the text field value
-  ///```dart
-  ///SEARCH_TYPE.onEdit,
-  ///SEARCH_TYPE.onSubmit
-  ///```
+  /// ```dart
+  /// SEARCH_TYPE.onEdit,
+  /// SEARCH_TYPE.onSubmit
+  /// ```
   /// Defaults to [SearchMode.onEdit].
   final SearchMode searchMode;
 
@@ -151,103 +151,106 @@ dependencies:
   /// Defaults to 24.
   final double defaultSuffixIconSize;
 
-  ///An async callback invoked when dragging down the list
-  ///if onRefresh is nullable the drag to refresh is not applied
+  /// An async callback invoked when dragging down the list
+  /// if onRefresh is nullable the drag to refresh is not applied
   late Future<void> Function()? onRefresh;
 
-  ///Builder callback required  when using [seperated] constructor
-  ///return the Widget that will seperate all the elements inside the list
+  /// Builder callback required  when using [seperated] constructor
+  /// return the Widget that will seperate all the elements inside the list
   late Widget Function(BuildContext context, int index)? seperatorBuilder;
 
-  ///The scroll direction of the list
-  ///by default [Axis.vertical]
+  /// The scroll direction of the list
+  /// by default [Axis.vertical]
   Axis scrollDirection = Axis.vertical;
 
-  ///The position of the text field (bottom or top)
-  ///by default the textfield is displayed on top
+  /// The position of the text field (bottom or top)
+  /// by default the textfield is displayed on top
   SearchTextPosition searchTextPosition = SearchTextPosition.top;
 
-  ///Callback function invoked each time the listview
-  ///reached the bottom
-  ///used to create pagination in listview
+  /// Callback function invoked each time the listview
+  /// reached the bottom
+  /// used to create pagination in listview
   Future<dynamic> Function()? onPaginate;
 
-  ///space between the search textfield and the list
-  ///by default the padding is set to 20
+  /// Space between the search textfield and the list
+  /// by default the padding is set to 20
   final double spaceBetweenSearchAndList;
 
-  ///cusor color used in the search textfield
+  // A padding applied to search field
+  final EdgeInsetsGeometry? searchFieldPadding;
+
+  /// Cusor color used in the search textfield
   final Color? cursorColor;
 
-  ///max lines attribute used in the search textfield
+  /// Max lines attribute used in the search textfield
   final int? maxLines;
 
-  ///max length attribute used in the search field
+  /// Max length attribute used in the search field
   final int? maxLength;
 
-  ///the text alignement of the search field
-  ///by default the alignement is start
+  /// The text alignement of the search field
+  /// by default the alignement is start
   final TextAlign textAlign;
 
-  ///List of strings  to display in an auto complete field
-  ///by default list is empty so a simple text field is displayed
+  /// List of strings  to display in an auto complete field
+  /// by default list is empty so a simple text field is displayed
   final List<String> autoCompleteHints;
 
-  ///secondary widget will be displayed alongside the search field
-  ///by default it's null
+  /// Secondary widget will be displayed alongside the search field
+  /// by default it's null
   final Widget? secondaryWidget;
 
-  ///Map of data used to build  searchable expansion list
-  ///required when using [expansion] constructor
+  /// Map of data used to build  searchable expansion list
+  /// required when using [expansion] constructor
   late Map<dynamic, List<T>> expansionListData;
 
-  ///callback used when filtering the expansion list
-  ///required when using [expansion] constructor
+  /// Callback used when filtering the expansion list
+  /// required when using [expansion] constructor
   late Map<dynamic, List<T>> Function(String)? filterExpansionData;
 
-  ///the expansion list title widget builder
-  ///required when using [expansion] constructor
+  /// The expansion list title widget builder
+  /// required when using [expansion] constructor
   late Widget Function(dynamic) expansionTitleBuilder;
 
-  ///physics attributes used in listview widget
+  /// Physics attributes used in listview widget
   late ScrollPhysics? physics;
 
-  ///shrinkWrap used in listview widget, not used in sliver searchable list
-  ///by default `shrinkWrap = false`
+  /// ShrinkWrap used in listview widget, not used in sliver searchable list
+  /// by default `shrinkWrap = false`
   late bool shrinkWrap;
 
-  ///item extent of the listview
+  /// Item extent of the listview
   late double? itemExtent;
 
-  ///listview item padding
+  /// Listview item padding
   late EdgeInsetsGeometry? listViewPadding;
 
-  ///list items reverse attributes
-  ///by default `reverse = false`
-  ///not available for sliver listview constructor
+  /// List items reverse attributes
+  /// by default `reverse = false`
+  /// not available for sliver listview constructor
   late bool reverse;
 
-  ///Predicate callback invoked when sorting list items
-  ///required when `displaySortWidget` is True
+  /// Predicate callback invoked when sorting list items
+  /// required when `displaySortWidget` is True
   late int Function(T a, T b)? sortPredicate;
 
-  ///Widget displayed when sorting list
+  /// Widget displayed when sorting list
   /// available only if `displaySortWidget` is True
   late Widget? sortWidget;
 
-  ///Scroll controller passed to listview widget
-  ///by default listview uses scrollcontroller with a listener for pagination if `onPaginate = true`
-  ///or `closeKeyboardWhenScrolling = true` to close keyboard when scrolling
+  /// Scroll controller passed to listview widget
+  /// by default listview uses scrollcontroller with a listener for pagination if `onPaginate = true`
+  /// or `closeKeyboardWhenScrolling = true` to close keyboard when scrolling
   ScrollController? scrollController;
 
-  ///indicates whether the keyboard will be closed when scrolling or not
-  ///by default `closeKeyboardWhenScrolling = true`
+  /// Indicates whether the keyboard will be closed when scrolling or not
+  /// by default `closeKeyboardWhenScrolling = true`
   final bool closeKeyboardWhenScrolling;
 
-  ///indicate whether the expansion will be shown or not when the expansion group is empty
+  /// Indicate whether the expansion will be shown or not when the expansion group is empty
   late bool hideEmptyExpansionItems = false;
 
-  ///Indicate whether the expansion tile will be enabled or not
+  /// Indicate whether the expansion tile will be enabled or not
   late bool expansionTileEnabled = true;
 
   /// max width of search text field
@@ -255,6 +258,10 @@ dependencies:
 
   /// height of search text field
   final double? searchFieldHeight;
+
+  // Indicates how list view is rendered if `true` searchable listview
+  // uses `Listview.Builder` otherwise it uses `Listview`
+  final bool lazyLoadingEnabled;
 
 `
 

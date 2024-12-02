@@ -4,17 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:searchable_listview/resources/arrays.dart';
 import 'package:searchable_listview/widgets/default_error_widget.dart';
 import 'package:searchable_listview/widgets/default_loading_widget.dart';
+import 'package:searchable_listview/widgets/list_view_rendering.dart';
 import 'package:searchable_listview/widgets/search_text_field.dart';
 
 class SearchableList<T> extends StatefulWidget {
-  ///indicates whether the ssliver scroll effect will be applied
-  ///on the listview and search field or not
-  ///by default sliverScrollEffect == [false]
+  /// Indicates whether the ssliver scroll effect will be applied
+  /// on the listview and search field or not
+  /// by default sliverScrollEffect == [false]
   bool sliverScrollEffect = false;
 
-  ///indicate if the divider will be displayed or not
-  ///if true the listview will be rendered with [ListView.separated] constructor
-  bool displayDividder = false;
+  /// Indicate if the divider will be displayed or not
+  /// if true the listview will be rendered with [ListView.separated] constructor
+  bool displayDivider = false;
 
   SearchableList({
     Key? key,
@@ -26,10 +27,10 @@ class SearchableList<T> extends StatefulWidget {
     this.searchTextController,
     this.keyboardAction = TextInputAction.done,
     this.inputDecoration,
-    this.style,
+    this.textStyle,
     this.onSubmitSearch,
     this.searchMode = SearchMode.onEdit,
-    this.emptyWidget = const SizedBox.shrink(),
+    this.emptyWidget,
     this.textInputType = TextInputType.text,
     this.obscureText = false,
     this.focusNode,
@@ -41,7 +42,11 @@ class SearchableList<T> extends StatefulWidget {
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
+    @Deprecated(
+      'Deprecated will be removed in the next release, use searchFieldPadding instead',
+    )
     this.spaceBetweenSearchAndList = 20,
+    this.searchFieldPadding,
     this.cursorColor,
     this.maxLines,
     this.maxLength,
@@ -61,6 +66,7 @@ class SearchableList<T> extends StatefulWidget {
     this.displaySearchIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
     this.defaultSuffixIconSize = 24,
+    this.lazyLoadingEnabled = true,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     expansionListBuilder = null;
@@ -81,7 +87,7 @@ class SearchableList<T> extends StatefulWidget {
     this.searchTextController,
     this.keyboardAction = TextInputAction.done,
     this.inputDecoration,
-    this.style,
+    this.textStyle,
     this.onSubmitSearch,
     this.searchMode = SearchMode.onEdit,
     this.emptyWidget = const SizedBox.shrink(),
@@ -96,7 +102,11 @@ class SearchableList<T> extends StatefulWidget {
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
+    @Deprecated(
+      'Deprecated will be removed in the next release, use searchFieldPadding instead',
+    )
     this.spaceBetweenSearchAndList = 20,
+    this.searchFieldPadding,
     this.cursorColor,
     this.maxLines,
     this.maxLength,
@@ -116,6 +126,7 @@ class SearchableList<T> extends StatefulWidget {
     this.displaySearchIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
     this.defaultSuffixIconSize = 24,
+    this.lazyLoadingEnabled = true,
   }) : super(key: key) {
     assert(asyncListCallback != null);
     searchTextController ??= TextEditingController();
@@ -136,7 +147,7 @@ class SearchableList<T> extends StatefulWidget {
     this.searchTextController,
     this.keyboardAction = TextInputAction.done,
     this.inputDecoration,
-    this.style,
+    this.textStyle,
     this.onSubmitSearch,
     this.searchMode = SearchMode.onEdit,
     this.emptyWidget = const SizedBox.shrink(),
@@ -147,7 +158,11 @@ class SearchableList<T> extends StatefulWidget {
     this.searchFieldWidth,
     this.searchFieldHeight,
     this.displayClearIcon = true,
+    @Deprecated(
+      'Deprecated will be removed in the next release, use searchFieldPadding instead',
+    )
     this.spaceBetweenSearchAndList = 20,
+    this.searchFieldPadding,
     this.cursorColor,
     this.maxLines,
     this.maxLength,
@@ -168,6 +183,7 @@ class SearchableList<T> extends StatefulWidget {
     this.displaySearchIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
     this.defaultSuffixIconSize = 24,
+    this.lazyLoadingEnabled = true,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
@@ -188,7 +204,7 @@ class SearchableList<T> extends StatefulWidget {
     this.searchTextController,
     this.keyboardAction = TextInputAction.done,
     this.inputDecoration,
-    this.style,
+    this.textStyle,
     this.onSubmitSearch,
     this.searchMode = SearchMode.onEdit,
     this.emptyWidget = const SizedBox.shrink(),
@@ -202,7 +218,11 @@ class SearchableList<T> extends StatefulWidget {
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
+    @Deprecated(
+      'Deprecated will be removed in the next release, use searchFieldPadding instead',
+    )
     this.spaceBetweenSearchAndList = 20,
+    this.searchFieldPadding,
     this.cursorColor,
     this.maxLines,
     this.maxLength,
@@ -217,6 +237,7 @@ class SearchableList<T> extends StatefulWidget {
     this.displaySearchIcon = true,
     this.defaultSuffixIconColor = Colors.grey,
     this.defaultSuffixIconSize = 24,
+    this.lazyLoadingEnabled = true,
   }) : super(key: key) {
     asyncListCallback = null;
     asyncListFilter = null;
@@ -235,7 +256,7 @@ class SearchableList<T> extends StatefulWidget {
   }
 
   /// Initial list of all elements that will be displayed.
-  ///to filter the [initialList] you need provide [filter] callback
+  /// to filter the [initialList] you need provide [filter] callback
   late List<T> initialList;
 
   /// Callback to filter the list based on the given search value.
@@ -244,21 +265,21 @@ class SearchableList<T> extends StatefulWidget {
   /// You should return a list of filtered elements.
   List<T> Function(String query)? filter;
 
-  ///Async callback that return list to be displayed with future builder
-  ///to filter the [asyncListCallback] result you need provide [asyncListFilter]
+  /// Async callback that return list to be displayed with future builder
+  /// to filter the [asyncListCallback] result you need provide [asyncListFilter]
   Future<List<T>?> Function()? asyncListCallback;
 
-  ///Callback invoked when filtring the searchable list
-  ///used when providing [asyncListCallback]
-  ///can't be null when [asyncListCallback] isn't null
+  /// Callback invoked when filtring the searchable list
+  /// used when providing [asyncListCallback]
+  /// can't be null when [asyncListCallback] isn't null
   late List<T> Function(String, List<T>)? asyncListFilter;
 
-  ///Loading widget displayed when [asyncListCallback] is loading
-  ///if nothing is provided in [loadingWidget] searchable list will display a [CircularProgressIndicator]
+  /// Loading widget displayed when [asyncListCallback] is loading
+  /// if nothing is provided in [loadingWidget] searchable list will display a [CircularProgressIndicator]
   Widget? loadingWidget;
 
-  ///error widget displayed when [asyncListCallback] result is null
-  ///if nothing is provided in [errorWidget] searchable list will display a [Icon]
+  /// Error widget displayed when [asyncListCallback] result is null
+  /// if nothing is provided in [errorWidget] searchable list will display a [Icon]
   Widget? errorWidget;
 
   /// Builder function that generates the ListView items
@@ -274,7 +295,7 @@ class SearchableList<T> extends StatefulWidget {
 
   /// The widget to be displayed when the filter returns an empty list.
   /// Defaults to `const SizedBox.shrink()`.
-  final Widget emptyWidget;
+  final Widget? emptyWidget;
 
   /// Text editing controller applied on the search field.
   /// Defaults to null.
@@ -290,7 +311,7 @@ class SearchableList<T> extends StatefulWidget {
 
   /// The style for the input text field
   /// Defaults to null.
-  final TextStyle? style;
+  final TextStyle? textStyle;
 
   /// The keyboard text input type
   /// Defaults to [TextInputType.text]
@@ -300,10 +321,10 @@ class SearchableList<T> extends StatefulWidget {
   final Function(String?)? onSubmitSearch;
 
   /// The search type on submiting text field or when changing the text field value
-  ///```dart
-  ///SEARCH_TYPE.onEdit,
-  ///SEARCH_TYPE.onSubmit
-  ///```
+  /// ```dart
+  /// SEARCH_TYPE.onEdit,
+  /// SEARCH_TYPE.onSubmit
+  /// ```
   /// Defaults to [SearchMode.onEdit].
   final SearchMode searchMode;
 
@@ -336,103 +357,106 @@ class SearchableList<T> extends StatefulWidget {
   /// Defaults to 24.
   final double defaultSuffixIconSize;
 
-  ///An async callback invoked when dragging down the list
-  ///if onRefresh is nullable the drag to refresh is not applied
+  /// An async callback invoked when dragging down the list
+  /// if onRefresh is nullable the drag to refresh is not applied
   late Future<void> Function()? onRefresh;
 
-  ///Builder callback required  when using [seperated] constructor
-  ///return the Widget that will seperate all the elements inside the list
+  /// Builder callback required  when using [seperated] constructor
+  /// return the Widget that will seperate all the elements inside the list
   late Widget Function(BuildContext context, int index)? seperatorBuilder;
 
-  ///The scroll direction of the list
-  ///by default [Axis.vertical]
+  /// The scroll direction of the list
+  /// by default [Axis.vertical]
   Axis scrollDirection = Axis.vertical;
 
-  ///The position of the text field (bottom or top)
-  ///by default the textfield is displayed on top
+  /// The position of the text field (bottom or top)
+  /// by default the textfield is displayed on top
   SearchTextPosition searchTextPosition = SearchTextPosition.top;
 
-  ///Callback function invoked each time the listview
-  ///reached the bottom
-  ///used to create pagination in listview
+  /// Callback function invoked each time the listview
+  /// reached the bottom
+  /// used to create pagination in listview
   Future<dynamic> Function()? onPaginate;
 
-  ///space between the search textfield and the list
-  ///by default the padding is set to 20
+  /// Space between the search textfield and the list
+  /// by default the padding is set to 20
   final double spaceBetweenSearchAndList;
 
-  ///cusor color used in the search textfield
+  // A padding applied to search field
+  final EdgeInsetsGeometry? searchFieldPadding;
+
+  /// Cusor color used in the search textfield
   final Color? cursorColor;
 
-  ///max lines attribute used in the search textfield
+  /// Max lines attribute used in the search textfield
   final int? maxLines;
 
-  ///max length attribute used in the search field
+  /// Max length attribute used in the search field
   final int? maxLength;
 
-  ///the text alignement of the search field
-  ///by default the alignement is start
+  /// The text alignement of the search field
+  /// by default the alignement is start
   final TextAlign textAlign;
 
-  ///List of strings  to display in an auto complete field
-  ///by default list is empty so a simple text field is displayed
+  /// List of strings  to display in an auto complete field
+  /// by default list is empty so a simple text field is displayed
   final List<String> autoCompleteHints;
 
-  ///secondary widget will be displayed alongside the search field
-  ///by default it's null
+  /// Secondary widget will be displayed alongside the search field
+  /// by default it's null
   final Widget? secondaryWidget;
 
-  ///Map of data used to build  searchable expansion list
-  ///required when using [expansion] constructor
+  /// Map of data used to build  searchable expansion list
+  /// required when using [expansion] constructor
   late Map<dynamic, List<T>> expansionListData;
 
-  ///callback used when filtering the expansion list
-  ///required when using [expansion] constructor
+  /// Callback used when filtering the expansion list
+  /// required when using [expansion] constructor
   late Map<dynamic, List<T>> Function(String)? filterExpansionData;
 
-  ///the expansion list title widget builder
-  ///required when using [expansion] constructor
+  /// The expansion list title widget builder
+  /// required when using [expansion] constructor
   late Widget Function(dynamic) expansionTitleBuilder;
 
-  ///physics attributes used in listview widget
+  /// Physics attributes used in listview widget
   late ScrollPhysics? physics;
 
-  ///shrinkWrap used in listview widget, not used in sliver searchable list
-  ///by default `shrinkWrap = false`
+  /// ShrinkWrap used in listview widget, not used in sliver searchable list
+  /// by default `shrinkWrap = false`
   late bool shrinkWrap;
 
-  ///item extent of the listview
+  /// Item extent of the listview
   late double? itemExtent;
 
-  ///listview item padding
+  /// Listview item padding
   late EdgeInsetsGeometry? listViewPadding;
 
-  ///list items reverse attributes
-  ///by default `reverse = false`
-  ///not available for sliver listview constructor
+  /// List items reverse attributes
+  /// by default `reverse = false`
+  /// not available for sliver listview constructor
   late bool reverse;
 
-  ///Predicate callback invoked when sorting list items
-  ///required when `displaySortWidget` is True
+  /// Predicate callback invoked when sorting list items
+  /// required when `displaySortWidget` is True
   late int Function(T a, T b)? sortPredicate;
 
-  ///Widget displayed when sorting list
+  /// Widget displayed when sorting list
   /// available only if `displaySortWidget` is True
   late Widget? sortWidget;
 
-  ///Scroll controller passed to listview widget
-  ///by default listview uses scrollcontroller with a listener for pagination if `onPaginate = true`
-  ///or `closeKeyboardWhenScrolling = true` to close keyboard when scrolling
+  /// Scroll controller passed to listview widget
+  /// by default listview uses scrollcontroller with a listener for pagination if `onPaginate = true`
+  /// or `closeKeyboardWhenScrolling = true` to close keyboard when scrolling
   ScrollController? scrollController;
 
-  ///indicates whether the keyboard will be closed when scrolling or not
-  ///by default `closeKeyboardWhenScrolling = true`
+  /// Indicates whether the keyboard will be closed when scrolling or not
+  /// by default `closeKeyboardWhenScrolling = true`
   final bool closeKeyboardWhenScrolling;
 
-  ///indicate whether the expansion will be shown or not when the expansion group is empty
+  /// Indicate whether the expansion will be shown or not when the expansion group is empty
   late bool hideEmptyExpansionItems = false;
 
-  ///Indicate whether the expansion tile will be enabled or not
+  /// Indicate whether the expansion tile will be enabled or not
   late bool expansionTileEnabled = true;
 
   /// max width of search text field
@@ -441,6 +465,10 @@ class SearchableList<T> extends StatefulWidget {
   /// height of search text field
   final double? searchFieldHeight;
 
+  // Indicates how list view is rendered if `true` searchable listview
+  // uses `Listview.Builder` otherwise it uses `Listview`
+  final bool lazyLoadingEnabled;
+
   bool isExpansionList = false;
 
   @override
@@ -448,8 +476,8 @@ class SearchableList<T> extends StatefulWidget {
 }
 
 class _SearchableListState<T> extends State<SearchableList<T>> {
-  ///create scroll controller instance
-  ///attached to the listview widget
+  /// Create scroll controller instance
+  /// attached to the listview widget
   late ScrollController scrollController =
       widget.scrollController ?? ScrollController();
   List<T> asyncListResult = [];
@@ -492,38 +520,40 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: widget.searchTextPosition == SearchTextPosition.top
                     ? [
-                        SizedBox(
-                          width: widget.searchFieldWidth,
-                          height: widget.searchFieldHeight,
-                          child: SearchTextField(
-                            filterList: filterList,
-                            focusNode: widget.focusNode,
-                            inputDecoration: widget.inputDecoration,
-                            keyboardAction: widget.keyboardAction,
-                            obscureText: widget.obscureText,
-                            onSubmitSearch: widget.onSubmitSearch,
-                            searchFieldEnabled: widget.searchFieldEnabled,
-                            searchMode: widget.searchMode,
-                            searchTextController: widget.searchTextController,
-                            textInputType: widget.textInputType,
-                            displayClearIcon: widget.displayClearIcon,
-                            displaySearchIcon: widget.displaySearchIcon,
-                            defaultSuffixIconColor:
-                                widget.defaultSuffixIconColor,
-                            defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                            textStyle: widget.style,
-                            cursorColor: widget.cursorColor,
-                            maxLength: widget.maxLength,
-                            maxLines: widget.maxLines,
-                            textAlign: widget.textAlign,
-                            autoCompleteHints: widget.autoCompleteHints,
-                            secondaryWidget: widget.secondaryWidget,
-                            onSortTap: sortList,
-                            sortWidget: widget.sortWidget,
+                        Padding(
+                          padding: widget.searchFieldPadding ??
+                              const EdgeInsets.all(0),
+                          child: SizedBox(
+                            width: widget.searchFieldWidth,
+                            height: widget.searchFieldHeight,
+                            child: SearchTextField(
+                              filterList: filterList,
+                              focusNode: widget.focusNode,
+                              inputDecoration: widget.inputDecoration,
+                              keyboardAction: widget.keyboardAction,
+                              obscureText: widget.obscureText,
+                              onSubmitSearch: widget.onSubmitSearch,
+                              searchFieldEnabled: widget.searchFieldEnabled,
+                              searchMode: widget.searchMode,
+                              searchTextController: widget.searchTextController,
+                              textInputType: widget.textInputType,
+                              displayClearIcon: widget.displayClearIcon,
+                              displaySearchIcon: widget.displaySearchIcon,
+                              defaultSuffixIconColor:
+                                  widget.defaultSuffixIconColor,
+                              defaultSuffixIconSize:
+                                  widget.defaultSuffixIconSize,
+                              textStyle: widget.textStyle,
+                              cursorColor: widget.cursorColor,
+                              maxLength: widget.maxLength,
+                              maxLines: widget.maxLines,
+                              textAlign: widget.textAlign,
+                              autoCompleteHints: widget.autoCompleteHints,
+                              secondaryWidget: widget.secondaryWidget,
+                              onSortTap: sortList,
+                              sortWidget: widget.sortWidget,
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: widget.spaceBetweenSearchAndList,
                         ),
                         Expanded(
                           child: widget.asyncListCallback != null &&
@@ -539,37 +569,39 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                               ? renderAsyncListView()
                               : renderSearchableListView(),
                         ),
-                        SizedBox(
-                          height: widget.spaceBetweenSearchAndList,
-                        ),
-                        SizedBox(
-                          width: widget.searchFieldWidth,
-                          height: widget.searchFieldHeight,
-                          child: SearchTextField(
-                            filterList: filterList,
-                            focusNode: widget.focusNode,
-                            inputDecoration: widget.inputDecoration,
-                            keyboardAction: widget.keyboardAction,
-                            obscureText: widget.obscureText,
-                            onSubmitSearch: widget.onSubmitSearch,
-                            searchFieldEnabled: widget.searchFieldEnabled,
-                            searchMode: widget.searchMode,
-                            searchTextController: widget.searchTextController,
-                            textInputType: widget.textInputType,
-                            displayClearIcon: widget.displayClearIcon,
-                            displaySearchIcon: widget.displaySearchIcon,
-                            defaultSuffixIconColor:
-                                widget.defaultSuffixIconColor,
-                            defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                            textStyle: widget.style,
-                            cursorColor: widget.cursorColor,
-                            maxLength: widget.maxLength,
-                            maxLines: widget.maxLines,
-                            textAlign: widget.textAlign,
-                            autoCompleteHints: widget.autoCompleteHints,
-                            secondaryWidget: widget.secondaryWidget,
-                            onSortTap: sortList,
-                            sortWidget: widget.sortWidget,
+                        Padding(
+                          padding: widget.searchFieldPadding ??
+                              const EdgeInsets.all(0),
+                          child: SizedBox(
+                            width: widget.searchFieldWidth,
+                            height: widget.searchFieldHeight,
+                            child: SearchTextField(
+                              filterList: filterList,
+                              focusNode: widget.focusNode,
+                              inputDecoration: widget.inputDecoration,
+                              keyboardAction: widget.keyboardAction,
+                              obscureText: widget.obscureText,
+                              onSubmitSearch: widget.onSubmitSearch,
+                              searchFieldEnabled: widget.searchFieldEnabled,
+                              searchMode: widget.searchMode,
+                              searchTextController: widget.searchTextController,
+                              textInputType: widget.textInputType,
+                              displayClearIcon: widget.displayClearIcon,
+                              displaySearchIcon: widget.displaySearchIcon,
+                              defaultSuffixIconColor:
+                                  widget.defaultSuffixIconColor,
+                              defaultSuffixIconSize:
+                                  widget.defaultSuffixIconSize,
+                              textStyle: widget.textStyle,
+                              cursorColor: widget.cursorColor,
+                              maxLength: widget.maxLength,
+                              maxLines: widget.maxLines,
+                              textAlign: widget.textAlign,
+                              autoCompleteHints: widget.autoCompleteHints,
+                              secondaryWidget: widget.secondaryWidget,
+                              onSortTap: sortList,
+                              sortWidget: widget.sortWidget,
+                            ),
                           ),
                         ),
                       ],
@@ -607,51 +639,51 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          width: widget.searchFieldWidth,
-          height: widget.searchFieldHeight,
-          child: SearchTextField(
-            filterList: filterList,
-            focusNode: widget.focusNode,
-            inputDecoration: widget.inputDecoration,
-            keyboardAction: widget.keyboardAction,
-            obscureText: widget.obscureText,
-            onSubmitSearch: widget.onSubmitSearch,
-            searchFieldEnabled: widget.searchFieldEnabled,
-            searchMode: widget.searchMode,
-            searchTextController: widget.searchTextController,
-            textInputType: widget.textInputType,
-            displayClearIcon: widget.displayClearIcon,
-            displaySearchIcon: widget.displaySearchIcon,
-            defaultSuffixIconColor: widget.defaultSuffixIconColor,
-            defaultSuffixIconSize: widget.defaultSuffixIconSize,
-            textStyle: widget.style,
-            cursorColor: widget.cursorColor,
-            maxLength: widget.maxLength,
-            maxLines: widget.maxLines,
-            textAlign: widget.textAlign,
-            autoCompleteHints: widget.autoCompleteHints,
-            secondaryWidget: widget.secondaryWidget,
+        Padding(
+          padding: widget.searchFieldPadding ?? const EdgeInsets.all(0),
+          child: SizedBox(
+            width: widget.searchFieldWidth,
+            height: widget.searchFieldHeight,
+            child: SearchTextField(
+              filterList: filterList,
+              focusNode: widget.focusNode,
+              inputDecoration: widget.inputDecoration,
+              keyboardAction: widget.keyboardAction,
+              obscureText: widget.obscureText,
+              onSubmitSearch: widget.onSubmitSearch,
+              searchFieldEnabled: widget.searchFieldEnabled,
+              searchMode: widget.searchMode,
+              searchTextController: widget.searchTextController,
+              textInputType: widget.textInputType,
+              displayClearIcon: widget.displayClearIcon,
+              displaySearchIcon: widget.displaySearchIcon,
+              defaultSuffixIconColor: widget.defaultSuffixIconColor,
+              defaultSuffixIconSize: widget.defaultSuffixIconSize,
+              textStyle: widget.textStyle,
+              cursorColor: widget.cursorColor,
+              maxLength: widget.maxLength,
+              maxLines: widget.maxLines,
+              textAlign: widget.textAlign,
+              autoCompleteHints: widget.autoCompleteHints,
+              secondaryWidget: widget.secondaryWidget,
+            ),
           ),
-        ),
-        SizedBox(
-          height: widget.spaceBetweenSearchAndList,
         ),
         renderExpansionListView(),
       ],
     );
   }
 
-  ///creates listview based on the items passed to the widget
-  ///check whether the [widget.onRefresh] parameter is nullable or not
-  ///if [widget.displayDividder] is true
+  /// Creates listview based on the items passed to the widget
+  /// check whether the [widget.onRefresh] parameter is nullable or not
+  /// if [widget.displayDividder] is true
   /// function will runder [ListView.separated]
-  ///else the function will render a normal listview [ListView.builder]
+  /// else the function will render a normal listview [ListView.builder]
   Widget renderListView({
     required List<T> list,
   }) {
     if (list.isEmpty) {
-      return widget.emptyWidget;
+      return widget.emptyWidget ?? const SizedBox.shrink();
     } else {
       return widget.onRefresh != null
           ? RefreshIndicator(
@@ -659,32 +691,32 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
               onRefresh: widget.onRefresh!,
               child: widget.seperatorBuilder != null
                   ? renderSeperatedListView(list)
-                  : ListView.builder(
+                  : ListViewRendering(
                       physics: widget.physics,
                       shrinkWrap: widget.shrinkWrap,
                       itemExtent: widget.itemExtent,
                       padding: widget.listViewPadding,
                       reverse: widget.reverse,
-                      controller: scrollController,
+                      scrollController: scrollController,
                       scrollDirection: widget.scrollDirection,
-                      itemCount: list.length,
-                      itemBuilder: (context, index) =>
-                          widget.itemBuilder!(list[index]),
+                      isLazyLoadingEnabled: widget.lazyLoadingEnabled,
+                      list: list,
+                      itemBuilder: widget.itemBuilder,
                     ),
             )
           : widget.seperatorBuilder != null
               ? renderSeperatedListView(list)
-              : ListView.builder(
+              : ListViewRendering(
                   physics: widget.physics,
                   shrinkWrap: widget.shrinkWrap,
                   itemExtent: widget.itemExtent,
                   padding: widget.listViewPadding,
                   reverse: widget.reverse,
-                  controller: scrollController,
+                  scrollController: scrollController,
                   scrollDirection: widget.scrollDirection,
-                  itemCount: list.length,
-                  itemBuilder: (context, index) =>
-                      widget.itemBuilder!(list[index]),
+                  isLazyLoadingEnabled: widget.lazyLoadingEnabled,
+                  list: list,
+                  itemBuilder: widget.itemBuilder,
                 );
     }
   }
@@ -692,7 +724,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   Widget renderExpansionListView() {
     if (widget.expansionListData.isEmpty ||
         widget.expansionListData.values.every((element) => element.isEmpty)) {
-      return widget.emptyWidget;
+      return widget.emptyWidget ?? const SizedBox.shrink();
     } else {
       expansionTileControllers.addAll(
         List.generate(
@@ -733,7 +765,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     }
   }
 
-  ///renders a seperated listview using [ListView.separated]
+  /// Renders a seperated listview using [ListView.separated]
   Widget renderSeperatedListView(List<T> list) {
     return ListView.separated(
       controller: scrollController,
@@ -748,46 +780,47 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     );
   }
 
-  ///render sliver listview
-  ///if [widget.scrollDirection] set to [Axis.horizontal]
-  ///the function will render an horizontal sliver listview
-  ///else it will render a vertical listview
+  /// Render sliver listview
+  /// if [widget.scrollDirection] set to [Axis.horizontal]
+  /// the function will render an horizontal sliver listview
+  /// else it will render a vertical listview
   Widget renderSliverEffect() {
     return widget.scrollDirection == Axis.horizontal
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: widget.searchTextPosition == SearchTextPosition.top
                 ? [
-                    SizedBox(
-                      width: widget.searchFieldWidth,
-                      child: SearchTextField(
-                        filterList: filterList,
-                        focusNode: widget.focusNode,
-                        inputDecoration: widget.inputDecoration,
-                        keyboardAction: widget.keyboardAction,
-                        obscureText: widget.obscureText,
-                        onSubmitSearch: widget.onSubmitSearch,
-                        searchFieldEnabled: widget.searchFieldEnabled,
-                        searchMode: widget.searchMode,
-                        searchTextController: widget.searchTextController,
-                        textInputType: widget.textInputType,
-                        displayClearIcon: widget.displayClearIcon,
-                        displaySearchIcon: widget.displaySearchIcon,
-                        defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                        defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                        textStyle: widget.style,
-                        cursorColor: widget.cursorColor,
-                        maxLength: widget.maxLength,
-                        maxLines: widget.maxLines,
-                        textAlign: widget.textAlign,
-                        autoCompleteHints: widget.autoCompleteHints,
-                        secondaryWidget: widget.secondaryWidget,
-                        onSortTap: sortList,
-                        sortWidget: widget.sortWidget,
+                    Padding(
+                      padding:
+                          widget.searchFieldPadding ?? const EdgeInsets.all(0),
+                      child: SizedBox(
+                        width: widget.searchFieldWidth,
+                        child: SearchTextField(
+                          filterList: filterList,
+                          focusNode: widget.focusNode,
+                          inputDecoration: widget.inputDecoration,
+                          keyboardAction: widget.keyboardAction,
+                          obscureText: widget.obscureText,
+                          onSubmitSearch: widget.onSubmitSearch,
+                          searchFieldEnabled: widget.searchFieldEnabled,
+                          searchMode: widget.searchMode,
+                          searchTextController: widget.searchTextController,
+                          textInputType: widget.textInputType,
+                          displayClearIcon: widget.displayClearIcon,
+                          displaySearchIcon: widget.displaySearchIcon,
+                          defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                          defaultSuffixIconSize: widget.defaultSuffixIconSize,
+                          textStyle: widget.textStyle,
+                          cursorColor: widget.cursorColor,
+                          maxLength: widget.maxLength,
+                          maxLines: widget.maxLines,
+                          textAlign: widget.textAlign,
+                          autoCompleteHints: widget.autoCompleteHints,
+                          secondaryWidget: widget.secondaryWidget,
+                          onSortTap: sortList,
+                          sortWidget: widget.sortWidget,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: widget.spaceBetweenSearchAndList,
                     ),
                     Expanded(
                       child: CustomScrollView(
@@ -835,35 +868,36 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: widget.spaceBetweenSearchAndList,
-                    ),
-                    SizedBox(
-                      width: widget.searchFieldWidth,
-                      child: SearchTextField(
-                        filterList: filterList,
-                        focusNode: widget.focusNode,
-                        inputDecoration: widget.inputDecoration,
-                        keyboardAction: widget.keyboardAction,
-                        obscureText: widget.obscureText,
-                        onSubmitSearch: widget.onSubmitSearch,
-                        searchFieldEnabled: widget.searchFieldEnabled,
-                        searchMode: widget.searchMode,
-                        searchTextController: widget.searchTextController,
-                        textInputType: widget.textInputType,
-                        displayClearIcon: widget.displayClearIcon,
-                        displaySearchIcon: widget.displaySearchIcon,
-                        defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                        defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                        textStyle: widget.style,
-                        cursorColor: widget.cursorColor,
-                        maxLength: widget.maxLength,
-                        maxLines: widget.maxLines,
-                        textAlign: widget.textAlign,
-                        autoCompleteHints: widget.autoCompleteHints,
-                        secondaryWidget: widget.secondaryWidget,
-                        onSortTap: sortList,
-                        sortWidget: widget.sortWidget,
+                    Padding(
+                      padding:
+                          widget.searchFieldPadding ?? const EdgeInsets.all(0),
+                      child: SizedBox(
+                        width: widget.searchFieldWidth,
+                        child: SearchTextField(
+                          filterList: filterList,
+                          focusNode: widget.focusNode,
+                          inputDecoration: widget.inputDecoration,
+                          keyboardAction: widget.keyboardAction,
+                          obscureText: widget.obscureText,
+                          onSubmitSearch: widget.onSubmitSearch,
+                          searchFieldEnabled: widget.searchFieldEnabled,
+                          searchMode: widget.searchMode,
+                          searchTextController: widget.searchTextController,
+                          textInputType: widget.textInputType,
+                          displayClearIcon: widget.displayClearIcon,
+                          displaySearchIcon: widget.displaySearchIcon,
+                          defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                          defaultSuffixIconSize: widget.defaultSuffixIconSize,
+                          textStyle: widget.textStyle,
+                          cursorColor: widget.cursorColor,
+                          maxLength: widget.maxLength,
+                          maxLines: widget.maxLines,
+                          textAlign: widget.textAlign,
+                          autoCompleteHints: widget.autoCompleteHints,
+                          secondaryWidget: widget.secondaryWidget,
+                          onSortTap: sortList,
+                          sortWidget: widget.sortWidget,
+                        ),
                       ),
                     ),
                   ],
@@ -890,7 +924,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         displaySearchIcon: widget.displaySearchIcon,
                         defaultSuffixIconColor: widget.defaultSuffixIconColor,
                         defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                        textStyle: widget.style,
+                        textStyle: widget.textStyle,
                         cursorColor: widget.cursorColor,
                         maxLength: widget.maxLength,
                         maxLines: widget.maxLines,
@@ -944,7 +978,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         displaySearchIcon: widget.displaySearchIcon,
                         defaultSuffixIconColor: widget.defaultSuffixIconColor,
                         defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                        textStyle: widget.style,
+                        textStyle: widget.textStyle,
                         cursorColor: widget.cursorColor,
                         maxLength: widget.maxLength,
                         maxLines: widget.maxLines,
