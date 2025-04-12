@@ -6,7 +6,7 @@ class ListViewRendering<T> extends StatelessWidget {
   final double? itemExtent;
   final EdgeInsetsGeometry? padding;
   final bool reverse;
-  final ScrollController scrollController;
+  final ScrollController? scrollController;
   final Axis scrollDirection;
   final List<T> list;
   final Widget Function(T item)? itemBuilder;
@@ -21,7 +21,7 @@ class ListViewRendering<T> extends StatelessWidget {
     required this.padding,
     required this.physics,
     required this.reverse,
-    required this.scrollController,
+    this.scrollController,
     required this.scrollDirection,
     required this.shrinkWrap,
   }) : super(key: key);

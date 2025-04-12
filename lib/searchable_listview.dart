@@ -21,7 +21,7 @@ class SearchableList<T> extends StatefulWidget {
     Key? key,
     required this.initialList,
     required this.itemBuilder,
-    this.filter,
+    required this.filter,
     this.loadingWidget,
     this.errorWidget,
     this.searchTextController,
@@ -72,6 +72,7 @@ class SearchableList<T> extends StatefulWidget {
     expansionListBuilder = null;
     asyncListCallback = null;
     asyncListFilter = null;
+    assert(filter != null);
     if (sortWidget != null) {
       assert(sortPredicate != null);
     }
@@ -478,8 +479,7 @@ class SearchableList<T> extends StatefulWidget {
 class _SearchableListState<T> extends State<SearchableList<T>> {
   /// Create scroll controller instance
   /// attached to the listview widget
-  late ScrollController scrollController =
-      widget.scrollController ?? ScrollController();
+  late ScrollController? scrollController = widget.scrollController;
   List<T> asyncListResult = [];
   List<T> filtredAsyncListResult = [];
   bool dataDownloaded = false;
@@ -488,13 +488,14 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   @override
   void initState() {
     super.initState();
-    scrollController.addListener(() {
-      if (widget.closeKeyboardWhenScrolling) {
+    scrollController?.addListener(() {
+      if (widget.closeKeyboardWhenScrolling &&
+          widget.focusNode?.hasFocus == true) {
         FocusScope.of(context).requestFocus(FocusNode());
       }
       if (widget.onPaginate != null &&
-          scrollController.position.pixels ==
-              scrollController.position.maxScrollExtent) {
+          scrollController?.position.pixels ==
+              scrollController?.position.maxScrollExtent) {
         setState(() {
           widget.onPaginate?.call();
         });
@@ -505,7 +506,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
 
   @override
   void dispose() {
-    scrollController.dispose();
+    scrollController?.dispose();
     widget.searchTextController?.removeListener(_textControllerListener);
     super.dispose();
   }
@@ -517,94 +518,51 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         : widget.sliverScrollEffect
             ? renderSliverEffect()
             : Column(
+                verticalDirection:
+                    widget.searchTextPosition == SearchTextPosition.top
+                        ? VerticalDirection.down
+                        : VerticalDirection.up,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: widget.searchTextPosition == SearchTextPosition.top
-                    ? [
-                        Padding(
-                          padding: widget.searchFieldPadding ??
-                              const EdgeInsets.all(0),
-                          child: SizedBox(
-                            width: widget.searchFieldWidth,
-                            height: widget.searchFieldHeight,
-                            child: SearchTextField(
-                              filterList: filterList,
-                              focusNode: widget.focusNode,
-                              inputDecoration: widget.inputDecoration,
-                              keyboardAction: widget.keyboardAction,
-                              obscureText: widget.obscureText,
-                              onSubmitSearch: widget.onSubmitSearch,
-                              searchFieldEnabled: widget.searchFieldEnabled,
-                              searchMode: widget.searchMode,
-                              searchTextController: widget.searchTextController,
-                              textInputType: widget.textInputType,
-                              displayClearIcon: widget.displayClearIcon,
-                              displaySearchIcon: widget.displaySearchIcon,
-                              defaultSuffixIconColor:
-                                  widget.defaultSuffixIconColor,
-                              defaultSuffixIconSize:
-                                  widget.defaultSuffixIconSize,
-                              textStyle: widget.textStyle,
-                              cursorColor: widget.cursorColor,
-                              maxLength: widget.maxLength,
-                              maxLines: widget.maxLines,
-                              textAlign: widget.textAlign,
-                              autoCompleteHints: widget.autoCompleteHints,
-                              secondaryWidget: widget.secondaryWidget,
-                              onSortTap: sortList,
-                              sortWidget: widget.sortWidget,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: widget.asyncListCallback != null &&
-                                  !dataDownloaded
-                              ? renderAsyncListView()
-                              : renderSearchableListView(),
-                        ),
-                      ]
-                    : [
-                        Expanded(
-                          child: widget.asyncListCallback != null &&
-                                  !dataDownloaded
-                              ? renderAsyncListView()
-                              : renderSearchableListView(),
-                        ),
-                        Padding(
-                          padding: widget.searchFieldPadding ??
-                              const EdgeInsets.all(0),
-                          child: SizedBox(
-                            width: widget.searchFieldWidth,
-                            height: widget.searchFieldHeight,
-                            child: SearchTextField(
-                              filterList: filterList,
-                              focusNode: widget.focusNode,
-                              inputDecoration: widget.inputDecoration,
-                              keyboardAction: widget.keyboardAction,
-                              obscureText: widget.obscureText,
-                              onSubmitSearch: widget.onSubmitSearch,
-                              searchFieldEnabled: widget.searchFieldEnabled,
-                              searchMode: widget.searchMode,
-                              searchTextController: widget.searchTextController,
-                              textInputType: widget.textInputType,
-                              displayClearIcon: widget.displayClearIcon,
-                              displaySearchIcon: widget.displaySearchIcon,
-                              defaultSuffixIconColor:
-                                  widget.defaultSuffixIconColor,
-                              defaultSuffixIconSize:
-                                  widget.defaultSuffixIconSize,
-                              textStyle: widget.textStyle,
-                              cursorColor: widget.cursorColor,
-                              maxLength: widget.maxLength,
-                              maxLines: widget.maxLines,
-                              textAlign: widget.textAlign,
-                              autoCompleteHints: widget.autoCompleteHints,
-                              secondaryWidget: widget.secondaryWidget,
-                              onSortTap: sortList,
-                              sortWidget: widget.sortWidget,
-                            ),
-                          ),
-                        ),
-                      ],
+                children: [
+                  Padding(
+                    padding:
+                        widget.searchFieldPadding ?? const EdgeInsets.all(0),
+                    child: SizedBox(
+                      width: widget.searchFieldWidth,
+                      height: widget.searchFieldHeight,
+                      child: SearchTextField(
+                        filterList: filterList,
+                        focusNode: widget.focusNode,
+                        inputDecoration: widget.inputDecoration,
+                        keyboardAction: widget.keyboardAction,
+                        obscureText: widget.obscureText,
+                        onSubmitSearch: widget.onSubmitSearch,
+                        searchFieldEnabled: widget.searchFieldEnabled,
+                        searchMode: widget.searchMode,
+                        searchTextController: widget.searchTextController,
+                        textInputType: widget.textInputType,
+                        displayClearIcon: widget.displayClearIcon,
+                        displaySearchIcon: widget.displaySearchIcon,
+                        defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                        defaultSuffixIconSize: widget.defaultSuffixIconSize,
+                        textStyle: widget.textStyle,
+                        cursorColor: widget.cursorColor,
+                        maxLength: widget.maxLength,
+                        maxLines: widget.maxLines,
+                        textAlign: widget.textAlign,
+                        autoCompleteHints: widget.autoCompleteHints,
+                        secondaryWidget: widget.secondaryWidget,
+                        onSortTap: sortList,
+                        sortWidget: widget.sortWidget,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: widget.asyncListCallback != null && !dataDownloaded
+                        ? renderAsyncListView()
+                        : renderSearchableListView(),
+                  ),
+                ],
               );
   }
 
