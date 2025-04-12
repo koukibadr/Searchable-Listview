@@ -41,6 +41,12 @@ class _ExampleAppState extends State<ExampleApp> {
     Actor(age: 44, name: 'Tom', lastName: 'Hardy'),
     Actor(age: 66, name: 'Denzel', lastName: 'Washington'),
     Actor(age: 49, name: 'Ben', lastName: 'Affleck'),
+    Actor(age: 47, name: 'Leonardo', lastName: 'DiCaprio'),
+    Actor(age: 58, name: 'Johnny', lastName: 'Depp'),
+    Actor(age: 78, name: 'Robert', lastName: 'De Niro'),
+    Actor(age: 44, name: 'Tom', lastName: 'Hardy'),
+    Actor(age: 66, name: 'Denzel', lastName: 'Washington'),
+    Actor(age: 49, name: 'Ben', lastName: 'Affleck'),
   ];
 
   final Map<String, List<Actor>> mapOfActors = {
@@ -68,7 +74,7 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: renderAsynchSearchableListview(),
+              child: sliverListViewBuilder(),
             ),
           ),
           Align(

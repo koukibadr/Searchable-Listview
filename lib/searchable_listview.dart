@@ -42,10 +42,6 @@ class SearchableList<T> extends StatefulWidget {
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
-    @Deprecated(
-      'Deprecated will be removed in the next release, use searchFieldPadding instead',
-    )
-    this.spaceBetweenSearchAndList = 20,
     this.searchFieldPadding,
     this.cursorColor,
     this.maxLines,
@@ -103,10 +99,6 @@ class SearchableList<T> extends StatefulWidget {
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
-    @Deprecated(
-      'Deprecated will be removed in the next release, use searchFieldPadding instead',
-    )
-    this.spaceBetweenSearchAndList = 20,
     this.searchFieldPadding,
     this.cursorColor,
     this.maxLines,
@@ -159,10 +151,6 @@ class SearchableList<T> extends StatefulWidget {
     this.searchFieldWidth,
     this.searchFieldHeight,
     this.displayClearIcon = true,
-    @Deprecated(
-      'Deprecated will be removed in the next release, use searchFieldPadding instead',
-    )
-    this.spaceBetweenSearchAndList = 20,
     this.searchFieldPadding,
     this.cursorColor,
     this.maxLines,
@@ -185,6 +173,7 @@ class SearchableList<T> extends StatefulWidget {
     this.defaultSuffixIconColor = Colors.grey,
     this.defaultSuffixIconSize = 24,
     this.lazyLoadingEnabled = true,
+    this.searchTextPosition = SearchTextPosition.top,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
@@ -219,10 +208,6 @@ class SearchableList<T> extends StatefulWidget {
     this.scrollDirection = Axis.vertical,
     this.searchTextPosition = SearchTextPosition.top,
     this.onPaginate,
-    @Deprecated(
-      'Deprecated will be removed in the next release, use searchFieldPadding instead',
-    )
-    this.spaceBetweenSearchAndList = 20,
     this.searchFieldPadding,
     this.cursorColor,
     this.maxLines,
@@ -379,10 +364,6 @@ class SearchableList<T> extends StatefulWidget {
   /// used to create pagination in listview
   Future<dynamic> Function()? onPaginate;
 
-  /// Space between the search textfield and the list
-  /// by default the padding is set to 20
-  final double spaceBetweenSearchAndList;
-
   // A padding applied to search field
   final EdgeInsetsGeometry? searchFieldPadding;
 
@@ -514,7 +495,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   @override
   Widget build(BuildContext context) {
     return widget.isExpansionList
-        ? renderSearchableExpansionList()
+        ? buildExpandableListView()
         : widget.sliverScrollEffect
             ? renderSliverEffect()
             : Column(
@@ -525,8 +506,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding:
-                        widget.searchFieldPadding ?? const EdgeInsets.all(0),
+                    padding: widget.searchFieldPadding ?? EdgeInsets.zero,
                     child: SizedBox(
                       width: widget.searchFieldWidth,
                       height: widget.searchFieldHeight,
@@ -570,8 +550,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     return FutureBuilder(
       future: widget.asyncListCallback!.call(),
       builder: (context, snapshot) {
-        dataDownloaded = snapshot.connectionState != ConnectionState.waiting;
-        if (!dataDownloaded) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return widget.loadingWidget ?? const DefaultLoadingWidget();
         }
         if (snapshot.data == null) {
@@ -588,47 +567,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     List<T> renderedList = widget.asyncListCallback != null
         ? filtredAsyncListResult
         : widget.initialList;
-    return renderListView(
+    return buildSearchableListView(
       list: renderedList,
-    );
-  }
-
-  Widget renderSearchableExpansionList() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: widget.searchFieldPadding ?? const EdgeInsets.all(0),
-          child: SizedBox(
-            width: widget.searchFieldWidth,
-            height: widget.searchFieldHeight,
-            child: SearchTextField(
-              filterList: filterList,
-              focusNode: widget.focusNode,
-              inputDecoration: widget.inputDecoration,
-              keyboardAction: widget.keyboardAction,
-              obscureText: widget.obscureText,
-              onSubmitSearch: widget.onSubmitSearch,
-              searchFieldEnabled: widget.searchFieldEnabled,
-              searchMode: widget.searchMode,
-              searchTextController: widget.searchTextController,
-              textInputType: widget.textInputType,
-              displayClearIcon: widget.displayClearIcon,
-              displaySearchIcon: widget.displaySearchIcon,
-              defaultSuffixIconColor: widget.defaultSuffixIconColor,
-              defaultSuffixIconSize: widget.defaultSuffixIconSize,
-              textStyle: widget.textStyle,
-              cursorColor: widget.cursorColor,
-              maxLength: widget.maxLength,
-              maxLines: widget.maxLines,
-              textAlign: widget.textAlign,
-              autoCompleteHints: widget.autoCompleteHints,
-              secondaryWidget: widget.secondaryWidget,
-            ),
-          ),
-        ),
-        renderExpansionListView(),
-      ],
     );
   }
 
@@ -637,7 +577,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   /// if [widget.displayDividder] is true
   /// function will runder [ListView.separated]
   /// else the function will render a normal listview [ListView.builder]
-  Widget renderListView({
+  Widget buildSearchableListView({
     required List<T> list,
   }) {
     if (list.isEmpty) {
@@ -647,39 +587,39 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
           ? RefreshIndicator(
               triggerMode: RefreshIndicatorTriggerMode.onEdge,
               onRefresh: widget.onRefresh!,
-              child: widget.seperatorBuilder != null
-                  ? renderSeperatedListView(list)
-                  : ListViewRendering(
-                      physics: widget.physics,
-                      shrinkWrap: widget.shrinkWrap,
-                      itemExtent: widget.itemExtent,
-                      padding: widget.listViewPadding,
-                      reverse: widget.reverse,
-                      scrollController: scrollController,
-                      scrollDirection: widget.scrollDirection,
-                      isLazyLoadingEnabled: widget.lazyLoadingEnabled,
-                      list: list,
-                      itemBuilder: widget.itemBuilder,
-                    ),
+              child: ListViewRendering(
+                physics: widget.physics,
+                shrinkWrap: widget.shrinkWrap,
+                itemExtent: widget.itemExtent,
+                padding: widget.listViewPadding,
+                reverse: widget.reverse,
+                scrollController: scrollController,
+                scrollDirection: widget.scrollDirection,
+                isLazyLoadingEnabled: widget.lazyLoadingEnabled,
+                list: list,
+                itemBuilder: widget.itemBuilder,
+                isListViewSeparated: widget.seperatorBuilder != null,
+                seperatorBuilder: widget.seperatorBuilder,
+              ),
             )
-          : widget.seperatorBuilder != null
-              ? renderSeperatedListView(list)
-              : ListViewRendering(
-                  physics: widget.physics,
-                  shrinkWrap: widget.shrinkWrap,
-                  itemExtent: widget.itemExtent,
-                  padding: widget.listViewPadding,
-                  reverse: widget.reverse,
-                  scrollController: scrollController,
-                  scrollDirection: widget.scrollDirection,
-                  isLazyLoadingEnabled: widget.lazyLoadingEnabled,
-                  list: list,
-                  itemBuilder: widget.itemBuilder,
-                );
+          : ListViewRendering(
+              physics: widget.physics,
+              shrinkWrap: widget.shrinkWrap,
+              itemExtent: widget.itemExtent,
+              padding: widget.listViewPadding,
+              reverse: widget.reverse,
+              scrollController: scrollController,
+              scrollDirection: widget.scrollDirection,
+              isLazyLoadingEnabled: widget.lazyLoadingEnabled,
+              list: list,
+              itemBuilder: widget.itemBuilder,
+              isListViewSeparated: widget.seperatorBuilder != null,
+              seperatorBuilder: widget.seperatorBuilder,
+            );
     }
   }
 
-  Widget renderExpansionListView() {
+  Widget buildExpandableListView() {
     if (widget.expansionListData.isEmpty ||
         widget.expansionListData.values.every((element) => element.isEmpty)) {
       return widget.emptyWidget ?? const SizedBox.shrink();
@@ -693,49 +633,72 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       if (widget.hideEmptyExpansionItems) {
         widget.expansionListData.removeWhere((key, value) => value.isEmpty);
       }
-      return Expanded(
-        child: ListView.builder(
-          controller: scrollController,
-          scrollDirection: widget.scrollDirection,
-          itemCount: widget.expansionListData.length,
-          physics: widget.physics,
-          shrinkWrap: widget.shrinkWrap,
-          itemExtent: widget.itemExtent,
-          padding: widget.listViewPadding,
-          reverse: widget.reverse,
-          itemBuilder: (context, index) {
-            var entryKey = widget.expansionListData.keys.toList()[index];
-            var entryValueList = widget.expansionListData[entryKey];
-            return ExpansionTile(
-              title: widget.expansionTitleBuilder.call(entryKey),
-              enabled: widget.expansionTileEnabled,
-              controller: expansionTileControllers[index],
-              children: entryValueList?.map(
-                    (listItem) {
-                      return widget.expansionListBuilder!(index, listItem);
-                    },
-                  ).toList() ??
-                  [],
-            );
-          },
-        ),
+      return Column(
+        verticalDirection: widget.searchTextPosition == SearchTextPosition.top
+            ? VerticalDirection.down
+            : VerticalDirection.up,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: widget.searchFieldPadding ?? const EdgeInsets.all(0),
+            child: SizedBox(
+              width: widget.searchFieldWidth,
+              height: widget.searchFieldHeight,
+              child: SearchTextField(
+                filterList: filterList,
+                focusNode: widget.focusNode,
+                inputDecoration: widget.inputDecoration,
+                keyboardAction: widget.keyboardAction,
+                obscureText: widget.obscureText,
+                onSubmitSearch: widget.onSubmitSearch,
+                searchFieldEnabled: widget.searchFieldEnabled,
+                searchMode: widget.searchMode,
+                searchTextController: widget.searchTextController,
+                textInputType: widget.textInputType,
+                displayClearIcon: widget.displayClearIcon,
+                displaySearchIcon: widget.displaySearchIcon,
+                defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                defaultSuffixIconSize: widget.defaultSuffixIconSize,
+                textStyle: widget.textStyle,
+                cursorColor: widget.cursorColor,
+                maxLength: widget.maxLength,
+                maxLines: widget.maxLines,
+                textAlign: widget.textAlign,
+                autoCompleteHints: widget.autoCompleteHints,
+                secondaryWidget: widget.secondaryWidget,
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              controller: scrollController,
+              scrollDirection: widget.scrollDirection,
+              itemCount: widget.expansionListData.length,
+              physics: widget.physics,
+              shrinkWrap: widget.shrinkWrap,
+              itemExtent: widget.itemExtent,
+              padding: widget.listViewPadding,
+              reverse: widget.reverse,
+              itemBuilder: (context, index) {
+                var entryKey = widget.expansionListData.keys.toList()[index];
+                var entryValueList = widget.expansionListData[entryKey];
+                return ExpansionTile(
+                  title: widget.expansionTitleBuilder.call(entryKey),
+                  enabled: widget.expansionTileEnabled,
+                  controller: expansionTileControllers[index],
+                  children: entryValueList?.map(
+                        (listItem) {
+                          return widget.expansionListBuilder!(index, listItem);
+                        },
+                      ).toList() ??
+                      [],
+                );
+              },
+            ),
+          ),
+        ],
       );
     }
-  }
-
-  /// Renders a seperated listview using [ListView.separated]
-  Widget renderSeperatedListView(List<T> list) {
-    return ListView.separated(
-      controller: scrollController,
-      scrollDirection: widget.scrollDirection,
-      itemCount: list.length,
-      physics: widget.physics,
-      shrinkWrap: widget.shrinkWrap,
-      padding: widget.listViewPadding,
-      reverse: widget.reverse,
-      itemBuilder: (context, index) => widget.itemBuilder!(list[index]),
-      separatorBuilder: widget.seperatorBuilder!,
-    );
   }
 
   /// Render sliver listview
@@ -746,209 +709,106 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     return widget.scrollDirection == Axis.horizontal
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: widget.searchTextPosition == SearchTextPosition.top
-                ? [
-                    Padding(
-                      padding:
-                          widget.searchFieldPadding ?? const EdgeInsets.all(0),
-                      child: SizedBox(
-                        width: widget.searchFieldWidth,
-                        child: SearchTextField(
-                          filterList: filterList,
-                          focusNode: widget.focusNode,
-                          inputDecoration: widget.inputDecoration,
-                          keyboardAction: widget.keyboardAction,
-                          obscureText: widget.obscureText,
-                          onSubmitSearch: widget.onSubmitSearch,
-                          searchFieldEnabled: widget.searchFieldEnabled,
-                          searchMode: widget.searchMode,
-                          searchTextController: widget.searchTextController,
-                          textInputType: widget.textInputType,
-                          displayClearIcon: widget.displayClearIcon,
-                          displaySearchIcon: widget.displaySearchIcon,
-                          defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                          defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                          textStyle: widget.textStyle,
-                          cursorColor: widget.cursorColor,
-                          maxLength: widget.maxLength,
-                          maxLines: widget.maxLines,
-                          textAlign: widget.textAlign,
-                          autoCompleteHints: widget.autoCompleteHints,
-                          secondaryWidget: widget.secondaryWidget,
-                          onSortTap: sortList,
-                          sortWidget: widget.sortWidget,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: CustomScrollView(
-                        scrollDirection: widget.scrollDirection,
-                        physics: widget.physics,
-                        controller: scrollController,
-                        slivers: [
-                          SliverList(
-                            delegate: widget.initialList.isEmpty
-                                ? SliverChildBuilderDelegate(
-                                    (context, index) => widget.emptyWidget,
-                                    childCount: 1,
-                                  )
-                                : SliverChildBuilderDelegate(
-                                    (context, index) => widget.itemBuilder!(
-                                      widget.initialList[index],
-                                    ),
-                                    childCount: widget.initialList.length,
-                                  ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ]
-                : [
-                    Expanded(
-                      child: CustomScrollView(
-                        scrollDirection: widget.scrollDirection,
-                        controller: scrollController,
-                        physics: widget.physics,
-                        slivers: [
-                          SliverList(
-                            delegate: widget.initialList.isEmpty
-                                ? SliverChildBuilderDelegate(
-                                    (context, index) => widget.emptyWidget,
-                                    childCount: 1,
-                                  )
-                                : SliverChildBuilderDelegate(
-                                    (context, index) => widget.itemBuilder!(
-                                      widget.initialList[index],
-                                    ),
-                                    childCount: widget.initialList.length,
-                                  ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          widget.searchFieldPadding ?? const EdgeInsets.all(0),
-                      child: SizedBox(
-                        width: widget.searchFieldWidth,
-                        child: SearchTextField(
-                          filterList: filterList,
-                          focusNode: widget.focusNode,
-                          inputDecoration: widget.inputDecoration,
-                          keyboardAction: widget.keyboardAction,
-                          obscureText: widget.obscureText,
-                          onSubmitSearch: widget.onSubmitSearch,
-                          searchFieldEnabled: widget.searchFieldEnabled,
-                          searchMode: widget.searchMode,
-                          searchTextController: widget.searchTextController,
-                          textInputType: widget.textInputType,
-                          displayClearIcon: widget.displayClearIcon,
-                          displaySearchIcon: widget.displaySearchIcon,
-                          defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                          defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                          textStyle: widget.textStyle,
-                          cursorColor: widget.cursorColor,
-                          maxLength: widget.maxLength,
-                          maxLines: widget.maxLines,
-                          textAlign: widget.textAlign,
-                          autoCompleteHints: widget.autoCompleteHints,
-                          secondaryWidget: widget.secondaryWidget,
-                          onSortTap: sortList,
-                          sortWidget: widget.sortWidget,
-                        ),
-                      ),
-                    ),
+            verticalDirection:
+                widget.searchTextPosition == SearchTextPosition.top
+                    ? VerticalDirection.down
+                    : VerticalDirection.up,
+            children: [
+              Padding(
+                padding: widget.searchFieldPadding ?? const EdgeInsets.all(0),
+                child: SizedBox(
+                  width: widget.searchFieldWidth,
+                  child: SearchTextField(
+                    filterList: filterList,
+                    focusNode: widget.focusNode,
+                    inputDecoration: widget.inputDecoration,
+                    keyboardAction: widget.keyboardAction,
+                    obscureText: widget.obscureText,
+                    onSubmitSearch: widget.onSubmitSearch,
+                    searchFieldEnabled: widget.searchFieldEnabled,
+                    searchMode: widget.searchMode,
+                    searchTextController: widget.searchTextController,
+                    textInputType: widget.textInputType,
+                    displayClearIcon: widget.displayClearIcon,
+                    displaySearchIcon: widget.displaySearchIcon,
+                    defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                    defaultSuffixIconSize: widget.defaultSuffixIconSize,
+                    textStyle: widget.textStyle,
+                    cursorColor: widget.cursorColor,
+                    maxLength: widget.maxLength,
+                    maxLines: widget.maxLines,
+                    textAlign: widget.textAlign,
+                    autoCompleteHints: widget.autoCompleteHints,
+                    secondaryWidget: widget.secondaryWidget,
+                    onSortTap: sortList,
+                    sortWidget: widget.sortWidget,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: CustomScrollView(
+                  scrollDirection: widget.scrollDirection,
+                  physics: widget.physics,
+                  controller: scrollController,
+                  slivers: [
+                    renderSliverListView(),
                   ],
+                ),
+              ),
+            ],
           )
         : CustomScrollView(
             scrollDirection: widget.scrollDirection,
             physics: widget.physics,
-            slivers: widget.searchTextPosition == SearchTextPosition.top
-                ? [
-                    SliverAppBar(
-                      backgroundColor: Colors.transparent,
-                      flexibleSpace: SearchTextField(
-                        filterList: filterList,
-                        focusNode: widget.focusNode,
-                        inputDecoration: widget.inputDecoration,
-                        keyboardAction: widget.keyboardAction,
-                        obscureText: widget.obscureText,
-                        onSubmitSearch: widget.onSubmitSearch,
-                        searchFieldEnabled: widget.searchFieldEnabled,
-                        searchMode: widget.searchMode,
-                        searchTextController: widget.searchTextController,
-                        textInputType: widget.textInputType,
-                        displayClearIcon: widget.displayClearIcon,
-                        displaySearchIcon: widget.displaySearchIcon,
-                        defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                        defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                        textStyle: widget.textStyle,
-                        cursorColor: widget.cursorColor,
-                        maxLength: widget.maxLength,
-                        maxLines: widget.maxLines,
-                        textAlign: widget.textAlign,
-                        autoCompleteHints: widget.autoCompleteHints,
-                        secondaryWidget: widget.secondaryWidget,
-                        onSortTap: sortList,
-                        sortWidget: widget.sortWidget,
-                      ),
-                    ),
-                    SliverList(
-                      delegate: widget.initialList.isEmpty
-                          ? SliverChildBuilderDelegate(
-                              (context, index) => widget.emptyWidget,
-                              childCount: 1,
-                            )
-                          : SliverChildBuilderDelegate(
-                              (context, index) => widget
-                                  .itemBuilder!(widget.initialList[index]),
-                              childCount: widget.initialList.length,
-                            ),
-                    ),
-                  ]
-                : [
-                    SliverList(
-                      delegate: widget.initialList.isEmpty
-                          ? SliverChildBuilderDelegate(
-                              (context, index) => widget.emptyWidget,
-                              childCount: 1,
-                            )
-                          : SliverChildBuilderDelegate(
-                              (context, index) => widget
-                                  .itemBuilder!(widget.initialList[index]),
-                              childCount: widget.initialList.length,
-                            ),
-                    ),
-                    SliverAppBar(
-                      backgroundColor: Colors.transparent,
-                      flexibleSpace: SearchTextField(
-                        filterList: filterList,
-                        focusNode: widget.focusNode,
-                        inputDecoration: widget.inputDecoration,
-                        keyboardAction: widget.keyboardAction,
-                        obscureText: widget.obscureText,
-                        onSubmitSearch: widget.onSubmitSearch,
-                        searchFieldEnabled: widget.searchFieldEnabled,
-                        searchMode: widget.searchMode,
-                        searchTextController: widget.searchTextController,
-                        textInputType: widget.textInputType,
-                        displayClearIcon: widget.displayClearIcon,
-                        displaySearchIcon: widget.displaySearchIcon,
-                        defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                        defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                        textStyle: widget.textStyle,
-                        cursorColor: widget.cursorColor,
-                        maxLength: widget.maxLength,
-                        maxLines: widget.maxLines,
-                        textAlign: widget.textAlign,
-                        autoCompleteHints: widget.autoCompleteHints,
-                        secondaryWidget: widget.secondaryWidget,
-                        onSortTap: sortList,
-                        sortWidget: widget.sortWidget,
-                      ),
-                    ),
-                  ],
+            reverse: widget.searchTextPosition == SearchTextPosition.bottom,
+            slivers: [
+              SliverAppBar(
+                backgroundColor: Colors.transparent,
+                flexibleSpace: SearchTextField(
+                  filterList: filterList,
+                  focusNode: widget.focusNode,
+                  inputDecoration: widget.inputDecoration,
+                  keyboardAction: widget.keyboardAction,
+                  obscureText: widget.obscureText,
+                  onSubmitSearch: widget.onSubmitSearch,
+                  searchFieldEnabled: widget.searchFieldEnabled,
+                  searchMode: widget.searchMode,
+                  searchTextController: widget.searchTextController,
+                  textInputType: widget.textInputType,
+                  displayClearIcon: widget.displayClearIcon,
+                  displaySearchIcon: widget.displaySearchIcon,
+                  defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                  defaultSuffixIconSize: widget.defaultSuffixIconSize,
+                  textStyle: widget.textStyle,
+                  cursorColor: widget.cursorColor,
+                  maxLength: widget.maxLength,
+                  maxLines: widget.maxLines,
+                  textAlign: widget.textAlign,
+                  autoCompleteHints: widget.autoCompleteHints,
+                  secondaryWidget: widget.secondaryWidget,
+                  onSortTap: sortList,
+                  sortWidget: widget.sortWidget,
+                ),
+              ),
+              renderSliverListView(),
+            ],
           );
+  }
+
+  Widget renderSliverListView() {
+    return SliverList(
+      delegate: widget.initialList.isEmpty
+          ? SliverChildBuilderDelegate(
+              (context, index) => widget.emptyWidget,
+              childCount: 1,
+            )
+          : SliverChildBuilderDelegate(
+              (context, index) => widget.itemBuilder!(
+                widget.initialList[index],
+              ),
+              childCount: widget.initialList.length,
+            ),
+    );
   }
 
   void filterList(String value) {
@@ -971,7 +831,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       });
     } else {
       setState(() {
-        widget.initialList = widget.filter!(value);
+        widget.initialList = widget.filter?.call(value) ?? [];
       });
     }
   }
