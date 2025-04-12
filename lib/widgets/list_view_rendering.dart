@@ -11,6 +11,8 @@ class ListViewRendering<T> extends StatelessWidget {
   final List<T> list;
   final Widget Function(T item)? itemBuilder;
   final bool isLazyLoadingEnabled;
+  final Widget Function(BuildContext context, int index)? seperatorBuilder;
+  final bool isListViewSeparated;
 
   const ListViewRendering({
     Key? key,
@@ -24,6 +26,8 @@ class ListViewRendering<T> extends StatelessWidget {
     this.scrollController,
     required this.scrollDirection,
     required this.shrinkWrap,
+    this.seperatorBuilder,
+    this.isListViewSeparated = false,
   }) : super(key: key);
 
   @override
@@ -40,6 +44,19 @@ class ListViewRendering<T> extends StatelessWidget {
         children: list.map((item) {
           return itemBuilder!(item);
         }).toList(),
+      );
+    }
+    if (isListViewSeparated) {
+      return ListView.separated(
+        controller: scrollController,
+        scrollDirection: scrollDirection,
+        itemCount: list.length,
+        physics: physics,
+        shrinkWrap: shrinkWrap,
+        padding: padding,
+        reverse: reverse,
+        itemBuilder: (context, index) => itemBuilder!(list[index]),
+        separatorBuilder: seperatorBuilder!,
       );
     }
     return ListView.builder(
