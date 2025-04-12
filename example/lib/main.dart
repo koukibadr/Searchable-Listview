@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:searchable_listview/resources/arrays.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 
 void main() {
@@ -67,7 +68,7 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: simpleSearchWithSort(),
+              child: renderAsynchSearchableListview(),
             ),
           ),
           Align(
@@ -93,15 +94,20 @@ class _ExampleAppState extends State<ExampleApp> {
 
   Widget simpleSearchWithSort() {
     return SearchableList<Actor>(
+      searchTextPosition: SearchTextPosition.bottom,
       lazyLoadingEnabled: false,
       sortPredicate: (a, b) => a.age.compareTo(b.age),
       itemBuilder: (item) {
         return ActorItem(actor: item);
       },
-      initialList: List.generate(
-        200,
-        (index) => Actor(age: 47, name: 'Leonardo', lastName: 'DiCaprio'),
-      ),
+      filter: (query) {
+        return actors
+            .where((element) =>
+                element.name.toLowerCase().contains(query.toLowerCase()) ||
+                element.lastName.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      },
+      initialList: actors,
       inputDecoration: InputDecoration(
         labelText: "Search Actor",
         fillColor: Colors.white,
@@ -334,15 +340,17 @@ class EmptyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.error,
-          color: Colors.red,
-        ),
-        Text('no actor is found with this name'),
-      ],
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.error,
+            color: Colors.red,
+          ),
+          Text('no actor is found with this name'),
+        ],
+      ),
     );
   }
 }
