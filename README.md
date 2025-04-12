@@ -40,7 +40,7 @@ In order to add searchable listview package to your project add this line to you
 
 ```yaml
 dependencies:
-	searchable_listview: ^2.16.0
+	searchable_listview: ^2.17.0
 ```
 
 ## Attributes
@@ -171,10 +171,6 @@ dependencies:
   /// reached the bottom
   /// used to create pagination in listview
   Future<dynamic> Function()? onPaginate;
-
-  /// Space between the search textfield and the list
-  /// by default the padding is set to 20
-  final double spaceBetweenSearchAndList;
 
   // A padding applied to search field
   final EdgeInsetsGeometry? searchFieldPadding;
