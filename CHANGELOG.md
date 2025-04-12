@@ -1,3 +1,11 @@
+## 2.17.0- 12/04/2025
+
+* **Enhancement**
+    - Update simple searchable listview rendering method for optimized performance.
+    - Update expansion listview rendering method for optimized performance.
+    - Update sliver searchable listview rendering method for optimized performance.
+    - Remove `spaceBetweenSearchAndList` attribute and replace it with `searchFieldPadding` attribute for better padding control.
+
 ## 2.16.0- 02/12/2024
 
 * **Enhancement**
