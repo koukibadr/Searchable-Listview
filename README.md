@@ -40,7 +40,7 @@ In order to add searchable listview package to your project add this line to you
 
 ```yaml
 dependencies:
-	searchable_listview: ^2.17.0
+	searchable_listview: ^2.17.1
 ```
 
 ## Attributes
@@ -187,6 +187,9 @@ dependencies:
   /// The text alignement of the search field
   /// by default the alignement is start
   final TextAlign textAlign;
+
+  /// The text field vertical alignment
+  final TextAlignVertical textAlignVertical;
 
   /// List of strings  to display in an auto complete field
   /// by default list is empty so a simple text field is displayed
