@@ -234,7 +234,7 @@ class SearchableList<T> extends StatefulWidget {
     shrinkWrap = false;
     itemExtent = null;
     listViewPadding = null;
-    this.reverse = false;
+    reverse = false;
     expansionListBuilder = null;
     if (sortWidget != null) {
       assert(sortPredicate != null);
@@ -464,7 +464,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   List<T> asyncListResult = [];
   List<T> filtredAsyncListResult = [];
   bool dataDownloaded = false;
-  List<ExpansionTileController> expansionTileControllers = [];
+  List<ExpansibleController> expansionTileControllers = [];
 
   @override
   void initState() {
@@ -627,7 +627,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       expansionTileControllers.addAll(
         List.generate(
           widget.expansionListData.length,
-          (e) => ExpansionTileController(),
+          (e) => ExpansibleController(),
         ),
       );
       if (widget.hideEmptyExpansionItems) {
@@ -820,7 +820,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       for (var controller in expansionTileControllers) {
         try {
           controller.expand();
-        } catch (e) {}
+        } catch (e) {
+          // ignore: avoid_print
+          print('Error expanding tile: $e');
+        }
       }
     } else if (widget.asyncListCallback != null) {
       setState(() {
