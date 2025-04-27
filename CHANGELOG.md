@@ -1,3 +1,8 @@
+## 2.17.1- 27/04/2025
+
+* **Bug Fix**
+    - Fix searchable textview vertical alignment by adding `textAlignVertical` parameter [PR#132](https://github.com/koukibadr/Searchable-Listview/pulls?q=is%3Apr+is%3Aclosed) [Issue#131](https://github.com/koukibadr/Searchable-Listview/issues/131)
+
 ## 2.17.0- 12/04/2025
 
 * **Enhancement**
