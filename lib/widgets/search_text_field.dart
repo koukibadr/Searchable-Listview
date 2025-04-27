@@ -21,6 +21,7 @@ class SearchTextField extends StatelessWidget {
   final int? maxLines;
   final int? maxLength;
   final TextAlign textAlign;
+  final TextAlignVertical verticalTextAlign;
   final List<String> autoCompleteHints;
   final Widget? secondaryWidget;
   final Function()? onSortTap;
@@ -48,6 +49,7 @@ class SearchTextField extends StatelessWidget {
     required this.maxLength,
     required this.textAlign,
     required this.autoCompleteHints,
+    required this.verticalTextAlign,
     this.onSortTap,
     this.secondaryWidget,
     this.sortWidget,
@@ -74,6 +76,7 @@ class SearchTextField extends StatelessWidget {
                     onFieldSubmitted,
                   ) {
                     return TextField(
+                      textAlignVertical: verticalTextAlign,
                       cursorColor: cursorColor,
                       maxLength: maxLength,
                       maxLines: maxLines,
@@ -99,6 +102,7 @@ class SearchTextField extends StatelessWidget {
                   },
                 )
               : TextField(
+                  textAlignVertical: verticalTextAlign,
                   cursorColor: cursorColor,
                   maxLength: maxLength,
                   maxLines: maxLines,
