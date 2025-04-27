@@ -63,6 +63,7 @@ class SearchableList<T> extends StatefulWidget {
     this.defaultSuffixIconColor = Colors.grey,
     this.defaultSuffixIconSize = 24,
     this.lazyLoadingEnabled = true,
+    this.textAlignVertical = TextAlignVertical.center,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     expansionListBuilder = null;
@@ -120,6 +121,7 @@ class SearchableList<T> extends StatefulWidget {
     this.defaultSuffixIconColor = Colors.grey,
     this.defaultSuffixIconSize = 24,
     this.lazyLoadingEnabled = true,
+    this.textAlignVertical = TextAlignVertical.center,
   }) : super(key: key) {
     assert(asyncListCallback != null);
     searchTextController ??= TextEditingController();
@@ -174,6 +176,7 @@ class SearchableList<T> extends StatefulWidget {
     this.defaultSuffixIconSize = 24,
     this.lazyLoadingEnabled = true,
     this.searchTextPosition = SearchTextPosition.top,
+    this.textAlignVertical = TextAlignVertical.center,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
@@ -224,6 +227,7 @@ class SearchableList<T> extends StatefulWidget {
     this.defaultSuffixIconColor = Colors.grey,
     this.defaultSuffixIconSize = 24,
     this.lazyLoadingEnabled = true,
+    this.textAlignVertical = TextAlignVertical.center,
   }) : super(key: key) {
     asyncListCallback = null;
     asyncListFilter = null;
@@ -380,6 +384,9 @@ class SearchableList<T> extends StatefulWidget {
   /// by default the alignement is start
   final TextAlign textAlign;
 
+  /// The text field vertical alignment
+  final TextAlignVertical textAlignVertical;
+
   /// List of strings  to display in an auto complete field
   /// by default list is empty so a simple text field is displayed
   final List<String> autoCompleteHints;
@@ -534,6 +541,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         secondaryWidget: widget.secondaryWidget,
                         onSortTap: sortList,
                         sortWidget: widget.sortWidget,
+                        verticalTextAlign: widget.textAlignVertical,
                       ),
                     ),
                   ),
@@ -666,6 +674,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 textAlign: widget.textAlign,
                 autoCompleteHints: widget.autoCompleteHints,
                 secondaryWidget: widget.secondaryWidget,
+                verticalTextAlign: widget.textAlignVertical,
               ),
             ),
           ),
@@ -742,6 +751,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     secondaryWidget: widget.secondaryWidget,
                     onSortTap: sortList,
                     sortWidget: widget.sortWidget,
+                    verticalTextAlign: widget.textAlignVertical,
                   ),
                 ),
               ),
@@ -788,6 +798,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                   secondaryWidget: widget.secondaryWidget,
                   onSortTap: sortList,
                   sortWidget: widget.sortWidget,
+                  verticalTextAlign: widget.textAlignVertical,
                 ),
               ),
               renderSliverListView(),
