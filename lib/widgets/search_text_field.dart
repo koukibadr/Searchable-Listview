@@ -109,8 +109,9 @@ class SearchTextField extends StatelessWidget {
                   textAlign: textAlign,
                   focusNode: focusNode,
                   enabled: searchFieldEnabled,
-                  decoration: (inputDecoration ?? const InputDecoration())
-                      .copyWith(suffix: renderSuffixWidget(context)),
+                  decoration: (inputDecoration ??
+                      const InputDecoration()
+                          .copyWith(suffix: renderSuffixWidget(context))),
                   style: textStyle,
                   controller: searchTextController,
                   textInputAction: keyboardAction,
