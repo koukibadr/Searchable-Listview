@@ -74,7 +74,7 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: sliverListViewBuilder(),
+              child: simpleSearchWithSort(),
             ),
           ),
           Align(
@@ -100,6 +100,8 @@ class _ExampleAppState extends State<ExampleApp> {
 
   Widget simpleSearchWithSort() {
     return SearchableList<Actor>(
+      textAlignVertical: TextAlignVertical.center,
+      searchFieldHeight: 40,
       searchTextPosition: SearchTextPosition.bottom,
       lazyLoadingEnabled: false,
       sortPredicate: (a, b) => a.age.compareTo(b.age),
@@ -114,17 +116,6 @@ class _ExampleAppState extends State<ExampleApp> {
             .toList();
       },
       initialList: actors,
-      inputDecoration: InputDecoration(
-        labelText: "Search Actor",
-        fillColor: Colors.white,
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: Colors.blue,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-      ),
     );
   }
 
