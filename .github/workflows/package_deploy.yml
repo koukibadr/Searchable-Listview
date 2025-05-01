@@ -39,6 +39,7 @@ jobs:
         - name: Run unit tests
           run: flutter test
   deploy:
+    needs: [analyze-code, unit-test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
