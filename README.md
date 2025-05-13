@@ -8,31 +8,31 @@
 
 ## Features
 
-* **Filter list view easily**
-* **Filter async list**
-* **Filter expansion list**
-* **Sort list items**
-* **Support async callback in rendering list**
-* **Support pagination**
-* **Pull to refresh list**
-* **Sliver scroll animation effect**
-* Customizable sort widget
-* Customizable loading when async callback is loading
-* Customizable error widget
-* Display custom widget when list is empty
-* Customize search text field
-* Change keyboard input type and keyboard submit button
-* Add focus on search text field
-* Add on item pressed callback
-* Customize search text style
-* Clear icon button in search to easily clear text
-* Customizable scroll direction
-* Searchable list with seperator builder
-* Customizable text field position
-* Customizable text style in search field
-* Customize autocomplete options
-* Customizable secondary widget alongside search
-* Close automatically keyboard when scrolling on listview
+- **Filter list view easily**
+- **Filter async list**
+- **Filter expansion list**
+- **Sort list items**
+- **Support async callback in rendering list**
+- **Support pagination**
+- **Pull to refresh list**
+- **Sliver scroll animation effect**
+- Customizable sort widget
+- Customizable loading when async callback is loading
+- Customizable error widget
+- Display custom widget when list is empty
+- Customize search text field
+- Change keyboard input type and keyboard submit button
+- Add focus on search text field
+- Add on item pressed callback
+- Customize search text style
+- Clear icon button in search to easily clear text
+- Customizable scroll direction
+- Searchable list with seperator builder
+- Customizable text field position
+- Customizable text style in search field
+- Customize autocomplete options
+- Customizable secondary widget alongside search
+- Close automatically keyboard when scrolling on listview
 
 ## Getting Started
 
@@ -40,14 +40,14 @@ In order to add searchable listview package to your project add this line to you
 
 ```yaml
 dependencies:
-	searchable_listview: ^2.17.2
+	searchable_listview: ^2.17.3
 ```
 
 ## Attributes
 
 `
 
-```dart
+````dart
 
   /// Initial list of all elements that will be displayed.
   /// to filter the [initialList] you need provide [filter] callback
@@ -264,7 +264,7 @@ dependencies:
 
 `
 
-```
+````
 
 ## Implementation
 
@@ -545,9 +545,9 @@ SearchableList<Actor>(
 
 Of course the project is open source, and you can contribute to it [repository link](https://github.com/koukibadr/Searchable-Listview)
 
-* If you **found a bug**, open an issue.
-* If you **have a feature request**, open an issue.
-* If you **want to contribute**, submit a pull request.
+- If you **found a bug**, open an issue.
+- If you **have a feature request**, open an issue.
+- If you **want to contribute**, submit a pull request.
 
 ## Contributors
 
