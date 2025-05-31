@@ -74,7 +74,7 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: simpleSearchWithSort(),
+              child: renderSimpleSearchableList(),
             ),
           ),
           Align(
@@ -147,17 +147,8 @@ class _ExampleAppState extends State<ExampleApp> {
       },
       emptyWidget: const EmptyView(),
       onRefresh: () async {},
-      inputDecoration: InputDecoration(
-        labelText: "Search Actor",
-        fillColor: Colors.white,
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: Colors.blue,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-      ),
+      displaySearchIcon: true,
+      labelText: "Search Actor",
       closeKeyboardWhenScrolling: true,
     );
   }
