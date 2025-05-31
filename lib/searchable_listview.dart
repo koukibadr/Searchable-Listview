@@ -64,6 +64,7 @@ class SearchableList<T> extends StatefulWidget {
     this.defaultSuffixIconSize = 24,
     this.lazyLoadingEnabled = true,
     this.textAlignVertical = TextAlignVertical.center,
+    this.labelText,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     expansionListBuilder = null;
@@ -122,6 +123,7 @@ class SearchableList<T> extends StatefulWidget {
     this.defaultSuffixIconSize = 24,
     this.lazyLoadingEnabled = true,
     this.textAlignVertical = TextAlignVertical.center,
+    this.labelText,
   }) : super(key: key) {
     assert(asyncListCallback != null);
     searchTextController ??= TextEditingController();
@@ -177,6 +179,7 @@ class SearchableList<T> extends StatefulWidget {
     this.lazyLoadingEnabled = true,
     this.searchTextPosition = SearchTextPosition.top,
     this.textAlignVertical = TextAlignVertical.center,
+    this.labelText,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
@@ -228,6 +231,7 @@ class SearchableList<T> extends StatefulWidget {
     this.defaultSuffixIconSize = 24,
     this.lazyLoadingEnabled = true,
     this.textAlignVertical = TextAlignVertical.center,
+    this.labelText,
   }) : super(key: key) {
     asyncListCallback = null;
     asyncListFilter = null;
@@ -458,6 +462,11 @@ class SearchableList<T> extends StatefulWidget {
   // uses `Listview.Builder` otherwise it uses `Listview`
   final bool lazyLoadingEnabled;
 
+  /// The text field label text
+  /// used to display a label above the text field
+  /// this text is displayed only when [inputDecoration] is null.
+  final String? labelText;
+
   bool isExpansionList = false;
 
   @override
@@ -542,6 +551,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         onSortTap: sortList,
                         sortWidget: widget.sortWidget,
                         verticalTextAlign: widget.textAlignVertical,
+                        labelText: widget.labelText,
                       ),
                     ),
                   ),
@@ -675,6 +685,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 autoCompleteHints: widget.autoCompleteHints,
                 secondaryWidget: widget.secondaryWidget,
                 verticalTextAlign: widget.textAlignVertical,
+                labelText: widget.labelText,
               ),
             ),
           ),
@@ -752,6 +763,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     onSortTap: sortList,
                     sortWidget: widget.sortWidget,
                     verticalTextAlign: widget.textAlignVertical,
+                    labelText: widget.labelText,
                   ),
                 ),
               ),
@@ -799,6 +811,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                   onSortTap: sortList,
                   sortWidget: widget.sortWidget,
                   verticalTextAlign: widget.textAlignVertical,
+                  labelText: widget.labelText,
                 ),
               ),
               renderSliverListView(),

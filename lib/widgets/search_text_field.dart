@@ -26,6 +26,7 @@ class SearchTextField extends StatelessWidget {
   final Widget? secondaryWidget;
   final Function()? onSortTap;
   final Widget? sortWidget;
+  final String? labelText;
 
   const SearchTextField({
     Key? key,
@@ -53,6 +54,7 @@ class SearchTextField extends StatelessWidget {
     this.onSortTap,
     this.secondaryWidget,
     this.sortWidget,
+    this.labelText,
   }) : super(key: key);
 
   @override
@@ -109,12 +111,11 @@ class SearchTextField extends StatelessWidget {
                   textAlign: textAlign,
                   focusNode: focusNode,
                   enabled: searchFieldEnabled,
-                  decoration: (inputDecoration != null
-                      ? inputDecoration!.copyWith(
-                          suffix: renderSuffixWidget(context),
-                        )
-                      : const InputDecoration()
-                          .copyWith(suffix: renderSuffixWidget(context))),
+                  decoration: inputDecoration ??
+                      InputDecoration(
+                        labelText: labelText,
+                        suffixIcon: renderSuffixWidget(context),
+                      ),
                   style: textStyle,
                   controller: searchTextController,
                   textInputAction: keyboardAction,
