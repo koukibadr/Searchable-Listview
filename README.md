@@ -40,7 +40,7 @@ In order to add searchable listview package to your project add this line to you
 
 ```yaml
 dependencies:
-	searchable_listview: ^2.17.3
+	searchable_listview: ^2.18.0
 ```
 
 ## Attributes
@@ -261,6 +261,11 @@ dependencies:
   // Indicates how list view is rendered if `true` searchable listview
   // uses `Listview.Builder` otherwise it uses `Listview`
   final bool lazyLoadingEnabled;
+
+  /// The text field label text
+  /// used to display a label above the text field
+  /// this text is displayed only when [inputDecoration] is null.
+  final String? labelText;
 
 `
 

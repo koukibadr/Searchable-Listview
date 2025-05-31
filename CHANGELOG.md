@@ -1,3 +1,10 @@
+## 2.18.0 - 31/05/2025
+
+- **Changes**
+  - Added `labelText` String attribute to display default label in search field when the `inputDecoration` is null [PR#141](https://github.com/koukibadr/Searchable-Listview/pull/141)
+- **Bug Fix**
+  - Fix suffix widget rendering when input decoration is not null [PR#141](https://github.com/koukibadr/Searchable-Listview/pull/141)
+
 ## 2.17.3 - 13/05/2025
 
 - **Changes**
