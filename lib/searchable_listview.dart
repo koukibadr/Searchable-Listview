@@ -478,7 +478,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   /// attached to the listview widget
   late ScrollController? scrollController = widget.scrollController;
   List<T> asyncListResult = [];
+  late List<T> filtredListResult = widget.initialList;
   List<T> filtredAsyncListResult = [];
+  String searchText = '';
   bool dataDownloaded = false;
   List<ExpansionTileController> expansionTileControllers = [];
 
@@ -584,7 +586,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   Widget renderSearchableListView() {
     List<T> renderedList = widget.asyncListCallback != null
         ? filtredAsyncListResult
-        : widget.initialList;
+        : filtredListResult;
     return buildSearchableListView(
       list: renderedList,
     );
@@ -821,21 +823,22 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
 
   Widget renderSliverListView() {
     return SliverList(
-      delegate: widget.initialList.isEmpty
+      delegate: filtredListResult.isEmpty
           ? SliverChildBuilderDelegate(
               (context, index) => widget.emptyWidget,
               childCount: 1,
             )
           : SliverChildBuilderDelegate(
               (context, index) => widget.itemBuilder!(
-                widget.initialList[index],
+                filtredListResult[index],
               ),
-              childCount: widget.initialList.length,
+              childCount: filtredListResult.length,
             ),
     );
   }
 
   void filterList(String value) {
+    searchText = value;
     if (widget.isExpansionList) {
       setState(() {
         widget.expansionListData =
@@ -858,7 +861,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       });
     } else {
       setState(() {
-        widget.initialList = widget.filter?.call(value) ?? [];
+        filtredListResult = widget.filter?.call(value) ?? [];
       });
     }
   }
@@ -870,7 +873,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       });
     } else {
       setState(() {
-        widget.initialList.sort(widget.sortPredicate);
+        filtredListResult.sort(widget.sortPredicate);
       });
     }
   }
