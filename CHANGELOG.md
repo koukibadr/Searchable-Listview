@@ -1,3 +1,10 @@
+## 2.19.0 - 03/06/2025
+
+- **Changes**
+  - Added `showSearchField` parameter to show/hide the search field widget [PR#144](https://github.com/koukibadr/Searchable-Listview/pull/144) [ISSUE#74](https://github.com/koukibadr/Searchable-Listview/issues/74)
+- **Bug Fix**
+  - Fix filtred list rendering when using SearchableListView in a bottom sheet modal [PR#143](https://github.com/koukibadr/Searchable-Listview/pull/143) [ISSUE#140](https://github.com/koukibadr/Searchable-Listview/issues/140)
+
 ## 2.18.0 - 31/05/2025
 
 - **Changes**
