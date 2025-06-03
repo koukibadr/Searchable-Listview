@@ -65,6 +65,7 @@ class SearchableList<T> extends StatefulWidget {
     this.lazyLoadingEnabled = true,
     this.textAlignVertical = TextAlignVertical.center,
     this.labelText,
+    this.showSearchField = true,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     expansionListBuilder = null;
@@ -124,6 +125,7 @@ class SearchableList<T> extends StatefulWidget {
     this.lazyLoadingEnabled = true,
     this.textAlignVertical = TextAlignVertical.center,
     this.labelText,
+    this.showSearchField = true,
   }) : super(key: key) {
     assert(asyncListCallback != null);
     searchTextController ??= TextEditingController();
@@ -180,6 +182,7 @@ class SearchableList<T> extends StatefulWidget {
     this.searchTextPosition = SearchTextPosition.top,
     this.textAlignVertical = TextAlignVertical.center,
     this.labelText,
+    this.showSearchField = true,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     seperatorBuilder = null;
@@ -232,6 +235,7 @@ class SearchableList<T> extends StatefulWidget {
     this.lazyLoadingEnabled = true,
     this.textAlignVertical = TextAlignVertical.center,
     this.labelText,
+    this.showSearchField = true,
   }) : super(key: key) {
     asyncListCallback = null;
     asyncListFilter = null;
@@ -467,6 +471,10 @@ class SearchableList<T> extends StatefulWidget {
   /// this text is displayed only when [inputDecoration] is null.
   final String? labelText;
 
+  /// Indicates whether the search field will be displayed or not
+  /// by default `showSearchField = true`
+  final bool showSearchField;
+
   bool isExpansionList = false;
 
   @override
@@ -521,40 +529,41 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                         : VerticalDirection.up,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: widget.searchFieldPadding ?? EdgeInsets.zero,
-                    child: SizedBox(
-                      width: widget.searchFieldWidth,
-                      height: widget.searchFieldHeight,
-                      child: SearchTextField(
-                        filterList: filterList,
-                        focusNode: widget.focusNode,
-                        inputDecoration: widget.inputDecoration,
-                        keyboardAction: widget.keyboardAction,
-                        obscureText: widget.obscureText,
-                        onSubmitSearch: widget.onSubmitSearch,
-                        searchFieldEnabled: widget.searchFieldEnabled,
-                        searchMode: widget.searchMode,
-                        searchTextController: widget.searchTextController,
-                        textInputType: widget.textInputType,
-                        displayClearIcon: widget.displayClearIcon,
-                        displaySearchIcon: widget.displaySearchIcon,
-                        defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                        defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                        textStyle: widget.textStyle,
-                        cursorColor: widget.cursorColor,
-                        maxLength: widget.maxLength,
-                        maxLines: widget.maxLines,
-                        textAlign: widget.textAlign,
-                        autoCompleteHints: widget.autoCompleteHints,
-                        secondaryWidget: widget.secondaryWidget,
-                        onSortTap: sortList,
-                        sortWidget: widget.sortWidget,
-                        verticalTextAlign: widget.textAlignVertical,
-                        labelText: widget.labelText,
+                  if (widget.showSearchField)
+                    Padding(
+                      padding: widget.searchFieldPadding ?? EdgeInsets.zero,
+                      child: SizedBox(
+                        width: widget.searchFieldWidth,
+                        height: widget.searchFieldHeight,
+                        child: SearchTextField(
+                          filterList: filterList,
+                          focusNode: widget.focusNode,
+                          inputDecoration: widget.inputDecoration,
+                          keyboardAction: widget.keyboardAction,
+                          obscureText: widget.obscureText,
+                          onSubmitSearch: widget.onSubmitSearch,
+                          searchFieldEnabled: widget.searchFieldEnabled,
+                          searchMode: widget.searchMode,
+                          searchTextController: widget.searchTextController,
+                          textInputType: widget.textInputType,
+                          displayClearIcon: widget.displayClearIcon,
+                          displaySearchIcon: widget.displaySearchIcon,
+                          defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                          defaultSuffixIconSize: widget.defaultSuffixIconSize,
+                          textStyle: widget.textStyle,
+                          cursorColor: widget.cursorColor,
+                          maxLength: widget.maxLength,
+                          maxLines: widget.maxLines,
+                          textAlign: widget.textAlign,
+                          autoCompleteHints: widget.autoCompleteHints,
+                          secondaryWidget: widget.secondaryWidget,
+                          onSortTap: sortList,
+                          sortWidget: widget.sortWidget,
+                          verticalTextAlign: widget.textAlignVertical,
+                          labelText: widget.labelText,
+                        ),
                       ),
                     ),
-                  ),
                   Expanded(
                     child: widget.asyncListCallback != null && !dataDownloaded
                         ? renderAsyncListView()
@@ -657,38 +666,39 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
             : VerticalDirection.up,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: widget.searchFieldPadding ?? const EdgeInsets.all(0),
-            child: SizedBox(
-              width: widget.searchFieldWidth,
-              height: widget.searchFieldHeight,
-              child: SearchTextField(
-                filterList: filterList,
-                focusNode: widget.focusNode,
-                inputDecoration: widget.inputDecoration,
-                keyboardAction: widget.keyboardAction,
-                obscureText: widget.obscureText,
-                onSubmitSearch: widget.onSubmitSearch,
-                searchFieldEnabled: widget.searchFieldEnabled,
-                searchMode: widget.searchMode,
-                searchTextController: widget.searchTextController,
-                textInputType: widget.textInputType,
-                displayClearIcon: widget.displayClearIcon,
-                displaySearchIcon: widget.displaySearchIcon,
-                defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                textStyle: widget.textStyle,
-                cursorColor: widget.cursorColor,
-                maxLength: widget.maxLength,
-                maxLines: widget.maxLines,
-                textAlign: widget.textAlign,
-                autoCompleteHints: widget.autoCompleteHints,
-                secondaryWidget: widget.secondaryWidget,
-                verticalTextAlign: widget.textAlignVertical,
-                labelText: widget.labelText,
+          if (widget.showSearchField)
+            Padding(
+              padding: widget.searchFieldPadding ?? const EdgeInsets.all(0),
+              child: SizedBox(
+                width: widget.searchFieldWidth,
+                height: widget.searchFieldHeight,
+                child: SearchTextField(
+                  filterList: filterList,
+                  focusNode: widget.focusNode,
+                  inputDecoration: widget.inputDecoration,
+                  keyboardAction: widget.keyboardAction,
+                  obscureText: widget.obscureText,
+                  onSubmitSearch: widget.onSubmitSearch,
+                  searchFieldEnabled: widget.searchFieldEnabled,
+                  searchMode: widget.searchMode,
+                  searchTextController: widget.searchTextController,
+                  textInputType: widget.textInputType,
+                  displayClearIcon: widget.displayClearIcon,
+                  displaySearchIcon: widget.displaySearchIcon,
+                  defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                  defaultSuffixIconSize: widget.defaultSuffixIconSize,
+                  textStyle: widget.textStyle,
+                  cursorColor: widget.cursorColor,
+                  maxLength: widget.maxLength,
+                  maxLines: widget.maxLines,
+                  textAlign: widget.textAlign,
+                  autoCompleteHints: widget.autoCompleteHints,
+                  secondaryWidget: widget.secondaryWidget,
+                  verticalTextAlign: widget.textAlignVertical,
+                  labelText: widget.labelText,
+                ),
               ),
             ),
-          ),
           Expanded(
             child: ListView.builder(
               controller: scrollController,
@@ -734,11 +744,61 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     ? VerticalDirection.down
                     : VerticalDirection.up,
             children: [
-              Padding(
-                padding: widget.searchFieldPadding ?? const EdgeInsets.all(0),
-                child: SizedBox(
-                  width: widget.searchFieldWidth,
-                  child: SearchTextField(
+              if (widget.showSearchField)
+                Padding(
+                  padding: widget.searchFieldPadding ?? const EdgeInsets.all(0),
+                  child: SizedBox(
+                    width: widget.searchFieldWidth,
+                    child: SearchTextField(
+                      filterList: filterList,
+                      focusNode: widget.focusNode,
+                      inputDecoration: widget.inputDecoration,
+                      keyboardAction: widget.keyboardAction,
+                      obscureText: widget.obscureText,
+                      onSubmitSearch: widget.onSubmitSearch,
+                      searchFieldEnabled: widget.searchFieldEnabled,
+                      searchMode: widget.searchMode,
+                      searchTextController: widget.searchTextController,
+                      textInputType: widget.textInputType,
+                      displayClearIcon: widget.displayClearIcon,
+                      displaySearchIcon: widget.displaySearchIcon,
+                      defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                      defaultSuffixIconSize: widget.defaultSuffixIconSize,
+                      textStyle: widget.textStyle,
+                      cursorColor: widget.cursorColor,
+                      maxLength: widget.maxLength,
+                      maxLines: widget.maxLines,
+                      textAlign: widget.textAlign,
+                      autoCompleteHints: widget.autoCompleteHints,
+                      secondaryWidget: widget.secondaryWidget,
+                      onSortTap: sortList,
+                      sortWidget: widget.sortWidget,
+                      verticalTextAlign: widget.textAlignVertical,
+                      labelText: widget.labelText,
+                    ),
+                  ),
+                ),
+              Expanded(
+                child: CustomScrollView(
+                  scrollDirection: widget.scrollDirection,
+                  physics: widget.physics,
+                  controller: scrollController,
+                  slivers: [
+                    renderSliverListView(),
+                  ],
+                ),
+              ),
+            ],
+          )
+        : CustomScrollView(
+            scrollDirection: widget.scrollDirection,
+            physics: widget.physics,
+            reverse: widget.searchTextPosition == SearchTextPosition.bottom,
+            slivers: [
+              if (widget.showSearchField)
+                SliverAppBar(
+                  backgroundColor: Colors.transparent,
+                  flexibleSpace: SearchTextField(
                     filterList: filterList,
                     focusNode: widget.focusNode,
                     inputDecoration: widget.inputDecoration,
@@ -766,54 +826,6 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                     labelText: widget.labelText,
                   ),
                 ),
-              ),
-              Expanded(
-                child: CustomScrollView(
-                  scrollDirection: widget.scrollDirection,
-                  physics: widget.physics,
-                  controller: scrollController,
-                  slivers: [
-                    renderSliverListView(),
-                  ],
-                ),
-              ),
-            ],
-          )
-        : CustomScrollView(
-            scrollDirection: widget.scrollDirection,
-            physics: widget.physics,
-            reverse: widget.searchTextPosition == SearchTextPosition.bottom,
-            slivers: [
-              SliverAppBar(
-                backgroundColor: Colors.transparent,
-                flexibleSpace: SearchTextField(
-                  filterList: filterList,
-                  focusNode: widget.focusNode,
-                  inputDecoration: widget.inputDecoration,
-                  keyboardAction: widget.keyboardAction,
-                  obscureText: widget.obscureText,
-                  onSubmitSearch: widget.onSubmitSearch,
-                  searchFieldEnabled: widget.searchFieldEnabled,
-                  searchMode: widget.searchMode,
-                  searchTextController: widget.searchTextController,
-                  textInputType: widget.textInputType,
-                  displayClearIcon: widget.displayClearIcon,
-                  displaySearchIcon: widget.displaySearchIcon,
-                  defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                  defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                  textStyle: widget.textStyle,
-                  cursorColor: widget.cursorColor,
-                  maxLength: widget.maxLength,
-                  maxLines: widget.maxLines,
-                  textAlign: widget.textAlign,
-                  autoCompleteHints: widget.autoCompleteHints,
-                  secondaryWidget: widget.secondaryWidget,
-                  onSortTap: sortList,
-                  sortWidget: widget.sortWidget,
-                  verticalTextAlign: widget.textAlignVertical,
-                  labelText: widget.labelText,
-                ),
-              ),
               renderSliverListView(),
             ],
           );
