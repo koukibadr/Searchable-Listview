@@ -40,7 +40,7 @@ In order to add searchable listview package to your project add this line to you
 
 ```yaml
 dependencies:
-	searchable_listview: ^2.18.0
+	searchable_listview: ^2.19.0
 ```
 
 ## Attributes
@@ -267,8 +267,9 @@ dependencies:
   /// this text is displayed only when [inputDecoration] is null.
   final String? labelText;
 
-`
-
+  /// Indicates whether the search field will be displayed or not
+  /// by default `showSearchField = true`
+  final bool showSearchField;
 ````
 
 ## Implementation
