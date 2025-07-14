@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:searchable_listview/resources/arrays.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 
 void main() {
@@ -48,6 +47,7 @@ class _ExampleAppState extends State<ExampleApp> {
     Actor(age: 66, name: 'Denzel', lastName: 'Washington'),
     Actor(age: 49, name: 'Ben', lastName: 'Affleck'),
   ];
+  List<Actor> filteredActors = [];
 
   final Map<String, List<Actor>> mapOfActors = {
     'test 1': [
@@ -65,6 +65,12 @@ class _ExampleAppState extends State<ExampleApp> {
   final TextEditingController searchTextController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    filteredActors = actors;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
@@ -74,7 +80,7 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: renderSimpleSearchableList(),
+              child: renderAsynchSearchableListview(),
             ),
           ),
           Align(
@@ -102,18 +108,44 @@ class _ExampleAppState extends State<ExampleApp> {
     return SearchableList<Actor>(
       textAlignVertical: TextAlignVertical.center,
       searchFieldHeight: 40,
-      searchTextPosition: SearchTextPosition.bottom,
       lazyLoadingEnabled: false,
+      separatorBuilder: (context, index) {
+        return Container(
+          height: 40,
+        );
+      },
       sortPredicate: (a, b) => a.age.compareTo(b.age),
       itemBuilder: (item) {
-        return ActorItem(actor: item);
+        int index = filteredActors.indexOf(item);
+        if (index == 0) {
+          return Container(
+            color: Colors.red,
+            height: 10,
+            width: 300,
+          );
+        } else {
+          return ActorItem(actor: filteredActors[index - 1]);
+        }
       },
+      emptyWidget: Column(
+        children: [
+          Container(
+            color: Colors.red,
+            height: 10,
+            width: 300,
+          ),
+          const Column(
+            children: [Icon(Icons.error), Text('No Data found')],
+          )
+        ],
+      ),
       filter: (query) {
-        return actors
+        filteredActors = actors
             .where((element) =>
                 element.name.toLowerCase().contains(query.toLowerCase()) ||
                 element.lastName.toLowerCase().contains(query.toLowerCase()))
             .toList();
+        return filteredActors;
       },
       initialList: actors,
     );
@@ -121,7 +153,7 @@ class _ExampleAppState extends State<ExampleApp> {
 
   Widget renderSimpleSearchableList() {
     return SearchableList<Actor>(
-      seperatorBuilder: (context, index) {
+      separatorBuilder: (context, index) {
         return const Divider();
       },
       textStyle: const TextStyle(fontSize: 25),
@@ -196,8 +228,10 @@ class _ExampleAppState extends State<ExampleApp> {
                 element.lastName.contains(query))
             .toList();
       },
-      seperatorBuilder: (context, index) {
-        return const Divider();
+      separatorBuilder: (context, index) {
+        return Container(
+          height: 30,
+        );
       },
       textStyle: const TextStyle(fontSize: 25),
       emptyWidget: const EmptyView(),

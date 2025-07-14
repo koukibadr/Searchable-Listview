@@ -32,20 +32,6 @@ class ListViewRendering<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isLazyLoadingEnabled) {
-      return ListView(
-        physics: physics,
-        shrinkWrap: shrinkWrap,
-        itemExtent: itemExtent,
-        padding: padding,
-        reverse: reverse,
-        controller: scrollController,
-        scrollDirection: scrollDirection,
-        children: list.map((item) {
-          return itemBuilder!(item);
-        }).toList(),
-      );
-    }
     if (isListViewSeparated) {
       return ListView.separated(
         controller: scrollController,
@@ -58,17 +44,31 @@ class ListViewRendering<T> extends StatelessWidget {
         itemBuilder: (context, index) => itemBuilder!(list[index]),
         separatorBuilder: seperatorBuilder!,
       );
+    } else if (isLazyLoadingEnabled) {
+      return ListView(
+        physics: physics,
+        shrinkWrap: shrinkWrap,
+        itemExtent: itemExtent,
+        padding: padding,
+        reverse: reverse,
+        controller: scrollController,
+        scrollDirection: scrollDirection,
+        children: list.map((item) {
+          return itemBuilder!(item);
+        }).toList(),
+      );
+    } else {
+      return ListView.builder(
+        physics: physics,
+        shrinkWrap: shrinkWrap,
+        itemExtent: itemExtent,
+        padding: padding,
+        reverse: reverse,
+        controller: scrollController,
+        scrollDirection: scrollDirection,
+        itemCount: list.length,
+        itemBuilder: (context, index) => itemBuilder!(list[index]),
+      );
     }
-    return ListView.builder(
-      physics: physics,
-      shrinkWrap: shrinkWrap,
-      itemExtent: itemExtent,
-      padding: padding,
-      reverse: reverse,
-      controller: scrollController,
-      scrollDirection: scrollDirection,
-      itemCount: list.length,
-      itemBuilder: (context, index) => itemBuilder!(list[index]),
-    );
   }
 }
