@@ -56,7 +56,7 @@ class SearchableList<T> extends StatefulWidget {
     this.reverse = false,
     this.sortPredicate,
     this.sortWidget,
-    this.seperatorBuilder,
+    this.separatorBuilder,
     this.scrollController,
     this.closeKeyboardWhenScrolling = false,
     this.displaySearchIcon = true,
@@ -114,7 +114,7 @@ class SearchableList<T> extends StatefulWidget {
     this.itemExtent,
     this.listViewPadding,
     this.reverse = false,
-    this.seperatorBuilder,
+    this.separatorBuilder,
     this.sortPredicate,
     this.sortWidget,
     this.scrollController,
@@ -185,7 +185,7 @@ class SearchableList<T> extends StatefulWidget {
     this.showSearchField = true,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
-    seperatorBuilder = null;
+    separatorBuilder = null;
     isExpansionList = true;
     //! use itemBuiler instead of expansionTitleBuilder and expansionListBuilder
     itemBuilder = null;
@@ -240,7 +240,7 @@ class SearchableList<T> extends StatefulWidget {
     asyncListCallback = null;
     asyncListFilter = null;
     searchTextController ??= TextEditingController();
-    seperatorBuilder = null;
+    separatorBuilder = null;
     sliverScrollEffect = true;
     onRefresh = null;
     shrinkWrap = false;
@@ -361,7 +361,7 @@ class SearchableList<T> extends StatefulWidget {
 
   /// Builder callback required  when using [seperated] constructor
   /// return the Widget that will seperate all the elements inside the list
-  late Widget Function(BuildContext context, int index)? seperatorBuilder;
+  late Widget Function(BuildContext context, int index)? separatorBuilder;
 
   /// The scroll direction of the list
   /// by default [Axis.vertical]
@@ -627,8 +627,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 isLazyLoadingEnabled: widget.lazyLoadingEnabled,
                 list: list,
                 itemBuilder: widget.itemBuilder,
-                isListViewSeparated: widget.seperatorBuilder != null,
-                seperatorBuilder: widget.seperatorBuilder,
+                isListViewSeparated: widget.separatorBuilder != null,
+                seperatorBuilder: widget.separatorBuilder,
               ),
             )
           : ListViewRendering(
@@ -642,8 +642,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
               isLazyLoadingEnabled: widget.lazyLoadingEnabled,
               list: list,
               itemBuilder: widget.itemBuilder,
-              isListViewSeparated: widget.seperatorBuilder != null,
-              seperatorBuilder: widget.seperatorBuilder,
+              isListViewSeparated: widget.separatorBuilder != null,
+              seperatorBuilder: widget.separatorBuilder,
             );
     }
   }
