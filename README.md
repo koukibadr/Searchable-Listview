@@ -27,7 +27,7 @@
 - Customize search text style
 - Clear icon button in search to easily clear text
 - Customizable scroll direction
-- Searchable list with seperator builder
+- Searchable list with separator builder
 - Customizable text field position
 - Customizable text style in search field
 - Customize autocomplete options
@@ -40,7 +40,7 @@ In order to add searchable listview package to your project add this line to you
 
 ```yaml
 dependencies:
-	searchable_listview: ^2.19.0
+ searchable_listview: ^2.19.1
 ```
 
 ## Attributes
@@ -157,7 +157,7 @@ dependencies:
 
   /// Builder callback required  when using [seperated] constructor
   /// return the Widget that will seperate all the elements inside the list
-  late Widget Function(BuildContext context, int index)? seperatorBuilder;
+  late Widget Function(BuildContext context, int index)? separatorBuilder;
 
   /// The scroll direction of the list
   /// by default [Axis.vertical]
@@ -324,14 +324,14 @@ SearchableList<Actor>(
   emptyWidget:  const EmptyView(),
   inputDecoration: InputDecoration(
   labelText: "Search Actor",
-	fillColor: Colors.white,
-	focusedBorder: OutlineInputBorder(
-	  borderSide: const BorderSide(
-	    color: Colors.blue,
-		width: 1.0,
-	  ),
-	  borderRadius: BorderRadius.circular(10.0),
-	),
+ fillColor: Colors.white,
+ focusedBorder: OutlineInputBorder(
+   borderSide: const BorderSide(
+     color: Colors.blue,
+  width: 1.0,
+   ),
+   borderRadius: BorderRadius.circular(10.0),
+ ),
   ),
 ),
 
@@ -475,14 +475,14 @@ SearchableList<Actor>.sliver(
   emptyWidget:  const EmptyView(),
   inputDecoration: InputDecoration(
     labelText: "Search Actor",
-	fillColor: Colors.white,
-	focusedBorder: OutlineInputBorder(
-	  borderSide: const BorderSide(
-	    color: Colors.blue,
-		width: 1.0,
-	  ),
-	  borderRadius: BorderRadius.circular(10.0),
-	),
+ fillColor: Colors.white,
+ focusedBorder: OutlineInputBorder(
+   borderSide: const BorderSide(
+     color: Colors.blue,
+  width: 1.0,
+   ),
+   borderRadius: BorderRadius.circular(10.0),
+ ),
   ),
 ),
 

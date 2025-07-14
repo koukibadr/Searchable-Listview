@@ -1,3 +1,8 @@
+## 2.19.1 - 14/07/2025
+
+- **Bug Fix**
+  - Fix separator builder rendering issue [ISSUE#149](https://github.com/koukibadr/Searchable-Listview/issues/149)
+
 ## 2.19.0 - 03/06/2025
 
 - **Changes**
