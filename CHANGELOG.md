@@ -1,3 +1,8 @@
+## 2.19.2 - 23/07/2025
+
+- **Bug Fix**
+  - Fix scroll controller dispose issue when widget is disposed [Issue#152](https://github.com/koukibadr/Searchable-Listview/issues/152)
+
 ## 2.19.1 - 14/07/2025
 
 - **Bug Fix**

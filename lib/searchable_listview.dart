@@ -484,25 +484,25 @@ class SearchableList<T> extends StatefulWidget {
 class _SearchableListState<T> extends State<SearchableList<T>> {
   /// Create scroll controller instance
   /// attached to the listview widget
-  late ScrollController? scrollController = widget.scrollController;
+  late ScrollController scrollController = widget.scrollController ?? ScrollController();
   List<T> asyncListResult = [];
   late List<T> filtredListResult = widget.initialList;
   List<T> filtredAsyncListResult = [];
   String searchText = '';
   bool dataDownloaded = false;
-  List<ExpansionTileController> expansionTileControllers = [];
+  List<ExpansibleController> expansionTileControllers = [];
 
   @override
   void initState() {
     super.initState();
-    scrollController?.addListener(() {
+    scrollController.addListener(() {
       if (widget.closeKeyboardWhenScrolling &&
           widget.focusNode?.hasFocus == true) {
         FocusScope.of(context).requestFocus(FocusNode());
       }
       if (widget.onPaginate != null &&
-          scrollController?.position.pixels ==
-              scrollController?.position.maxScrollExtent) {
+          scrollController.position.pixels ==
+              scrollController.position.maxScrollExtent) {
         setState(() {
           widget.onPaginate?.call();
         });
@@ -513,7 +513,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
 
   @override
   void dispose() {
-    scrollController?.dispose();
+    if (widget.scrollController == null) {
+      scrollController.dispose();
+    }
     widget.searchTextController?.removeListener(_textControllerListener);
     super.dispose();
   }
@@ -656,7 +658,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       expansionTileControllers.addAll(
         List.generate(
           widget.expansionListData.length,
-          (e) => ExpansionTileController(),
+          (e) => ExpansibleController(),
         ),
       );
       if (widget.hideEmptyExpansionItems) {
