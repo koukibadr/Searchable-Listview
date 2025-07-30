@@ -490,7 +490,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   List<T> filtredAsyncListResult = [];
   String searchText = '';
   bool dataDownloaded = false;
-  List<ExpansibleController> expansionTileControllers = [];
+  List<ExpansionTileController> expansionTileControllers = [];
 
   @override
   void initState() {
@@ -658,7 +658,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       expansionTileControllers.addAll(
         List.generate(
           widget.expansionListData.length,
-          (e) => ExpansibleController(),
+          (e) => ExpansionTileController(),
         ),
       );
       if (widget.hideEmptyExpansionItems) {
