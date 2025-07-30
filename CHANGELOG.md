@@ -1,3 +1,8 @@
+## 2.19.3 - 30/07/2025
+
+- **Bug Fix**
+  - Fix exapnsible controller compatbility and build errors [Issue#154](https://github.com/koukibadr/Searchable-Listview/issues/154)
+
 ## 2.19.2 - 23/07/2025
 
 - **Bug Fix**
