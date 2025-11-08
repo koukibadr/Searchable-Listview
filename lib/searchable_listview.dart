@@ -484,7 +484,8 @@ class SearchableList<T> extends StatefulWidget {
 class _SearchableListState<T> extends State<SearchableList<T>> {
   /// Create scroll controller instance
   /// attached to the listview widget
-  late ScrollController scrollController = widget.scrollController ?? ScrollController();
+  late ScrollController scrollController =
+      widget.scrollController ?? ScrollController();
   List<T> asyncListResult = [];
   late List<T> filtredListResult = widget.initialList;
   List<T> filtredAsyncListResult = [];
@@ -584,6 +585,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return widget.loadingWidget ?? const DefaultLoadingWidget();
         }
+        dataDownloaded = true;
         if (snapshot.data == null) {
           return widget.errorWidget ?? const DefaultErrorWidget();
         }
@@ -893,6 +895,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   }
 
   void _textControllerListener() {
-    filterList(widget.searchTextController?.text ?? '');
+    if (searchText != widget.searchTextController?.text) {
+      filterList(widget.searchTextController?.text ?? '');
+    }
   }
 }
