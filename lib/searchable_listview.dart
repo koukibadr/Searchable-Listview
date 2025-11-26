@@ -484,7 +484,8 @@ class SearchableList<T> extends StatefulWidget {
 class _SearchableListState<T> extends State<SearchableList<T>> {
   /// Create scroll controller instance
   /// attached to the listview widget
-  late ScrollController scrollController = widget.scrollController ?? ScrollController();
+  late ScrollController scrollController =
+      widget.scrollController ?? ScrollController();
   List<T> asyncListResult = [];
   late List<T> filtredListResult = widget.initialList;
   List<T> filtredAsyncListResult = [];
@@ -522,59 +523,59 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.isExpansionList
-        ? buildExpandableListView()
-        : widget.sliverScrollEffect
-            ? renderSliverEffect()
-            : Column(
-                verticalDirection:
-                    widget.searchTextPosition == SearchTextPosition.top
-                        ? VerticalDirection.down
-                        : VerticalDirection.up,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (widget.showSearchField)
-                    Padding(
-                      padding: widget.searchFieldPadding ?? EdgeInsets.zero,
-                      child: SizedBox(
-                        width: widget.searchFieldWidth,
-                        height: widget.searchFieldHeight,
-                        child: SearchTextField(
-                          filterList: filterList,
-                          focusNode: widget.focusNode,
-                          inputDecoration: widget.inputDecoration,
-                          keyboardAction: widget.keyboardAction,
-                          obscureText: widget.obscureText,
-                          onSubmitSearch: widget.onSubmitSearch,
-                          searchFieldEnabled: widget.searchFieldEnabled,
-                          searchMode: widget.searchMode,
-                          searchTextController: widget.searchTextController,
-                          textInputType: widget.textInputType,
-                          displayClearIcon: widget.displayClearIcon,
-                          displaySearchIcon: widget.displaySearchIcon,
-                          defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                          defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                          textStyle: widget.textStyle,
-                          cursorColor: widget.cursorColor,
-                          maxLength: widget.maxLength,
-                          maxLines: widget.maxLines,
-                          textAlign: widget.textAlign,
-                          autoCompleteHints: widget.autoCompleteHints,
-                          secondaryWidget: widget.secondaryWidget,
-                          onSortTap: sortList,
-                          sortWidget: widget.sortWidget,
-                          verticalTextAlign: widget.textAlignVertical,
-                          labelText: widget.labelText,
-                        ),
-                      ),
+    return widget.sliverScrollEffect
+        ? renderSliverEffect()
+        : Column(
+            verticalDirection:
+                widget.searchTextPosition == SearchTextPosition.top
+                    ? VerticalDirection.down
+                    : VerticalDirection.up,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (widget.showSearchField)
+                Padding(
+                  padding: widget.searchFieldPadding ?? EdgeInsets.zero,
+                  child: SizedBox(
+                    width: widget.searchFieldWidth,
+                    height: widget.searchFieldHeight,
+                    child: SearchTextField(
+                      filterList: filterList,
+                      focusNode: widget.focusNode,
+                      inputDecoration: widget.inputDecoration,
+                      keyboardAction: widget.keyboardAction,
+                      obscureText: widget.obscureText,
+                      onSubmitSearch: widget.onSubmitSearch,
+                      searchFieldEnabled: widget.searchFieldEnabled,
+                      searchMode: widget.searchMode,
+                      searchTextController: widget.searchTextController,
+                      textInputType: widget.textInputType,
+                      displayClearIcon: widget.displayClearIcon,
+                      displaySearchIcon: widget.displaySearchIcon,
+                      defaultSuffixIconColor: widget.defaultSuffixIconColor,
+                      defaultSuffixIconSize: widget.defaultSuffixIconSize,
+                      textStyle: widget.textStyle,
+                      cursorColor: widget.cursorColor,
+                      maxLength: widget.maxLength,
+                      maxLines: widget.maxLines,
+                      textAlign: widget.textAlign,
+                      autoCompleteHints: widget.autoCompleteHints,
+                      secondaryWidget: widget.secondaryWidget,
+                      onSortTap: sortList,
+                      sortWidget: widget.sortWidget,
+                      verticalTextAlign: widget.textAlignVertical,
+                      labelText: widget.labelText,
                     ),
-                  Expanded(
-                    child: widget.asyncListCallback != null && !dataDownloaded
-                        ? renderAsyncListView()
-                        : renderSearchableListView(),
                   ),
-                ],
-              );
+                ),
+              Expanded(
+                child: widget.isExpansionList
+                    ? renderExpandableListView()
+                    : (widget.asyncListCallback != null && !dataDownloaded
+                        ? renderAsyncListView()
+                        : renderSearchableListView()),
+              ),
+            ],
+          );
   }
 
   Widget renderAsyncListView() {
@@ -650,7 +651,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     }
   }
 
-  Widget buildExpandableListView() {
+  Widget renderExpandableListView() {
     if (widget.expansionListData.isEmpty ||
         widget.expansionListData.values.every((element) => element.isEmpty)) {
       return widget.emptyWidget ?? const SizedBox.shrink();
@@ -664,73 +665,30 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       if (widget.hideEmptyExpansionItems) {
         widget.expansionListData.removeWhere((key, value) => value.isEmpty);
       }
-      return Column(
-        verticalDirection: widget.searchTextPosition == SearchTextPosition.top
-            ? VerticalDirection.down
-            : VerticalDirection.up,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (widget.showSearchField)
-            Padding(
-              padding: widget.searchFieldPadding ?? const EdgeInsets.all(0),
-              child: SizedBox(
-                width: widget.searchFieldWidth,
-                height: widget.searchFieldHeight,
-                child: SearchTextField(
-                  filterList: filterList,
-                  focusNode: widget.focusNode,
-                  inputDecoration: widget.inputDecoration,
-                  keyboardAction: widget.keyboardAction,
-                  obscureText: widget.obscureText,
-                  onSubmitSearch: widget.onSubmitSearch,
-                  searchFieldEnabled: widget.searchFieldEnabled,
-                  searchMode: widget.searchMode,
-                  searchTextController: widget.searchTextController,
-                  textInputType: widget.textInputType,
-                  displayClearIcon: widget.displayClearIcon,
-                  displaySearchIcon: widget.displaySearchIcon,
-                  defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                  defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                  textStyle: widget.textStyle,
-                  cursorColor: widget.cursorColor,
-                  maxLength: widget.maxLength,
-                  maxLines: widget.maxLines,
-                  textAlign: widget.textAlign,
-                  autoCompleteHints: widget.autoCompleteHints,
-                  secondaryWidget: widget.secondaryWidget,
-                  verticalTextAlign: widget.textAlignVertical,
-                  labelText: widget.labelText,
-                ),
-              ),
-            ),
-          Expanded(
-            child: ListView.builder(
-              controller: scrollController,
-              scrollDirection: widget.scrollDirection,
-              itemCount: widget.expansionListData.length,
-              physics: widget.physics,
-              shrinkWrap: widget.shrinkWrap,
-              itemExtent: widget.itemExtent,
-              padding: widget.listViewPadding,
-              reverse: widget.reverse,
-              itemBuilder: (context, index) {
-                var entryKey = widget.expansionListData.keys.toList()[index];
-                var entryValueList = widget.expansionListData[entryKey];
-                return ExpansionTile(
-                  title: widget.expansionTitleBuilder.call(entryKey),
-                  enabled: widget.expansionTileEnabled,
-                  controller: expansionTileControllers[index],
-                  children: entryValueList?.map(
-                        (listItem) {
-                          return widget.expansionListBuilder!(index, listItem);
-                        },
-                      ).toList() ??
-                      [],
-                );
-              },
-            ),
-          ),
-        ],
+      return ListView.builder(
+        controller: scrollController,
+        scrollDirection: widget.scrollDirection,
+        itemCount: widget.expansionListData.length,
+        physics: widget.physics,
+        shrinkWrap: widget.shrinkWrap,
+        itemExtent: widget.itemExtent,
+        padding: widget.listViewPadding,
+        reverse: widget.reverse,
+        itemBuilder: (context, index) {
+          var entryKey = widget.expansionListData.keys.toList()[index];
+          var entryValueList = widget.expansionListData[entryKey];
+          return ExpansionTile(
+            title: widget.expansionTitleBuilder.call(entryKey),
+            enabled: widget.expansionTileEnabled,
+            controller: expansionTileControllers[index],
+            children: entryValueList?.map(
+                  (listItem) {
+                    return widget.expansionListBuilder!(index, listItem);
+                  },
+                ).toList() ??
+                [],
+          );
+        },
       );
     }
   }
