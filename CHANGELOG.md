@@ -1,3 +1,9 @@
+## 2.19.4 - 02/12/2025
+
+- **Bug Fix**
+  - Fix expansible empty view to show text field [PR#158](https://github.com/koukibadr/Searchable-Listview/pull/158)
+  - Fix unnecessary async rendering when using async searchable list [PR#157](https://github.com/koukibadr/Searchable-Listview/pull/157)
+
 ## 2.19.3 - 30/07/2025
 
 - **Bug Fix**
