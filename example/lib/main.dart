@@ -222,11 +222,12 @@ class _ExampleAppState extends State<ExampleApp> {
         return actors;
       },
       asyncListFilter: (query, list) {
-        return actors
+        var result = actors
             .where((element) =>
                 element.name.contains(query) ||
                 element.lastName.contains(query))
             .toList();
+        return result;
       },
       separatorBuilder: (context, index) {
         return Container(
