@@ -173,6 +173,7 @@ class SearchableList<T> extends StatefulWidget {
     this.closeKeyboardWhenScrolling = false,
     this.hideEmptyExpansionItems = false,
     this.expansionTileEnabled = true,
+    this.initiallyExpanded = false,
     this.sortWidget,
     this.sortPredicate,
     this.displaySearchIcon = true,
@@ -456,6 +457,9 @@ class SearchableList<T> extends StatefulWidget {
   /// Indicate whether the expansion tile will be enabled or not
   late bool expansionTileEnabled = true;
 
+  /// Indicate whether the expansion tiles are initially expanded.
+  bool initiallyExpanded = false;
+
   /// max width of search text field
   final double? searchFieldWidth;
 
@@ -679,6 +683,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
           var entryKey = widget.expansionListData.keys.toList()[index];
           var entryValueList = widget.expansionListData[entryKey];
           return ExpansionTile(
+            initiallyExpanded: widget.initiallyExpanded,
             title: widget.expansionTitleBuilder.call(entryKey),
             enabled: widget.expansionTileEnabled,
             controller: expansionTileControllers[index],
