@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:searchable_listview/resources/arrays.dart';
 import 'package:searchable_listview/widgets/default_error_widget.dart';
@@ -271,7 +273,7 @@ class SearchableList<T> extends StatefulWidget {
   /// Callback invoked when filtring the searchable list
   /// used when providing [asyncListCallback]
   /// can't be null when [asyncListCallback] isn't null
-  late List<T> Function(String, List<T>)? asyncListFilter;
+  late Future<List<T>> Function(String, List<T>)? asyncListFilter;
 
   /// Loading widget displayed when [asyncListCallback] is loading
   /// if nothing is provided in [loadingWidget] searchable list will display a [CircularProgressIndicator]
@@ -494,7 +496,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   late List<T> filtredListResult = widget.initialList;
   List<T> filtredAsyncListResult = [];
   String searchText = '';
-  bool dataDownloaded = false;
+  int numberOfRequestLoading = 0;
+  bool asyncError = false;
   List<ExpansionTileController> expansionTileControllers = [];
 
   @override
@@ -514,6 +517,28 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       }
     });
     widget.searchTextController?.addListener(_textControllerListener);
+
+    if (widget.asyncListCallback != null) {
+      // Load the initial list for the async constructor
+      numberOfRequestLoading = 1;
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        try {
+          final result = await widget.asyncListCallback!.call();
+          if (result != null) {
+            filtredAsyncListResult = result;
+          } else {
+            asyncError = true;
+          }
+        } catch (e) {
+          asyncError = true;
+        }
+        if (mounted) {
+          setState(() {
+            numberOfRequestLoading--;
+          });
+        }
+      });
+    }
   }
 
   @override
@@ -574,7 +599,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
               Expanded(
                 child: widget.isExpansionList
                     ? renderExpandableListView()
-                    : (widget.asyncListCallback != null && !dataDownloaded
+                    : (widget.asyncListCallback != null
                         ? renderAsyncListView()
                         : renderSearchableListView()),
               ),
@@ -583,21 +608,13 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   }
 
   Widget renderAsyncListView() {
-    return FutureBuilder(
-      future: widget.asyncListCallback!.call(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return widget.loadingWidget ?? const DefaultLoadingWidget();
-        }
-        dataDownloaded = true;
-        if (snapshot.data == null) {
-          return widget.errorWidget ?? const DefaultErrorWidget();
-        }
-        asyncListResult = snapshot.data as List<T>;
-        filtredAsyncListResult = asyncListResult;
-        return renderSearchableListView();
-      },
-    );
+    if (asyncError) {
+      return widget.errorWidget ?? const DefaultErrorWidget();
+    }
+    if (numberOfRequestLoading != 0) {
+      return widget.loadingWidget ?? const DefaultLoadingWidget();
+    }
+    return renderSearchableListView();
   }
 
   Widget renderSearchableListView() {
@@ -831,12 +848,26 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         }
       }
     } else if (widget.asyncListCallback != null) {
-      setState(() {
-        filtredAsyncListResult = widget.asyncListFilter!(
-          value,
-          asyncListResult,
-        );
-      });
+      () async {
+        if (mounted) {
+          setState(() {
+            numberOfRequestLoading++;
+          });
+        }
+        try {
+          filtredAsyncListResult = await widget.asyncListFilter!(
+            value,
+            asyncListResult,
+          );
+        } catch (e) {
+          asyncError = true;
+        }
+        if (mounted) {
+          setState(() {
+            numberOfRequestLoading--;
+          });
+        }
+      }();
     } else {
       setState(() {
         filtredListResult = widget.filter?.call(value) ?? [];
