@@ -251,6 +251,7 @@ class _ExampleAppState extends State<ExampleApp> {
             .toList();
         return result;
       },
+      asyncDebounceTime: 200,
       separatorBuilder: (context, index) {
         return Container(
           height: 30,
