@@ -289,8 +289,7 @@ class SearchableList<T> extends StatefulWidget {
   /// if nothing is provided in [errorWidget] searchable list will display a [Icon]
   Widget? errorWidget;
 
-  /// Builder function that generates the ListView items
-  /// based on the returned <T> type item
+  /// Builder function that generates the ListView items based on the returned \<T> type item.
   late Widget Function(T item)? itemBuilder;
 
   /// Builder function that generates the Expansion listView items
