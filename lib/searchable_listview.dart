@@ -447,7 +447,8 @@ class SearchableList<T> extends StatefulWidget {
   ScrollController? scrollController;
 
   /// Indicates whether the keyboard will be closed when scrolling or not
-  /// by default `closeKeyboardWhenScrolling = true`
+  /// by default `closeKeyboardWhenScrolling = false`
+  /// You also need to provide [focusNode] to close the keyboard
   final bool closeKeyboardWhenScrolling;
 
   /// Indicate whether the expansion will be shown or not when the expansion group is empty
