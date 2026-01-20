@@ -221,7 +221,8 @@ class _ExampleAppState extends State<ExampleApp> {
         await Future.delayed(const Duration(seconds: 5));
         return actors;
       },
-      asyncListFilter: (query, list) {
+      asyncListFilter: (query, list) async {
+        await Future.delayed(const Duration(seconds: 3));
         var result = actors
             .where((element) =>
                 element.name.contains(query) ||
@@ -229,6 +230,7 @@ class _ExampleAppState extends State<ExampleApp> {
             .toList();
         return result;
       },
+      asyncDebounceTime: 200,
       separatorBuilder: (context, index) {
         return Container(
           height: 30,
