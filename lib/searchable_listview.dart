@@ -271,7 +271,7 @@ class SearchableList<T> extends StatefulWidget {
   /// Callback invoked when filtring the searchable list
   /// used when providing [asyncListCallback]
   /// can't be null when [asyncListCallback] isn't null
-  late List<T> Function(String, List<T>)? asyncListFilter;
+  late List<T> Function(String query, List<T> list)? asyncListFilter;
 
   /// Loading widget displayed when [asyncListCallback] is loading
   /// if nothing is provided in [loadingWidget] searchable list will display a [CircularProgressIndicator]
@@ -316,7 +316,7 @@ class SearchableList<T> extends StatefulWidget {
   final TextInputType textInputType;
 
   /// Callback function invoked when submiting the search text field
-  final Function(String?)? onSubmitSearch;
+  final Function(String? search)? onSubmitSearch;
 
   /// The search type on submiting text field or when changing the text field value
   /// ```dart
@@ -409,11 +409,11 @@ class SearchableList<T> extends StatefulWidget {
 
   /// Callback used when filtering the expansion list
   /// required when using [expansion] constructor
-  late Map<dynamic, List<T>> Function(String)? filterExpansionData;
+  late Map<dynamic, List<T>> Function(String query)? filterExpansionData;
 
   /// The expansion list title widget builder
   /// required when using [expansion] constructor
-  late Widget Function(dynamic) expansionTitleBuilder;
+  late Widget Function(dynamic header) expansionTitleBuilder;
 
   /// Physics attributes used in listview widget
   late ScrollPhysics? physics;
