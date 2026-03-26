@@ -525,6 +525,26 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   }
 
   @override
+  void didUpdateWidget(covariant SearchableList<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Reload the list if the initialList changed
+    if (oldWidget.initialList != widget.initialList) {
+      if (searchText.isEmpty) {
+        setState(() {
+          filtredListResult = widget.initialList;
+        });
+      } else {
+        filterList(searchText);
+      }
+    }
+    if (widget.isExpansionList &&
+        oldWidget.expansionListData != widget.expansionListData) {
+      filterList(searchText);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return widget.sliverScrollEffect
         ? renderSliverEffect()
