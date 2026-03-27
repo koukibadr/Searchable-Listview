@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:searchable_listview/resources/arrays.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 
 void main() {
@@ -63,6 +64,7 @@ class _ExampleAppState extends State<ExampleApp> {
   };
 
   final TextEditingController searchTextController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -80,14 +82,32 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: renderAsynchSearchableListview(),
+              child: renderSimpleSearchableList(),
             ),
           ),
           Align(
             alignment: Alignment.center,
-            child: ElevatedButton(
-              onPressed: addActor,
-              child: const Text('Add actor'),
+            child: Row(
+              children: [
+                ElevatedButton(
+                  onPressed: addActor,
+                  child: const Text('Add actor'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (formKey.currentState?.validate() ?? false) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Field is valid')),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Field is not valid')),
+                      );
+                    }
+                  },
+                  child: const Text('Validate field'),
+                ),
+              ],
             ),
           )
         ],
@@ -140,11 +160,7 @@ class _ExampleAppState extends State<ExampleApp> {
         ],
       ),
       filter: (query) {
-        filteredActors = actors
-            .where((element) =>
-                element.name.toLowerCase().contains(query.toLowerCase()) ||
-                element.lastName.toLowerCase().contains(query.toLowerCase()))
-            .toList();
+        filteredActors = actors.where((element) => element.name.toLowerCase().contains(query.toLowerCase()) || element.lastName.toLowerCase().contains(query.toLowerCase())).toList();
         return filteredActors;
       },
       initialList: actors,
@@ -160,6 +176,7 @@ class _ExampleAppState extends State<ExampleApp> {
       itemBuilder: (item) {
         return ActorItem(actor: item);
       },
+      searchMode: SearchMode.onSubmit,
       errorWidget: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -222,11 +239,7 @@ class _ExampleAppState extends State<ExampleApp> {
         return actors;
       },
       asyncListFilter: (query, list) {
-        var result = actors
-            .where((element) =>
-                element.name.contains(query) ||
-                element.lastName.contains(query))
-            .toList();
+        var result = actors.where((element) => element.name.contains(query) || element.lastName.contains(query)).toList();
         return result;
       },
       separatorBuilder: (context, index) {
@@ -264,12 +277,7 @@ class _ExampleAppState extends State<ExampleApp> {
         );
       },
       filterExpansionData: (p0) {
-        final filteredMap = {
-          for (final entry in mapOfActors.entries)
-            entry.key: (mapOfActors[entry.key] ?? [])
-                .where((element) => element.name.contains(p0))
-                .toList()
-        };
+        final filteredMap = {for (final entry in mapOfActors.entries) entry.key: (mapOfActors[entry.key] ?? []).where((element) => element.name.contains(p0)).toList()};
         return filteredMap;
       },
       textStyle: const TextStyle(fontSize: 25),
