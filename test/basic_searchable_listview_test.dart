@@ -14,8 +14,7 @@ void main() {
       var basicSearchableList = SearchableList<int>(
         initialList: intList,
         itemBuilder: (item) => DummyListItem(index: item),
-        filter: (query) =>
-            intList.where((item) => item.toString().contains(query)).toList(),
+        filter: (query) => intList.where((item) => item.toString().contains(query)).toList(),
       );
 
       await test.pumpWidget(
@@ -52,8 +51,7 @@ void main() {
           border: OutlineInputBorder(),
         ),
         itemBuilder: (item) => DummyListItem(index: item),
-        filter: (query) =>
-            intList.where((item) => item.toString().contains(query)).toList(),
+        filter: (query) => intList.where((item) => item.toString().contains(query)).toList(),
       );
 
       await test.pumpWidget(
@@ -71,8 +69,7 @@ void main() {
       expect(find.text('Search Items'), findsOneWidget);
       final searchField = find.byType(TextField);
       expect(
-        test.widget<TextField>(searchField).decoration!.border
-            is OutlineInputBorder,
+        test.widget<TextField>(searchField).decoration!.border is OutlineInputBorder,
         isTrue,
       );
     });
@@ -86,8 +83,7 @@ void main() {
         initialList: <int>[],
         emptyWidget: const Text('No items found'),
         itemBuilder: (item) => DummyListItem(index: item),
-        filter: (query) =>
-            intList.where((item) => item.toString().contains(query)).toList(),
+        filter: (query) => intList.where((item) => item.toString().contains(query)).toList(),
       );
 
       await test.pumpWidget(
@@ -116,8 +112,7 @@ void main() {
       var basicSearchableList = SearchableList<int>(
         initialList: intList,
         itemBuilder: (item) => DummyListItem(index: item),
-        filter: (query) =>
-            intList.where((item) => item.toString().contains(query)).toList(),
+        filter: (query) => intList.where((item) => item.toString().contains(query)).toList(),
       );
 
       await test.pumpWidget(
@@ -159,8 +154,7 @@ void main() {
       var basicSearchableList = SearchableList<int>(
         initialList: intList,
         itemBuilder: (item) => DummyListItem(index: item),
-        filter: (query) =>
-            intList.where((item) => item.toString().contains(query)).toList(),
+        filter: (query) => intList.where((item) => item.toString().contains(query)).toList(),
       );
 
       await test.pumpWidget(
@@ -191,8 +185,7 @@ void main() {
       var basicSearchableList = SearchableList<int>(
         initialList: <int>[],
         itemBuilder: (item) => DummyListItem(index: item),
-        filter: (query) =>
-            intList.where((item) => item.toString().contains(query)).toList(),
+        filter: (query) => intList.where((item) => item.toString().contains(query)).toList(),
       );
 
       await test.pumpWidget(
@@ -223,9 +216,7 @@ void main() {
       var basicSearchableList = SearchableList<String>(
         initialList: stringList,
         itemBuilder: (item) => Text(item),
-        filter: (query) => stringList
-            .where((item) => item.toString().contains(query))
-            .toList(),
+        filter: (query) => stringList.where((item) => item.toString().contains(query)).toList(),
       );
 
       await test.pumpWidget(
@@ -270,8 +261,7 @@ void main() {
         initialList: intList,
         displayClearIcon: true,
         itemBuilder: (item) => DummyListItem(index: item),
-        filter: (query) =>
-            intList.where((item) => item.toString().contains(query)).toList(),
+        filter: (query) => intList.where((item) => item.toString().contains(query)).toList(),
       );
 
       await test.pumpWidget(
@@ -298,8 +288,7 @@ void main() {
         initialList: intList,
         displayClearIcon: true,
         itemBuilder: (item) => DummyListItem(index: item),
-        filter: (query) =>
-            intList.where((item) => item.toString().contains(query)).toList(),
+        filter: (query) => intList.where((item) => item.toString().contains(query)).toList(),
       );
 
       await test.pumpWidget(
@@ -322,4 +311,78 @@ void main() {
       expect(find.byType(DummyListItem), findsNWidgets(10));
     });
   });
+
+  group(
+    """"
+  Verifying form validation and form key behavior
+""",
+    () {
+      testWidgets("", (tester) async {
+        final intList = List.generate(3, (index) => index);
+        final formKey = GlobalKey<FormState>();
+        var basicSearchableList = SearchableList<int>(
+          initialList: intList,
+          displayClearIcon: true,
+          itemBuilder: (item) => DummyListItem(index: item),
+          filter: (query) => intList.where((item) => item.toString().contains(query)).toList(),
+          fieldValidator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Search field cannot be empty';
+            }
+            return null;
+          },
+          formFieldKey: formKey,
+        );
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: Column(
+                children: [
+                  Expanded(child: basicSearchableList),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        // If the form is valid, the valid elements will show automatically.
+                      } else {
+                        ScaffoldMessenger.of(tester.element(find.byType(ElevatedButton))).showSnackBar(
+                          const SnackBar(
+                            content: Text('Please fix the errors in the search field'),
+                            duration: Duration(seconds: 1),
+                          ),
+                        );
+                      }
+                    },
+                    child: Text('Submit'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+
+        final submitButton = find.byType(ElevatedButton);
+
+        expect(find.byType(TextField), findsOneWidget);
+
+        // Try submitting empty search query
+        await tester.enterText(find.byType(TextField), '');
+        await tester.tap(submitButton);
+        await tester.pumpAndSettle();
+
+        // Check for validation error message
+        expect(find.text('Please fix the errors in the search field'), findsOneWidget);
+
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+        // Enter valid search query
+        await tester.enterText(find.byType(TextField), '1');
+        await tester.tap(submitButton);
+        await tester.pumpAndSettle();
+
+        // Check that validation error message is gone and results are shown
+        expect(find.text('Please fix the errors in the search field'), findsNothing);
+        expect(find.text('Item 1'), findsOneWidget);
+      });
+    },
+  );
 }

@@ -66,6 +66,8 @@ class SearchableList<T> extends StatefulWidget {
     this.textAlignVertical = TextAlignVertical.center,
     this.labelText,
     this.showSearchField = true,
+    this.fieldValidator,
+    this.formFieldKey,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     expansionListBuilder = null;
@@ -126,6 +128,8 @@ class SearchableList<T> extends StatefulWidget {
     this.textAlignVertical = TextAlignVertical.center,
     this.labelText,
     this.showSearchField = true,
+    this.fieldValidator,
+    this.formFieldKey,
   }) : super(key: key) {
     assert(asyncListCallback != null);
     searchTextController ??= TextEditingController();
@@ -184,6 +188,8 @@ class SearchableList<T> extends StatefulWidget {
     this.textAlignVertical = TextAlignVertical.center,
     this.labelText,
     this.showSearchField = true,
+    this.fieldValidator,
+    this.formFieldKey,
   }) : super(key: key) {
     searchTextController ??= TextEditingController();
     separatorBuilder = null;
@@ -237,6 +243,8 @@ class SearchableList<T> extends StatefulWidget {
     this.textAlignVertical = TextAlignVertical.center,
     this.labelText,
     this.showSearchField = true,
+    this.fieldValidator,
+    this.formFieldKey,
   }) : super(key: key) {
     asyncListCallback = null;
     asyncListFilter = null;
@@ -288,8 +296,7 @@ class SearchableList<T> extends StatefulWidget {
   /// [expansionGroupIndex] : expansion group index
   /// [listItem] the current item model that will be rendered.
   /// Used only for expansion list constructor
-  late Widget Function(int expansionGroupIndex, T listItem)?
-      expansionListBuilder;
+  late Widget Function(int expansionGroupIndex, T listItem)? expansionListBuilder;
 
   /// The widget to be displayed when the filter returns an empty list.
   /// Defaults to `const SizedBox.shrink()`.
@@ -478,6 +485,10 @@ class SearchableList<T> extends StatefulWidget {
   /// by default `showSearchField = true`
   final bool showSearchField;
 
+  final FormFieldValidator<String>? fieldValidator;
+
+  final Key? formFieldKey;
+
   bool isExpansionList = false;
 
   @override
@@ -487,8 +498,7 @@ class SearchableList<T> extends StatefulWidget {
 class _SearchableListState<T> extends State<SearchableList<T>> {
   /// Create scroll controller instance
   /// attached to the listview widget
-  late ScrollController scrollController =
-      widget.scrollController ?? ScrollController();
+  late ScrollController scrollController = widget.scrollController ?? ScrollController();
   List<T> asyncListResult = [];
   late List<T> filtredListResult = widget.initialList;
   List<T> filtredAsyncListResult = [];
@@ -500,19 +510,18 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   void initState() {
     super.initState();
     scrollController.addListener(() {
-      if (widget.closeKeyboardWhenScrolling &&
-          widget.focusNode?.hasFocus == true) {
+      if (widget.closeKeyboardWhenScrolling && widget.focusNode?.hasFocus == true) {
         FocusScope.of(context).requestFocus(FocusNode());
       }
-      if (widget.onPaginate != null &&
-          scrollController.position.pixels ==
-              scrollController.position.maxScrollExtent) {
+      if (widget.onPaginate != null && scrollController.position.pixels == scrollController.position.maxScrollExtent) {
         setState(() {
           widget.onPaginate?.call();
         });
       }
     });
-    widget.searchTextController?.addListener(_textControllerListener);
+    if (widget.searchMode == SearchMode.onEdit) {
+      widget.searchTextController?.addListener(_textControllerListener);
+    }
   }
 
   @override
@@ -538,8 +547,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         filterList(searchText);
       }
     }
-    if (widget.isExpansionList &&
-        oldWidget.expansionListData != widget.expansionListData) {
+    if (widget.isExpansionList && oldWidget.expansionListData != widget.expansionListData) {
       filterList(searchText);
     }
   }
@@ -549,10 +557,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     return widget.sliverScrollEffect
         ? renderSliverEffect()
         : Column(
-            verticalDirection:
-                widget.searchTextPosition == SearchTextPosition.top
-                    ? VerticalDirection.down
-                    : VerticalDirection.up,
+            verticalDirection: widget.searchTextPosition == SearchTextPosition.top ? VerticalDirection.down : VerticalDirection.up,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (widget.showSearchField)
@@ -561,41 +566,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                   child: SizedBox(
                     width: widget.searchFieldWidth,
                     height: widget.searchFieldHeight,
-                    child: SearchTextField(
-                      filterList: filterList,
-                      focusNode: widget.focusNode,
-                      inputDecoration: widget.inputDecoration,
-                      keyboardAction: widget.keyboardAction,
-                      obscureText: widget.obscureText,
-                      onSubmitSearch: widget.onSubmitSearch,
-                      searchFieldEnabled: widget.searchFieldEnabled,
-                      searchMode: widget.searchMode,
-                      searchTextController: widget.searchTextController,
-                      textInputType: widget.textInputType,
-                      displayClearIcon: widget.displayClearIcon,
-                      displaySearchIcon: widget.displaySearchIcon,
-                      defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                      defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                      textStyle: widget.textStyle,
-                      cursorColor: widget.cursorColor,
-                      maxLength: widget.maxLength,
-                      maxLines: widget.maxLines,
-                      textAlign: widget.textAlign,
-                      autoCompleteHints: widget.autoCompleteHints,
-                      secondaryWidget: widget.secondaryWidget,
-                      onSortTap: sortList,
-                      sortWidget: widget.sortWidget,
-                      verticalTextAlign: widget.textAlignVertical,
-                      labelText: widget.labelText,
-                    ),
+                    child: _buildSearchTextField(),
                   ),
                 ),
               Expanded(
-                child: widget.isExpansionList
-                    ? renderExpandableListView()
-                    : (widget.asyncListCallback != null && !dataDownloaded
-                        ? renderAsyncListView()
-                        : renderSearchableListView()),
+                child: widget.isExpansionList ? renderExpandableListView() : (widget.asyncListCallback != null && !dataDownloaded ? renderAsyncListView() : renderSearchableListView()),
               ),
             ],
           );
@@ -620,9 +595,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   }
 
   Widget renderSearchableListView() {
-    List<T> renderedList = widget.asyncListCallback != null
-        ? filtredAsyncListResult
-        : filtredListResult;
+    List<T> renderedList = widget.asyncListCallback != null ? filtredAsyncListResult : filtredListResult;
     return buildSearchableListView(
       list: renderedList,
     );
@@ -676,8 +649,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   }
 
   Widget renderExpandableListView() {
-    if (widget.expansionListData.isEmpty ||
-        widget.expansionListData.values.every((element) => element.isEmpty)) {
+    if (widget.expansionListData.isEmpty || widget.expansionListData.values.every((element) => element.isEmpty)) {
       return widget.emptyWidget ?? const SizedBox.shrink();
     } else {
       expansionTileControllers.addAll(
@@ -726,43 +698,14 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     return widget.scrollDirection == Axis.horizontal
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            verticalDirection:
-                widget.searchTextPosition == SearchTextPosition.top
-                    ? VerticalDirection.down
-                    : VerticalDirection.up,
+            verticalDirection: widget.searchTextPosition == SearchTextPosition.top ? VerticalDirection.down : VerticalDirection.up,
             children: [
               if (widget.showSearchField)
                 Padding(
                   padding: widget.searchFieldPadding ?? const EdgeInsets.all(0),
                   child: SizedBox(
                     width: widget.searchFieldWidth,
-                    child: SearchTextField(
-                      filterList: filterList,
-                      focusNode: widget.focusNode,
-                      inputDecoration: widget.inputDecoration,
-                      keyboardAction: widget.keyboardAction,
-                      obscureText: widget.obscureText,
-                      onSubmitSearch: widget.onSubmitSearch,
-                      searchFieldEnabled: widget.searchFieldEnabled,
-                      searchMode: widget.searchMode,
-                      searchTextController: widget.searchTextController,
-                      textInputType: widget.textInputType,
-                      displayClearIcon: widget.displayClearIcon,
-                      displaySearchIcon: widget.displaySearchIcon,
-                      defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                      defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                      textStyle: widget.textStyle,
-                      cursorColor: widget.cursorColor,
-                      maxLength: widget.maxLength,
-                      maxLines: widget.maxLines,
-                      textAlign: widget.textAlign,
-                      autoCompleteHints: widget.autoCompleteHints,
-                      secondaryWidget: widget.secondaryWidget,
-                      onSortTap: sortList,
-                      sortWidget: widget.sortWidget,
-                      verticalTextAlign: widget.textAlignVertical,
-                      labelText: widget.labelText,
-                    ),
+                    child: _buildSearchTextField(),
                   ),
                 ),
               Expanded(
@@ -785,33 +728,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
               if (widget.showSearchField)
                 SliverAppBar(
                   backgroundColor: Colors.transparent,
-                  flexibleSpace: SearchTextField(
-                    filterList: filterList,
-                    focusNode: widget.focusNode,
-                    inputDecoration: widget.inputDecoration,
-                    keyboardAction: widget.keyboardAction,
-                    obscureText: widget.obscureText,
-                    onSubmitSearch: widget.onSubmitSearch,
-                    searchFieldEnabled: widget.searchFieldEnabled,
-                    searchMode: widget.searchMode,
-                    searchTextController: widget.searchTextController,
-                    textInputType: widget.textInputType,
-                    displayClearIcon: widget.displayClearIcon,
-                    displaySearchIcon: widget.displaySearchIcon,
-                    defaultSuffixIconColor: widget.defaultSuffixIconColor,
-                    defaultSuffixIconSize: widget.defaultSuffixIconSize,
-                    textStyle: widget.textStyle,
-                    cursorColor: widget.cursorColor,
-                    maxLength: widget.maxLength,
-                    maxLines: widget.maxLines,
-                    textAlign: widget.textAlign,
-                    autoCompleteHints: widget.autoCompleteHints,
-                    secondaryWidget: widget.secondaryWidget,
-                    onSortTap: sortList,
-                    sortWidget: widget.sortWidget,
-                    verticalTextAlign: widget.textAlignVertical,
-                    labelText: widget.labelText,
-                  ),
+                  flexibleSpace: _buildSearchTextField(),
                 ),
               renderSliverListView(),
             ],
@@ -838,8 +755,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     searchText = value;
     if (widget.isExpansionList) {
       setState(() {
-        widget.expansionListData =
-            widget.filterExpansionData?.call(value) ?? {};
+        widget.expansionListData = widget.filterExpansionData?.call(value) ?? {};
       });
       for (var controller in expansionTileControllers) {
         try {
@@ -879,5 +795,38 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     if (searchText != widget.searchTextController?.text) {
       filterList(widget.searchTextController?.text ?? '');
     }
+  }
+
+  /// Builds and returns a SearchTextField widget with all necessary parameters
+  Widget _buildSearchTextField() {
+    return SearchTextField(
+      filterList: filterList,
+      focusNode: widget.focusNode,
+      inputDecoration: widget.inputDecoration,
+      keyboardAction: widget.keyboardAction,
+      obscureText: widget.obscureText,
+      onSubmitSearch: widget.onSubmitSearch,
+      searchFieldEnabled: widget.searchFieldEnabled,
+      searchMode: widget.searchMode,
+      searchTextController: widget.searchTextController,
+      textInputType: widget.textInputType,
+      displayClearIcon: widget.displayClearIcon,
+      displaySearchIcon: widget.displaySearchIcon,
+      defaultSuffixIconColor: widget.defaultSuffixIconColor,
+      defaultSuffixIconSize: widget.defaultSuffixIconSize,
+      textStyle: widget.textStyle,
+      cursorColor: widget.cursorColor,
+      maxLength: widget.maxLength,
+      maxLines: widget.maxLines,
+      textAlign: widget.textAlign,
+      autoCompleteHints: widget.autoCompleteHints,
+      secondaryWidget: widget.secondaryWidget,
+      onSortTap: sortList,
+      sortWidget: widget.sortWidget,
+      verticalTextAlign: widget.textAlignVertical,
+      labelText: widget.labelText,
+      validator: widget.fieldValidator,
+      formFieldKey: widget.formFieldKey,
+    );
   }
 }
