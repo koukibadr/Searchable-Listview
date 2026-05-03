@@ -517,7 +517,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   bool asyncError = false;
   // Current async task running, null otherwise
   CancelableOperation<List<T>?>? _activeOperation;
-  late Debouncer _debouncer;
+  late Debouncer? _debouncer;
   List<ExpansionTileController> expansionTileControllers = [];
 
   @override
@@ -797,7 +797,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         }
       }
     } else if (widget.asyncListCallback != null) {
-      _debouncer.run(() async {
+      // Debouncer always has a value in this case
+      _debouncer!.run(() async {
         _activeOperation?.cancel();
         _asyncFilter(value);
         if (mounted) setState(() {});
