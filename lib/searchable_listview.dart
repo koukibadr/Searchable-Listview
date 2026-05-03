@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:searchable_listview/resources/arrays.dart';
 import 'package:searchable_listview/resources/debouncer.dart';
@@ -513,8 +514,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   late List<T> filtredListResult = widget.initialList;
   List<T> filtredAsyncListResult = [];
   String searchText = '';
-  int numberOfRequestLoading = 0;
   bool asyncError = false;
+  // Current async task running, null otherwise
+  CancelableOperation<List<T>?>? _activeOperation;
   late Debouncer _debouncer;
   List<ExpansionTileController> expansionTileControllers = [];
 
@@ -538,23 +540,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
 
     if (widget.asyncListCallback != null) {
       // Load the initial list for the async constructor
-      numberOfRequestLoading = 1;
       WidgetsBinding.instance.addPostFrameCallback((_) async {
-        try {
-          final result = await widget.asyncListCallback!.call();
-          if (result != null) {
-            filtredAsyncListResult = result;
-          } else {
-            asyncError = true;
-          }
-        } catch (e) {
-          asyncError = true;
-        }
-        if (mounted) {
-          setState(() {
-            numberOfRequestLoading--;
-          });
-        }
+        _asyncFilter("");
+        if (mounted) setState(() {});
       });
       _debouncer = Debouncer(milliseconds: widget.asyncDebounceTime);
     }
@@ -624,7 +612,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     if (asyncError) {
       return widget.errorWidget ?? const DefaultErrorWidget();
     }
-    if (numberOfRequestLoading != 0) {
+    if (_activeOperation != null) {
       return widget.loadingWidget ?? const DefaultLoadingWidget();
     }
     return renderSearchableListView();
@@ -810,24 +798,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       }
     } else if (widget.asyncListCallback != null) {
       _debouncer.run(() async {
-        if (mounted) {
-          setState(() {
-            numberOfRequestLoading++;
-          });
-        }
-        try {
-          filtredAsyncListResult = await widget.asyncListFilter!(
-            value,
-            asyncListResult,
-          );
-        } catch (e) {
-          asyncError = true;
-        }
-        if (mounted) {
-          setState(() {
-            numberOfRequestLoading--;
-          });
-        }
+        _activeOperation?.cancel();
+        _asyncFilter(value);
+        if (mounted) setState(() {});
       });
     } else {
       setState(() {
@@ -885,5 +858,31 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       validator: widget.fieldValidator,
       formFieldKey: widget.formFieldKey,
     );
+  }
+
+  Future<void> _asyncFilter(String value) async {
+    final operation = CancelableOperation.fromFuture(
+      widget.asyncListFilter!(
+        value,
+        asyncListResult,
+      ),
+    );
+    _activeOperation = operation;
+    try {
+      final result = await operation.valueOrCancellation();
+      if (result != null && !operation.isCanceled) {
+        filtredAsyncListResult = result;
+      }
+    } catch (e) {
+      if (!operation.isCanceled) {
+        asyncError = true;
+      }
+    } finally {
+      // Make sure to not interrupt an other operation
+      if (_activeOperation == operation) {
+        _activeOperation = null;
+      }
+    }
+    setState(() {});
   }
 }
