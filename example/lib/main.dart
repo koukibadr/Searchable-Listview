@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:searchable_listview/resources/arrays.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 
 void main() {
@@ -63,6 +64,7 @@ class _ExampleAppState extends State<ExampleApp> {
   };
 
   final TextEditingController searchTextController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -80,14 +82,32 @@ class _ExampleAppState extends State<ExampleApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: renderAsynchSearchableListview(),
+              child: renderSimpleSearchableList(),
             ),
           ),
           Align(
             alignment: Alignment.center,
-            child: ElevatedButton(
-              onPressed: addActor,
-              child: const Text('Add actor'),
+            child: Row(
+              children: [
+                ElevatedButton(
+                  onPressed: addActor,
+                  child: const Text('Add actor'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (formKey.currentState?.validate() ?? false) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Field is valid')),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Field is not valid')),
+                      );
+                    }
+                  },
+                  child: const Text('Validate field'),
+                ),
+              ],
             ),
           )
         ],
@@ -160,6 +180,7 @@ class _ExampleAppState extends State<ExampleApp> {
       itemBuilder: (item) {
         return ActorItem(actor: item);
       },
+      searchMode: SearchMode.onSubmit,
       errorWidget: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -222,7 +243,6 @@ class _ExampleAppState extends State<ExampleApp> {
         return actors;
       },
       asyncListFilter: (query, list) async {
-        await Future.delayed(const Duration(seconds: 3));
         var result = actors
             .where((element) =>
                 element.name.contains(query) ||
