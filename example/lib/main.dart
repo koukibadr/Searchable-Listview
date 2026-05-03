@@ -238,6 +238,9 @@ class _ExampleAppState extends State<ExampleApp> {
       },
       textStyle: const TextStyle(fontSize: 25),
       emptyWidget: const EmptyView(),
+      loadingWidget: const Center(
+        child: CircularProgressIndicator(),
+      ),
       inputDecoration: InputDecoration(
         labelText: "Search Actor",
         fillColor: Colors.white,
