@@ -1,7 +1,11 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:async';
+
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:searchable_listview/resources/arrays.dart';
+import 'package:searchable_listview/resources/debouncer.dart';
 import 'package:searchable_listview/widgets/default_error_widget.dart';
 import 'package:searchable_listview/widgets/default_loading_widget.dart';
 import 'package:searchable_listview/widgets/list_view_rendering.dart';
@@ -84,6 +88,7 @@ class SearchableList<T> extends StatefulWidget {
     required this.asyncListCallback,
     required this.asyncListFilter,
     required this.itemBuilder,
+    this.asyncDebounceTime = 0,
     this.loadingWidget,
     this.errorWidget,
     this.searchTextController,
@@ -279,7 +284,11 @@ class SearchableList<T> extends StatefulWidget {
   /// Callback invoked when filtring the searchable list
   /// used when providing [asyncListCallback]
   /// can't be null when [asyncListCallback] isn't null
-  late List<T> Function(String query, List<T> list)? asyncListFilter;
+  late Future<List<T>> Function(String, List<T>)? asyncListFilter;
+
+  /// Debouncing time when typing in search field in milliseconds
+  /// Wait [asyncDebounceTime] milliseconds without any new entry before invoking [asyncListFilter]
+  int asyncDebounceTime = 0;
 
   /// Loading widget displayed when [asyncListCallback] is loading
   /// if nothing is provided in [loadingWidget] searchable list will display a [CircularProgressIndicator]
@@ -296,7 +305,8 @@ class SearchableList<T> extends StatefulWidget {
   /// [expansionGroupIndex] : expansion group index
   /// [listItem] the current item model that will be rendered.
   /// Used only for expansion list constructor
-  late Widget Function(int expansionGroupIndex, T listItem)? expansionListBuilder;
+  late Widget Function(int expansionGroupIndex, T listItem)?
+      expansionListBuilder;
 
   /// The widget to be displayed when the filter returns an empty list.
   /// Defaults to `const SizedBox.shrink()`.
@@ -498,29 +508,43 @@ class SearchableList<T> extends StatefulWidget {
 class _SearchableListState<T> extends State<SearchableList<T>> {
   /// Create scroll controller instance
   /// attached to the listview widget
-  late ScrollController scrollController = widget.scrollController ?? ScrollController();
+  late ScrollController scrollController =
+      widget.scrollController ?? ScrollController();
   List<T> asyncListResult = [];
   late List<T> filtredListResult = widget.initialList;
   List<T> filtredAsyncListResult = [];
   String searchText = '';
-  bool dataDownloaded = false;
+  bool asyncError = false;
+  // Current async task running, null otherwise
+  CancelableOperation<List<T>?>? _activeOperation;
+  late Debouncer? _debouncer;
   List<ExpansionTileController> expansionTileControllers = [];
 
   @override
   void initState() {
     super.initState();
     scrollController.addListener(() {
-      if (widget.closeKeyboardWhenScrolling && widget.focusNode?.hasFocus == true) {
+      if (widget.closeKeyboardWhenScrolling &&
+          widget.focusNode?.hasFocus == true) {
         FocusScope.of(context).requestFocus(FocusNode());
       }
-      if (widget.onPaginate != null && scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+      if (widget.onPaginate != null &&
+          scrollController.position.pixels ==
+              scrollController.position.maxScrollExtent) {
         setState(() {
           widget.onPaginate?.call();
         });
       }
     });
-    if (widget.searchMode == SearchMode.onEdit) {
-      widget.searchTextController?.addListener(_textControllerListener);
+    widget.searchTextController?.addListener(_textControllerListener);
+
+    if (widget.asyncListCallback != null) {
+      // Load the initial list for the async constructor
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        _asyncFilter("");
+        if (mounted) setState(() {});
+      });
+      _debouncer = Debouncer(milliseconds: widget.asyncDebounceTime);
     }
   }
 
@@ -547,7 +571,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         filterList(searchText);
       }
     }
-    if (widget.isExpansionList && oldWidget.expansionListData != widget.expansionListData) {
+    if (widget.isExpansionList &&
+        oldWidget.expansionListData != widget.expansionListData) {
       filterList(searchText);
     }
   }
@@ -557,7 +582,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     return widget.sliverScrollEffect
         ? renderSliverEffect()
         : Column(
-            verticalDirection: widget.searchTextPosition == SearchTextPosition.top ? VerticalDirection.down : VerticalDirection.up,
+            verticalDirection:
+                widget.searchTextPosition == SearchTextPosition.top
+                    ? VerticalDirection.down
+                    : VerticalDirection.up,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (widget.showSearchField)
@@ -570,32 +598,30 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                   ),
                 ),
               Expanded(
-                child: widget.isExpansionList ? renderExpandableListView() : (widget.asyncListCallback != null && !dataDownloaded ? renderAsyncListView() : renderSearchableListView()),
+                child: widget.isExpansionList
+                    ? renderExpandableListView()
+                    : (widget.asyncListCallback != null
+                        ? renderAsyncListView()
+                        : renderSearchableListView()),
               ),
             ],
           );
   }
 
   Widget renderAsyncListView() {
-    return FutureBuilder(
-      future: widget.asyncListCallback!.call(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return widget.loadingWidget ?? const DefaultLoadingWidget();
-        }
-        dataDownloaded = true;
-        if (snapshot.data == null) {
-          return widget.errorWidget ?? const DefaultErrorWidget();
-        }
-        asyncListResult = snapshot.data as List<T>;
-        filtredAsyncListResult = asyncListResult;
-        return renderSearchableListView();
-      },
-    );
+    if (asyncError) {
+      return widget.errorWidget ?? const DefaultErrorWidget();
+    }
+    if (_activeOperation != null) {
+      return widget.loadingWidget ?? const DefaultLoadingWidget();
+    }
+    return renderSearchableListView();
   }
 
   Widget renderSearchableListView() {
-    List<T> renderedList = widget.asyncListCallback != null ? filtredAsyncListResult : filtredListResult;
+    List<T> renderedList = widget.asyncListCallback != null
+        ? filtredAsyncListResult
+        : filtredListResult;
     return buildSearchableListView(
       list: renderedList,
     );
@@ -649,7 +675,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   }
 
   Widget renderExpandableListView() {
-    if (widget.expansionListData.isEmpty || widget.expansionListData.values.every((element) => element.isEmpty)) {
+    if (widget.expansionListData.isEmpty ||
+        widget.expansionListData.values.every((element) => element.isEmpty)) {
       return widget.emptyWidget ?? const SizedBox.shrink();
     } else {
       expansionTileControllers.addAll(
@@ -698,7 +725,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     return widget.scrollDirection == Axis.horizontal
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            verticalDirection: widget.searchTextPosition == SearchTextPosition.top ? VerticalDirection.down : VerticalDirection.up,
+            verticalDirection:
+                widget.searchTextPosition == SearchTextPosition.top
+                    ? VerticalDirection.down
+                    : VerticalDirection.up,
             children: [
               if (widget.showSearchField)
                 Padding(
@@ -755,7 +785,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     searchText = value;
     if (widget.isExpansionList) {
       setState(() {
-        widget.expansionListData = widget.filterExpansionData?.call(value) ?? {};
+        widget.expansionListData =
+            widget.filterExpansionData?.call(value) ?? {};
       });
       for (var controller in expansionTileControllers) {
         try {
@@ -766,11 +797,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         }
       }
     } else if (widget.asyncListCallback != null) {
-      setState(() {
-        filtredAsyncListResult = widget.asyncListFilter!(
-          value,
-          asyncListResult,
-        );
+      // Debouncer always has a value in this case
+      _debouncer!.run(() async {
+        _activeOperation?.cancel();
+        _asyncFilter(value);
+        if (mounted) setState(() {});
       });
     } else {
       setState(() {
@@ -828,5 +859,31 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       validator: widget.fieldValidator,
       formFieldKey: widget.formFieldKey,
     );
+  }
+
+  Future<void> _asyncFilter(String value) async {
+    final operation = CancelableOperation.fromFuture(
+      widget.asyncListFilter!(
+        value,
+        asyncListResult,
+      ),
+    );
+    _activeOperation = operation;
+    try {
+      final result = await operation.valueOrCancellation();
+      if (result != null && !operation.isCanceled) {
+        filtredAsyncListResult = result;
+      }
+    } catch (e) {
+      if (!operation.isCanceled) {
+        asyncError = true;
+      }
+    } finally {
+      // Make sure to not interrupt an other operation
+      if (_activeOperation == operation) {
+        _activeOperation = null;
+      }
+    }
+    setState(() {});
   }
 }

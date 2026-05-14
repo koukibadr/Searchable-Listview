@@ -16,7 +16,7 @@ void main() {
       var basicSearchableList = SearchableList<int>.async(
         asyncListCallback: () async => intList,
         itemBuilder: (item) => DummyListItem(index: item),
-        asyncListFilter: (query, _) =>
+        asyncListFilter: (query, _) async =>
             intList.where((item) => item.toString().contains(query)).toList(),
       );
 
@@ -55,7 +55,7 @@ void main() {
           labelText: 'Search Items',
           border: OutlineInputBorder(),
         ),
-        asyncListFilter: (query, _) =>
+        asyncListFilter: (query, _) async =>
             intList.where((item) => item.toString().contains(query)).toList(),
       );
 
@@ -92,7 +92,7 @@ void main() {
       var basicSearchableList = SearchableList<int>.async(
         asyncListCallback: () async => intList,
         itemBuilder: (item) => DummyListItem(index: item),
-        asyncListFilter: (query, _) =>
+        asyncListFilter: (query, _) async =>
             intList.where((item) => item.toString().contains(query)).toList(),
       );
 
@@ -124,7 +124,7 @@ void main() {
       var basicSearchableList = SearchableList<int>.async(
         asyncListCallback: () async => intList,
         itemBuilder: (item) => DummyListItem(index: item),
-        asyncListFilter: (query, _) =>
+        asyncListFilter: (query, _) async =>
             intList.where((item) => item.toString().contains(query)).toList(),
       );
 
@@ -151,7 +151,7 @@ void main() {
       var basicSearchableList = SearchableList<int>.async(
         asyncListCallback: () async => [],
         itemBuilder: (item) => DummyListItem(index: item),
-        asyncListFilter: (query, _) => [],
+        asyncListFilter: (query, _) async => [],
       );
 
       await test.pumpWidget(
@@ -180,7 +180,7 @@ void main() {
         asyncListCallback: () async => intList,
         itemBuilder: (item) => DummyListItem(index: item),
         emptyWidget: const Text('No items found'),
-        asyncListFilter: (query, _) =>
+        asyncListFilter: (query, _) async =>
             intList.where((item) => item.toString().contains(query)).toList(),
       );
 
