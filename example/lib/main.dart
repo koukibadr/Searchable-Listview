@@ -1,6 +1,8 @@
+import 'package:example/widgets/async_searchable_listview.dart';
+import 'package:example/widgets/basic_searchable_listview.dart';
+import 'package:example/widgets/expansion_searchable_listview.dart';
+import 'package:example/widgets/sliver_searchable_listview.dart';
 import 'package:flutter/material.dart';
-import 'package:searchable_listview/resources/arrays.dart';
-import 'package:searchable_listview/searchable_listview.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,401 +19,42 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Scaffold(
-        body: SafeArea(
-          child: ExampleApp(),
-        ),
-      ),
+      home: const ExampleWidget(),
     );
   }
 }
 
-class ExampleApp extends StatefulWidget {
-  const ExampleApp({Key? key}) : super(key: key);
+class ExampleWidget extends StatelessWidget {
+  const ExampleWidget({Key? key}) : super(key: key);
 
-  @override
-  State<ExampleApp> createState() => _ExampleAppState();
-}
-
-class _ExampleAppState extends State<ExampleApp> {
-  final List<Actor> actors = [
-    Actor(age: 47, name: 'Leonardo', lastName: 'DiCaprio'),
-    Actor(age: 58, name: 'Johnny', lastName: 'Depp'),
-    Actor(age: 78, name: 'Robert', lastName: 'De Niro'),
-    Actor(age: 44, name: 'Tom', lastName: 'Hardy'),
-    Actor(age: 66, name: 'Denzel', lastName: 'Washington'),
-    Actor(age: 49, name: 'Ben', lastName: 'Affleck'),
-    Actor(age: 47, name: 'Leonardo', lastName: 'DiCaprio'),
-    Actor(age: 58, name: 'Johnny', lastName: 'Depp'),
-    Actor(age: 78, name: 'Robert', lastName: 'De Niro'),
-    Actor(age: 44, name: 'Tom', lastName: 'Hardy'),
-    Actor(age: 66, name: 'Denzel', lastName: 'Washington'),
-    Actor(age: 49, name: 'Ben', lastName: 'Affleck'),
+  static const List<Tab> _tabs = [
+    Tab(text: 'Basic'),
+    Tab(text: 'Async'),
+    Tab(text: 'Sliver'),
+    Tab(text: 'Expansion'),
   ];
-  List<Actor> filteredActors = [];
-
-  final Map<String, List<Actor>> mapOfActors = {
-    'test 1': [
-      Actor(age: 47, name: 'Leonardo', lastName: 'DiCaprio'),
-      Actor(age: 66, name: 'Denzel', lastName: 'Washington'),
-      Actor(age: 49, name: 'Ben', lastName: 'Affleck'),
-    ],
-    'test 2': [
-      Actor(age: 58, name: 'Johnny', lastName: 'Depp'),
-      Actor(age: 78, name: 'Robert', lastName: 'De Niro'),
-      Actor(age: 44, name: 'Tom', lastName: 'Hardy'),
-    ]
-  };
-
-  final TextEditingController searchTextController = TextEditingController();
-  final formKey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    super.initState();
-    filteredActors = actors;
-  }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: Column(
-        children: [
-          const Text('Searchable list with divider'),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(15),
-              child: renderSimpleSearchableList(),
-            ),
+    return DefaultTabController(
+      length: _tabs.length,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Searchable Listview Examples'),
+          bottom: const TabBar(
+            isScrollable: true,
+            tabs: _tabs,
           ),
-          Align(
-            alignment: Alignment.center,
-            child: Row(
-              children: [
-                ElevatedButton(
-                  onPressed: addActor,
-                  child: const Text('Add actor'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    if (formKey.currentState?.validate() ?? false) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Field is valid')),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Field is not valid')),
-                      );
-                    }
-                  },
-                  child: const Text('Validate field'),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  void addActor() {
-    actors.add(Actor(
-      age: 10,
-      lastName: 'Ali',
-      name: 'ALi',
-    ));
-    setState(() {});
-  }
-
-  Widget simpleSearchWithSort() {
-    return SearchableList<Actor>(
-      textAlignVertical: TextAlignVertical.center,
-      searchFieldHeight: 40,
-      lazyLoadingEnabled: false,
-      separatorBuilder: (context, index) {
-        return Container(
-          height: 40,
-        );
-      },
-      sortPredicate: (a, b) => a.age.compareTo(b.age),
-      itemBuilder: (item) {
-        int index = filteredActors.indexOf(item);
-        if (index == 0) {
-          return Container(
-            color: Colors.red,
-            height: 10,
-            width: 300,
-          );
-        } else {
-          return ActorItem(actor: filteredActors[index - 1]);
-        }
-      },
-      emptyWidget: Column(
-        children: [
-          Container(
-            color: Colors.red,
-            height: 10,
-            width: 300,
-          ),
-          const Column(
-            children: [Icon(Icons.error), Text('No Data found')],
-          )
-        ],
-      ),
-      filter: (query) {
-        filteredActors = actors
-            .where((element) =>
-                element.name.toLowerCase().contains(query.toLowerCase()) ||
-                element.lastName.toLowerCase().contains(query.toLowerCase()))
-            .toList();
-        return filteredActors;
-      },
-      initialList: actors,
-    );
-  }
-
-  Widget renderSimpleSearchableList() {
-    return SearchableList<Actor>(
-      separatorBuilder: (context, index) {
-        return const Divider();
-      },
-      textStyle: const TextStyle(fontSize: 25),
-      itemBuilder: (item) {
-        return ActorItem(actor: item);
-      },
-      searchMode: SearchMode.onSubmit,
-      errorWidget: const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error,
-            color: Colors.red,
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Text('Error while fetching actors')
-        ],
-      ),
-      initialList: actors,
-      filter: (p0) {
-        return actors.where((element) => element.name.contains(p0)).toList();
-      },
-      emptyWidget: const EmptyView(),
-      onRefresh: () async {},
-      displaySearchIcon: true,
-      labelText: "Search Actor",
-      closeKeyboardWhenScrolling: true,
-    );
-  }
-
-  Widget sliverListViewBuilder() {
-    return SearchableList<Actor>.sliver(
-      initialList: actors,
-      inputDecoration: InputDecoration(
-        labelText: "Search Actor",
-        fillColor: Colors.white,
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: Colors.blue,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10.0),
         ),
-      ),
-      filter: (query) {
-        return actors.where((element) => element.name.contains(query)).toList();
-      },
-      itemBuilder: (Actor actorItem) {
-        return ActorItem(actor: actorItem);
-      },
-      sortWidget: const Icon(Icons.sort),
-      sortPredicate: (a, b) {
-        return a.age.compareTo(b.age);
-      },
-    );
-  }
-
-  Widget renderAsynchSearchableListview() {
-    return SearchableList<Actor>.async(
-      itemBuilder: (Actor item) {
-        return ActorItem(actor: item);
-      },
-      asyncListCallback: () async {
-        await Future.delayed(const Duration(seconds: 5));
-        return actors;
-      },
-      asyncListFilter: (query, list) async {
-        await Future.delayed(const Duration(seconds: 3));
-        var result = actors
-            .where((element) =>
-                element.name.contains(query) ||
-                element.lastName.contains(query))
-            .toList();
-        return result;
-      },
-      asyncDebounceTime: 200,
-      separatorBuilder: (context, index) {
-        return Container(
-          height: 30,
-        );
-      },
-      textStyle: const TextStyle(fontSize: 25),
-      emptyWidget: const EmptyView(),
-      loadingWidget: const Center(
-        child: CircularProgressIndicator(),
-      ),
-      inputDecoration: InputDecoration(
-        labelText: "Search Actor",
-        fillColor: Colors.white,
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: Colors.blue,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-      ),
-    );
-  }
-
-  Widget expansionSearchableList() {
-    return SearchableList<Actor>.expansion(
-      expansionListData: mapOfActors,
-      expansionTitleBuilder: (p0) {
-        return Container(
-          color: Colors.grey[300],
-          width: MediaQuery.of(context).size.width * 0.8,
-          height: 30,
-          child: Center(
-            child: Text(p0.toString()),
-          ),
-        );
-      },
-      filterExpansionData: (p0) {
-        final filteredMap = {
-          for (final entry in mapOfActors.entries)
-            entry.key: (mapOfActors[entry.key] ?? [])
-                .where((element) => element.name.contains(p0))
-                .toList()
-        };
-        return filteredMap;
-      },
-      textStyle: const TextStyle(fontSize: 25),
-      expansionListBuilder: (int index, Actor _actor) {
-        return ActorItem(
-          actor: _actor,
-        );
-      },
-      hideEmptyExpansionItems: true,
-      emptyWidget: const EmptyView(),
-      inputDecoration: InputDecoration(
-        labelText: "Search Actor",
-        fillColor: Colors.white,
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: Colors.blue,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-      ),
-    );
-  }
-}
-
-class ActorItem extends StatelessWidget {
-  final Actor actor;
-
-  const ActorItem({
-    Key? key,
-    required this.actor,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        height: 60,
-        decoration: BoxDecoration(
-          color: Colors.grey[200],
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
+        body: const TabBarView(
           children: [
-            const SizedBox(
-              width: 10,
-            ),
-            Icon(
-              Icons.star,
-              color: Colors.yellow[700],
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Firstname: ${actor.name}',
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  'Lastname: ${actor.lastName}',
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  'Age: ${actor.age}',
-                  style: const TextStyle(
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
+            BasicSearchableListview(),
+            AsyncSearchableListview(),
+            SliverSearchableListview(),
+            ExpansionSearchableListview(),
           ],
         ),
       ),
     );
   }
-}
-
-class EmptyView extends StatelessWidget {
-  const EmptyView({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error,
-            color: Colors.red,
-          ),
-          Text('no actor is found with this name'),
-        ],
-      ),
-    );
-  }
-}
-
-class Actor {
-  int age;
-  String name;
-  String lastName;
-
-  Actor({
-    required this.age,
-    required this.name,
-    required this.lastName,
-  });
 }
