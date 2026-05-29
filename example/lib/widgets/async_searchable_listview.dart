@@ -20,7 +20,7 @@ class AsyncSearchableListview extends StatelessWidget {
       },
       asyncListFilter: (query, list) async {
         await Future.delayed(const Duration(seconds: 3));
-        var result = actors
+        var result = list
             .where((element) =>
                 element.name.contains(query) ||
                 element.lastName.contains(query))
