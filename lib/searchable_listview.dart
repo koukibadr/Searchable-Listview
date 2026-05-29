@@ -900,11 +900,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       final initialData = await widget.asyncListCallback!();
       if (initialData != null) {
         asyncListResult = initialData;
+      } else {
+        asyncError = true;
       }
     } catch (e) {
-      setState(() {
-        asyncError = true;
-      });
+      asyncError = true;
       return;
     }
     isAsyncCallBackRunning = false;
