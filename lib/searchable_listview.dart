@@ -519,6 +519,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   CancelableOperation<List<T>?>? _activeOperation;
   late Debouncer? _debouncer;
   List<ExpansionTileController> expansionTileControllers = [];
+  bool isAsyncCallBackRunning = true;
 
   @override
   void initState() {
@@ -541,7 +542,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     if (widget.asyncListCallback != null) {
       // Load the initial list for the async constructor
       WidgetsBinding.instance.addPostFrameCallback((_) async {
-        _asyncFilter("");
+        await _asyncInitialList();
         if (mounted) setState(() {});
       });
       _debouncer = Debouncer(milliseconds: widget.asyncDebounceTime);
@@ -612,7 +613,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     if (asyncError) {
       return widget.errorWidget ?? const DefaultErrorWidget();
     }
-    if (_activeOperation != null) {
+    if (_activeOperation != null || isAsyncCallBackRunning) {
       return widget.loadingWidget ?? const DefaultLoadingWidget();
     }
     return renderSearchableListView();
@@ -799,8 +800,9 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     } else if (widget.asyncListCallback != null) {
       // Debouncer always has a value in this case
       _debouncer!.run(() async {
+        if (mounted) setState(() {});
         _activeOperation?.cancel();
-        _asyncFilter(value);
+        await _asyncFilter(value);
         if (mounted) setState(() {});
       });
     } else {
@@ -862,6 +864,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   }
 
   Future<void> _asyncFilter(String value) async {
+    if (isAsyncCallBackRunning) {
+      // Wait for the initial list before filtering
+      return;
+    }
+
     final operation = CancelableOperation.fromFuture(
       widget.asyncListFilter!(
         value,
@@ -879,11 +886,34 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         asyncError = true;
       }
     } finally {
-      // Make sure to not interrupt an other operation
+      // Make sure to not interrupt another operation
       if (_activeOperation == operation) {
         _activeOperation = null;
       }
     }
-    setState(() {});
+  }
+
+  Future<void> _asyncInitialList() async {
+    isAsyncCallBackRunning = true;
+    // First get the initial list
+    try {
+      final initialData = await widget.asyncListCallback!();
+      if (initialData != null) {
+        asyncListResult = initialData;
+      }
+    } catch (e) {
+      setState(() {
+        asyncError = true;
+      });
+      return;
+    }
+    isAsyncCallBackRunning = false;
+    // Then check if a query was typed during the initial list loading to filter if needed
+    if ((widget.searchTextController?.text ?? "") != "") {
+      await _asyncFilter(widget.searchTextController!.text);
+    } else {
+      filtredAsyncListResult.clear();
+      filtredAsyncListResult.addAll(asyncListResult);
+    }
   }
 }
