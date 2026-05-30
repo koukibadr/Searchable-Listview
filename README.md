@@ -29,7 +29,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  searchable_listview: ^2.19.4
+  searchable_listview: ^2.19.5
 ```
 
 Then run:
