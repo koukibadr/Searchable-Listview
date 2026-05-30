@@ -8,7 +8,8 @@ class BasicSearchableListview extends StatefulWidget {
   const BasicSearchableListview({Key? key}) : super(key: key);
 
   @override
-  State<BasicSearchableListview> createState() => _BasicSearchableListviewState();
+  State<BasicSearchableListview> createState() =>
+      _BasicSearchableListviewState();
 }
 
 class _BasicSearchableListviewState extends State<BasicSearchableListview> {

@@ -1,3 +1,12 @@
+## 2.19.5 - 30/05/2026
+
+- **Feature**
+  - Add `initiallyExpanded` parameter to control the initial expansion state of the expansion tiles [PR#161](https://github.com/koukibadr/Searchable-Listview/pull/161)
+
+- **Bug Fix**
+  - Fix initial list update and rendering [PR#173](https://github.com/koukibadr/Searchable-Listview/pull/173)
+  - Stores the asyncListCallback result and transmit it as an argument of asyncListFilter [PR#180](https://github.com/koukibadr/Searchable-Listview/pull/180)
+
 ## 2.19.4 - 02/12/2025
 
 - **Bug Fix**
