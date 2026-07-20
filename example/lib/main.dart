@@ -48,10 +48,34 @@ class ExampleWidget extends StatelessWidget {
         ),
         body: const TabBarView(
           children: [
-            BasicSearchableListview(),
-            AsyncSearchableListview(),
-            SliverSearchableListview(),
-            ExpansionSearchableListview(),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: 5,
+                horizontal: 10,
+              ),
+              child: BasicSearchableListview(),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: 5,
+                horizontal: 10,
+              ),
+              child: AsyncSearchableListview(),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: 5,
+                horizontal: 10,
+              ),
+              child: SliverSearchableListview(),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: 5,
+                horizontal: 10,
+              ),
+              child: ExpansionSearchableListview(),
+            ),
           ],
         ),
       ),
