@@ -2,7 +2,7 @@ import 'package:example/data/actor.dart';
 import 'package:example/data/actors_data.dart';
 import 'package:example/widgets/actor_item_widget.dart';
 import 'package:example/widgets/empty_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 
 class ExpansionSearchableListview extends StatelessWidget {

@@ -2,7 +2,7 @@ import 'package:example/widgets/async_searchable_listview.dart';
 import 'package:example/widgets/basic_searchable_listview.dart';
 import 'package:example/widgets/expansion_searchable_listview.dart';
 import 'package:example/widgets/sliver_searchable_listview.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   runApp(const MyApp());

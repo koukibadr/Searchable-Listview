@@ -1,5 +1,5 @@
 import 'package:example/data/actor.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ActorItem extends StatelessWidget {
   final Actor actor;
