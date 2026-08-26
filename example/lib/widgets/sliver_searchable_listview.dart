@@ -1,6 +1,6 @@
 import 'package:example/data/actor.dart';
 import 'package:example/data/actors_data.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 
 class SliverSearchableListview extends StatelessWidget {
