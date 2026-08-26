@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:async/async.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:searchable_listview/resources/arrays.dart';
 import 'package:searchable_listview/resources/debouncer.dart';
 import 'package:searchable_listview/widgets/default_error_widget.dart';
