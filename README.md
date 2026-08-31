@@ -136,7 +136,7 @@ Repository: <https://github.com/koukibadr/Searchable-Listview>
 
 This project is licensed under the terms in the `LICENSE` file.
 
-## Authors
+## Contributors
 
 <a href="https://github.com/koukibadr/Searchable-Listview/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=koukibadr/Searchable-Listview" />

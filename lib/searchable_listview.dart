@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:async/async.dart';
 import 'package:material_ui/material_ui.dart';
@@ -88,7 +89,7 @@ class SearchableList<T> extends StatefulWidget {
     required this.asyncListCallback,
     required this.asyncListFilter,
     required this.itemBuilder,
-    this.asyncDebounceTime = 0,
+    this.asyncDebounceTime = 3000,
     this.loadingWidget,
     this.errorWidget,
     this.searchTextController,
@@ -288,7 +289,7 @@ class SearchableList<T> extends StatefulWidget {
 
   /// Debouncing time when typing in search field in milliseconds
   /// Wait [asyncDebounceTime] milliseconds without any new entry before invoking [asyncListFilter]
-  int asyncDebounceTime = 0;
+  int asyncDebounceTime = 3000;
 
   /// Loading widget displayed when [asyncListCallback] is loading
   /// if nothing is provided in [loadingWidget] searchable list will display a [CircularProgressIndicator]
@@ -551,6 +552,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
 
   @override
   void dispose() {
+    log('disposing searchable listview');
+    if (widget.focusNode?.hasFocus == true) {
+      FocusScope.of(context).requestFocus(FocusNode());
+    }
     if (widget.scrollController == null) {
       scrollController.dispose();
     }
@@ -802,6 +807,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       _debouncer!.run(() async {
         if (mounted) setState(() {});
         _activeOperation?.cancel();
+        log('Filtering list with value: $value');
         await _asyncFilter(value);
         if (mounted) setState(() {});
       });
