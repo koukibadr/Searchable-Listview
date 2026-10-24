@@ -518,7 +518,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   bool asyncError = false;
   // Current async task running, null otherwise
   CancelableOperation<List<T>?>? _activeOperation;
-  late Debouncer? _debouncer;
+  Debouncer? _debouncer;
   List<ExpansionTileController> expansionTileControllers = [];
   bool isAsyncCallBackRunning = true;
 
@@ -553,6 +553,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   @override
   void dispose() {
     log('disposing searchable listview');
+    _debouncer?.dispose();
     if (widget.focusNode?.hasFocus == true) {
       FocusScope.of(context).requestFocus(FocusNode());
     }

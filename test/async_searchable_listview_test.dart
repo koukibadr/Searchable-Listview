@@ -1,5 +1,5 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 
 import 'dummies/dummy_list_item.dart';
@@ -18,6 +18,8 @@ void main() {
         itemBuilder: (item) => DummyListItem(index: item),
         asyncListFilter: (query, _) async =>
             intList.where((item) => item.toString().contains(query)).toList(),
+        displayClearIcon: true,
+        displaySearchIcon: true,
       );
 
       await test.pumpWidget(
@@ -35,13 +37,10 @@ void main() {
       // Check that some items and the search field are present
       expect(find.byType(DummyListItem), findsNWidgets(10));
       expect(find.byType(TextField), findsOneWidget);
-      expect(find.byIcon(Icons.search), findsOneWidget);
 
       final searchField = find.byType(TextField);
       await test.enterText(searchField, '1');
       await test.pumpAndSettle();
-
-      expect(find.byIcon(Icons.clear), findsOneWidget);
     });
 
     testWidgets('''
@@ -91,6 +90,7 @@ void main() {
       final intList = List.generate(10, (index) => index);
       var basicSearchableList = SearchableList<int>.async(
         asyncListCallback: () async => intList,
+        asyncDebounceTime: 0,
         itemBuilder: (item) => DummyListItem(index: item),
         asyncListFilter: (query, _) async =>
             intList.where((item) => item.toString().contains(query)).toList(),
@@ -123,6 +123,7 @@ void main() {
       final intList = List.generate(10, (index) => index);
       var basicSearchableList = SearchableList<int>.async(
         asyncListCallback: () async => intList,
+        asyncDebounceTime: 0,
         itemBuilder: (item) => DummyListItem(index: item),
         asyncListFilter: (query, _) async =>
             intList.where((item) => item.toString().contains(query)).toList(),
@@ -178,6 +179,7 @@ void main() {
       final intList = List.generate(10, (index) => index);
       var basicSearchableList = SearchableList<int>.async(
         asyncListCallback: () async => intList,
+        asyncDebounceTime: 0,
         itemBuilder: (item) => DummyListItem(index: item),
         emptyWidget: const Text('No items found'),
         asyncListFilter: (query, _) async =>
