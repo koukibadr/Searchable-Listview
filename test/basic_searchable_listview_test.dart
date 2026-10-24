@@ -1,5 +1,5 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 
 import 'dummies/dummy_list_item.dart';
@@ -358,11 +358,12 @@ void main() {
                         // If the form is valid, the valid elements will show automatically.
                       } else {
                         ScaffoldMessenger.of(
-                                tester.element(find.byType(ElevatedButton)))
-                            .showSnackBar(
+                          tester.element(find.byType(ElevatedButton)),
+                        ).showSnackBar(
                           const SnackBar(
                             content: Text(
-                                'Please fix the errors in the search field'),
+                              'Please fix the errors in the search field',
+                            ),
                             duration: Duration(seconds: 1),
                           ),
                         );
@@ -386,8 +387,10 @@ void main() {
         await tester.pumpAndSettle();
 
         // Check for validation error message
-        expect(find.text('Please fix the errors in the search field'),
-            findsOneWidget);
+        expect(
+          find.text('Please fix the errors in the search field'),
+          findsOneWidget,
+        );
 
         await tester.pumpAndSettle(const Duration(seconds: 2));
         // Enter valid search query
@@ -396,8 +399,10 @@ void main() {
         await tester.pumpAndSettle();
 
         // Check that validation error message is gone and results are shown
-        expect(find.text('Please fix the errors in the search field'),
-            findsNothing);
+        expect(
+          find.text('Please fix the errors in the search field'),
+          findsNothing,
+        );
         expect(find.text('Item 1'), findsOneWidget);
       });
     },
