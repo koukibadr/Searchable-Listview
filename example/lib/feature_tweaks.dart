@@ -43,7 +43,9 @@ class SearchableListTweaksScope
     final scope =
         context.dependOnInheritedWidgetOfExactType<SearchableListTweaksScope>();
     assert(
-        scope != null, 'SearchableListTweaksScope is missing from the tree.');
+      scope != null,
+      'SearchableListTweaksScope is missing from the tree.',
+    );
     return scope!.notifier!;
   }
 }

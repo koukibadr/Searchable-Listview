@@ -6,13 +6,28 @@ import 'package:example/widgets/empty_widget.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 
-class AsyncSearchableListview extends StatelessWidget {
+class AsyncSearchableListview extends StatefulWidget {
   const AsyncSearchableListview({Key? key}) : super(key: key);
+
+  @override
+  State<AsyncSearchableListview> createState() =>
+      _AsyncSearchableListviewState();
+}
+
+class _AsyncSearchableListviewState extends State<AsyncSearchableListview> {
+  final TextEditingController _searchTextController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchTextController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final tweaks = SearchableListTweaksScope.of(context);
     return SearchableList<Actor>.async(
+      searchTextController: _searchTextController,
       itemBuilder: (Actor item) {
         return ActorItem(actor: item);
       },
@@ -67,7 +82,6 @@ class AsyncSearchableListview extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.0),
         ),
       ),
-    )..sliverScrollEffect =
-        tweaks.value(SearchableListFeature.sliverScrollEffect, false);
+    );
   }
 }

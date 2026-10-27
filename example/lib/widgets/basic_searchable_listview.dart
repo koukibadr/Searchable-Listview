@@ -15,6 +15,7 @@ class BasicSearchableListview extends StatefulWidget {
 
 class _BasicSearchableListviewState extends State<BasicSearchableListview> {
   List<Actor> filteredActors = [];
+  final TextEditingController _searchTextController = TextEditingController();
 
   @override
   void initState() {
@@ -23,9 +24,16 @@ class _BasicSearchableListviewState extends State<BasicSearchableListview> {
   }
 
   @override
+  void dispose() {
+    _searchTextController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final tweaks = SearchableListTweaksScope.of(context);
     return SearchableList<Actor>(
+      searchTextController: _searchTextController,
       textAlignVertical: TextAlignVertical.center,
       searchFieldHeight: 40,
       lazyLoadingEnabled:
@@ -83,7 +91,6 @@ class _BasicSearchableListviewState extends State<BasicSearchableListview> {
         return filteredActors;
       },
       initialList: actors,
-    )..sliverScrollEffect =
-        tweaks.value(SearchableListFeature.sliverScrollEffect, false);
+    );
   }
 }

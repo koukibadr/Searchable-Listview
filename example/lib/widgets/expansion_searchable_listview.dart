@@ -6,13 +6,29 @@ import 'package:example/widgets/empty_widget.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 
-class ExpansionSearchableListview extends StatelessWidget {
+class ExpansionSearchableListview extends StatefulWidget {
   const ExpansionSearchableListview({Key? key}) : super(key: key);
+
+  @override
+  State<ExpansionSearchableListview> createState() =>
+      _ExpansionSearchableListviewState();
+}
+
+class _ExpansionSearchableListviewState
+    extends State<ExpansionSearchableListview> {
+  final TextEditingController _searchTextController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchTextController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final tweaks = SearchableListTweaksScope.of(context);
     return SearchableList<Actor>.expansion(
+      searchTextController: _searchTextController,
       expansionListData: mapOfActors,
       expansionTitleBuilder: (p0) {
         return Container(
