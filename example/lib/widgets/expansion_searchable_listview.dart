@@ -1,5 +1,6 @@
 import 'package:example/data/actor.dart';
 import 'package:example/data/actors_data.dart';
+import 'package:example/feature_tweaks.dart';
 import 'package:example/widgets/actor_item_widget.dart';
 import 'package:example/widgets/empty_widget.dart';
 import 'package:material_ui/material_ui.dart';
@@ -10,6 +11,7 @@ class ExpansionSearchableListview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tweaks = SearchableListTweaksScope.of(context);
     return SearchableList<Actor>.expansion(
       expansionListData: mapOfActors,
       expansionTitleBuilder: (p0) {
@@ -27,17 +29,31 @@ class ExpansionSearchableListview extends StatelessWidget {
           for (final entry in mapOfActors.entries)
             entry.key: (mapOfActors[entry.key] ?? [])
                 .where((element) => element.name.contains(p0))
-                .toList()
+                .toList(),
         };
         return filteredMap;
       },
       textStyle: const TextStyle(fontSize: 25),
+      showSearchField:
+          tweaks.value(SearchableListFeature.showSearchField, true),
+      searchFieldEnabled:
+          tweaks.value(SearchableListFeature.searchFieldEnabled, true),
+      displaySearchIcon:
+          tweaks.value(SearchableListFeature.displaySearchIcon, true),
+      displayClearIcon:
+          tweaks.value(SearchableListFeature.displayClearIcon, true),
+      lazyLoadingEnabled:
+          tweaks.value(SearchableListFeature.lazyLoadingEnabled, true),
+      closeKeyboardWhenScrolling:
+          tweaks.value(SearchableListFeature.closeKeyboardWhenScrolling, false),
+      shrinkWrap: tweaks.value(SearchableListFeature.shrinkWrap, false),
       expansionListBuilder: (int index, Actor _actor) {
         return ActorItem(
           actor: _actor,
         );
       },
-      hideEmptyExpansionItems: true,
+      hideEmptyExpansionItems:
+          tweaks.value(SearchableListFeature.hideEmptyExpansionItems, true),
       emptyWidget: const EmptyView(),
       inputDecoration: InputDecoration(
         labelText: 'Search Actor',
@@ -50,6 +66,11 @@ class ExpansionSearchableListview extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.0),
         ),
       ),
-    );
+    )
+      ..reverse = tweaks.value(SearchableListFeature.reverse, false)
+      ..expansionTileEnabled =
+          tweaks.value(SearchableListFeature.expansionTileEnabled, true)
+      ..initiallyExpanded =
+          tweaks.value(SearchableListFeature.initiallyExpanded, false);
   }
 }
