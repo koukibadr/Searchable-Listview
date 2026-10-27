@@ -4,13 +4,28 @@ import 'package:example/feature_tweaks.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 
-class SliverSearchableListview extends StatelessWidget {
+class SliverSearchableListview extends StatefulWidget {
   const SliverSearchableListview({Key? key}) : super(key: key);
+
+  @override
+  State<SliverSearchableListview> createState() =>
+      _SliverSearchableListviewState();
+}
+
+class _SliverSearchableListviewState extends State<SliverSearchableListview> {
+  final TextEditingController _searchTextController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchTextController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final tweaks = SearchableListTweaksScope.of(context);
     return SearchableList<Actor>.sliver(
+      searchTextController: _searchTextController,
       filter: (query) => actors
           .where(
             (actor) => '${actor.name} ${actor.lastName}'
