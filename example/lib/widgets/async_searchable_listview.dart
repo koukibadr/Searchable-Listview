@@ -1,5 +1,6 @@
 import 'package:example/data/actor.dart';
 import 'package:example/data/actors_data.dart';
+import 'package:example/feature_tweaks.dart';
 import 'package:example/widgets/actor_item_widget.dart';
 import 'package:example/widgets/empty_widget.dart';
 import 'package:material_ui/material_ui.dart';
@@ -10,6 +11,7 @@ class AsyncSearchableListview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tweaks = SearchableListTweaksScope.of(context);
     return SearchableList<Actor>.async(
       itemBuilder: (Actor item) {
         return ActorItem(actor: item);
@@ -21,13 +23,29 @@ class AsyncSearchableListview extends StatelessWidget {
       asyncListFilter: (query, list) async {
         await Future.delayed(const Duration(seconds: 3));
         var result = list
-            .where((element) =>
-                element.name.contains(query) ||
-                element.lastName.contains(query))
+            .where(
+              (element) =>
+                  element.name.contains(query) ||
+                  element.lastName.contains(query),
+            )
             .toList();
         return result;
       },
       asyncDebounceTime: 200,
+      lazyLoadingEnabled:
+          tweaks.value(SearchableListFeature.lazyLoadingEnabled, true),
+      showSearchField:
+          tweaks.value(SearchableListFeature.showSearchField, true),
+      searchFieldEnabled:
+          tweaks.value(SearchableListFeature.searchFieldEnabled, true),
+      displaySearchIcon:
+          tweaks.value(SearchableListFeature.displaySearchIcon, true),
+      displayClearIcon:
+          tweaks.value(SearchableListFeature.displayClearIcon, true),
+      closeKeyboardWhenScrolling:
+          tweaks.value(SearchableListFeature.closeKeyboardWhenScrolling, false),
+      shrinkWrap: tweaks.value(SearchableListFeature.shrinkWrap, false),
+      reverse: tweaks.value(SearchableListFeature.reverse, false),
       separatorBuilder: (context, index) {
         return Container(
           height: 30,
@@ -49,6 +67,7 @@ class AsyncSearchableListview extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.0),
         ),
       ),
-    );
+    )..sliverScrollEffect =
+        tweaks.value(SearchableListFeature.sliverScrollEffect, false);
   }
 }

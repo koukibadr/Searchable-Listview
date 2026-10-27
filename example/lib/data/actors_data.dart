@@ -25,5 +25,5 @@ final Map<String, List<Actor>> mapOfActors = {
     Actor(age: 58, name: 'Johnny', lastName: 'Depp'),
     Actor(age: 78, name: 'Robert', lastName: 'De Niro'),
     Actor(age: 44, name: 'Tom', lastName: 'Hardy'),
-  ]
+  ],
 };

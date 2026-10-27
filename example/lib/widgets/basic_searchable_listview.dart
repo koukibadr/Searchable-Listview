@@ -1,5 +1,6 @@
 import 'package:example/data/actor.dart';
 import 'package:example/data/actors_data.dart';
+import 'package:example/feature_tweaks.dart';
 import 'package:example/widgets/actor_item_widget.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:searchable_listview/searchable_listview.dart';
@@ -23,10 +24,24 @@ class _BasicSearchableListviewState extends State<BasicSearchableListview> {
 
   @override
   Widget build(BuildContext context) {
+    final tweaks = SearchableListTweaksScope.of(context);
     return SearchableList<Actor>(
       textAlignVertical: TextAlignVertical.center,
       searchFieldHeight: 40,
-      lazyLoadingEnabled: false,
+      lazyLoadingEnabled:
+          tweaks.value(SearchableListFeature.lazyLoadingEnabled, false),
+      showSearchField:
+          tweaks.value(SearchableListFeature.showSearchField, true),
+      searchFieldEnabled:
+          tweaks.value(SearchableListFeature.searchFieldEnabled, true),
+      displaySearchIcon:
+          tweaks.value(SearchableListFeature.displaySearchIcon, true),
+      displayClearIcon:
+          tweaks.value(SearchableListFeature.displayClearIcon, true),
+      closeKeyboardWhenScrolling:
+          tweaks.value(SearchableListFeature.closeKeyboardWhenScrolling, false),
+      shrinkWrap: tweaks.value(SearchableListFeature.shrinkWrap, false),
+      reverse: tweaks.value(SearchableListFeature.reverse, false),
       separatorBuilder: (context, index) {
         return Container(
           height: 40,
@@ -54,18 +69,21 @@ class _BasicSearchableListviewState extends State<BasicSearchableListview> {
           ),
           const Column(
             children: [Icon(Icons.error), Text('No Data found')],
-          )
+          ),
         ],
       ),
       filter: (query) {
         filteredActors = actors
-            .where((element) =>
-                element.name.toLowerCase().contains(query.toLowerCase()) ||
-                element.lastName.toLowerCase().contains(query.toLowerCase()))
+            .where(
+              (element) =>
+                  element.name.toLowerCase().contains(query.toLowerCase()) ||
+                  element.lastName.toLowerCase().contains(query.toLowerCase()),
+            )
             .toList();
         return filteredActors;
       },
       initialList: actors,
-    );
+    )..sliverScrollEffect =
+        tweaks.value(SearchableListFeature.sliverScrollEffect, false);
   }
 }
