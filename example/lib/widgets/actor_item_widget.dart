@@ -4,10 +4,7 @@ import 'package:material_ui/material_ui.dart';
 class ActorItem extends StatelessWidget {
   final Actor actor;
 
-  const ActorItem({
-    Key? key,
-    required this.actor,
-  }) : super(key: key);
+  const ActorItem({Key? key, required this.actor}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,16 +18,9 @@ class ActorItem extends StatelessWidget {
         ),
         child: Row(
           children: [
-            const SizedBox(
-              width: 10,
-            ),
-            Icon(
-              Icons.star,
-              color: Colors.yellow[700],
-            ),
-            const SizedBox(
-              width: 10,
-            ),
+            const SizedBox(width: 10),
+            Icon(Icons.star, color: Colors.yellow[700]),
+            const SizedBox(width: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -51,9 +41,7 @@ class ActorItem extends StatelessWidget {
                 ),
                 Text(
                   'Age: ${actor.age}',
-                  style: const TextStyle(
-                    color: Colors.black,
-                  ),
+                  style: const TextStyle(color: Colors.black),
                 ),
               ],
             ),

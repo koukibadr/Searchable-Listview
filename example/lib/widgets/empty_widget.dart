@@ -9,10 +9,7 @@ class EmptyView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.error,
-            color: Colors.red,
-          ),
+          Icon(Icons.error, color: Colors.red),
           Text('no actor is found with this name'),
         ],
       ),

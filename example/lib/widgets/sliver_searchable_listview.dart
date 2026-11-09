@@ -25,43 +25,45 @@ class _SliverSearchableListviewState extends State<SliverSearchableListview> {
   Widget build(BuildContext context) {
     final tweaks = SearchableListTweaksScope.of(context);
     return SearchableList<Actor>.sliver(
-      searchTextController: _searchTextController,
-      filter: (query) => actors
-          .where(
-            (actor) => '${actor.name} ${actor.lastName}'
-                .toLowerCase()
-                .contains(query.toLowerCase()),
-          )
-          .toList(),
-      initialList: actors,
-      lazyLoadingEnabled: tweaks.value(
-        SearchableListFeature.lazyLoadingEnabled,
+        searchTextController: _searchTextController,
+        filter: (query) => actors
+            .where(
+              (actor) => '${actor.name} ${actor.lastName}'
+                  .toLowerCase()
+                  .contains(query.toLowerCase()),
+            )
+            .toList(),
+        initialList: actors,
+        lazyLoadingEnabled: tweaks.value(
+          SearchableListFeature.lazyLoadingEnabled,
+          true,
+        ),
+        showSearchField: tweaks.value(
+          SearchableListFeature.showSearchField,
+          true,
+        ),
+        searchFieldEnabled: tweaks.value(
+          SearchableListFeature.searchFieldEnabled,
+          true,
+        ),
+        displaySearchIcon: tweaks.value(
+          SearchableListFeature.displaySearchIcon,
+          true,
+        ),
+        displayClearIcon: tweaks.value(
+          SearchableListFeature.displayClearIcon,
+          true,
+        ),
+        closeKeyboardWhenScrolling: tweaks.value(
+          SearchableListFeature.closeKeyboardWhenScrolling,
+          false,
+        ),
+        itemBuilder: (item) =>
+            ListTile(title: Text('${item.name} ${item.lastName}')),
+      )
+      ..sliverScrollEffect = tweaks.value(
+        SearchableListFeature.sliverScrollEffect,
         true,
-      ),
-      showSearchField: tweaks.value(
-        SearchableListFeature.showSearchField,
-        true,
-      ),
-      searchFieldEnabled: tweaks.value(
-        SearchableListFeature.searchFieldEnabled,
-        true,
-      ),
-      displaySearchIcon: tweaks.value(
-        SearchableListFeature.displaySearchIcon,
-        true,
-      ),
-      displayClearIcon: tweaks.value(
-        SearchableListFeature.displayClearIcon,
-        true,
-      ),
-      closeKeyboardWhenScrolling: tweaks.value(
-        SearchableListFeature.closeKeyboardWhenScrolling,
-        false,
-      ),
-      itemBuilder: (item) => ListTile(
-        title: Text('${item.name} ${item.lastName}'),
-      ),
-    )..sliverScrollEffect =
-        tweaks.value(SearchableListFeature.sliverScrollEffect, true);
+      );
   }
 }
