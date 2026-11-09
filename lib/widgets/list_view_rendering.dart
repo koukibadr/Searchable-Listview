@@ -15,7 +15,7 @@ class ListViewRendering<T> extends StatelessWidget {
   final bool isListViewSeparated;
 
   const ListViewRendering({
-    Key? key,
+    super.key,
     required this.itemExtent,
     required this.isLazyLoadingEnabled,
     required this.itemBuilder,
@@ -28,7 +28,7 @@ class ListViewRendering<T> extends StatelessWidget {
     required this.shrinkWrap,
     this.seperatorBuilder,
     this.isListViewSeparated = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

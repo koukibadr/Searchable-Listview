@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 class DummyListItem extends StatelessWidget {
   final int index;
 
-  const DummyListItem({Key? key, required this.index}) : super(key: key);
+  const DummyListItem({super.key, required this.index});
 
   @override
   Widget build(BuildContext context) {

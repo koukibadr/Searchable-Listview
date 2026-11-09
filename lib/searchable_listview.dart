@@ -23,7 +23,7 @@ class SearchableList<T> extends StatefulWidget {
   bool displayDivider = false;
 
   SearchableList({
-    Key? key,
+    super.key,
     required this.initialList,
     required this.itemBuilder,
     required this.filter,
@@ -73,7 +73,7 @@ class SearchableList<T> extends StatefulWidget {
     this.showSearchField = true,
     this.fieldValidator,
     this.formFieldKey,
-  }) : super(key: key) {
+  }) {
     searchTextController ??= TextEditingController();
     expansionListBuilder = null;
     asyncListCallback = null;
@@ -85,7 +85,7 @@ class SearchableList<T> extends StatefulWidget {
   }
 
   SearchableList.async({
-    Key? key,
+    super.key,
     required this.asyncListCallback,
     required this.asyncListFilter,
     required this.itemBuilder,
@@ -136,7 +136,7 @@ class SearchableList<T> extends StatefulWidget {
     this.showSearchField = true,
     this.fieldValidator,
     this.formFieldKey,
-  }) : super(key: key) {
+  }) {
     assert(asyncListCallback != null);
     searchTextController ??= TextEditingController();
     expansionListBuilder = null;
@@ -148,7 +148,7 @@ class SearchableList<T> extends StatefulWidget {
   }
 
   SearchableList.expansion({
-    Key? key,
+    super.key,
     required this.expansionListData,
     required this.expansionTitleBuilder,
     required this.filterExpansionData,
@@ -196,7 +196,7 @@ class SearchableList<T> extends StatefulWidget {
     this.showSearchField = true,
     this.fieldValidator,
     this.formFieldKey,
-  }) : super(key: key) {
+  }) {
     searchTextController ??= TextEditingController();
     separatorBuilder = null;
     isExpansionList = true;
@@ -209,7 +209,7 @@ class SearchableList<T> extends StatefulWidget {
   }
 
   SearchableList.sliver({
-    Key? key,
+    super.key,
     required this.initialList,
     this.filter,
     required this.itemBuilder,
@@ -251,7 +251,7 @@ class SearchableList<T> extends StatefulWidget {
     this.showSearchField = true,
     this.fieldValidator,
     this.formFieldKey,
-  }) : super(key: key) {
+  }) {
     asyncListCallback = null;
     asyncListFilter = null;
     searchTextController ??= TextEditingController();
@@ -307,7 +307,7 @@ class SearchableList<T> extends StatefulWidget {
   /// [listItem] the current item model that will be rendered.
   /// Used only for expansion list constructor
   late Widget Function(int expansionGroupIndex, T listItem)?
-      expansionListBuilder;
+  expansionListBuilder;
 
   /// The widget to be displayed when the filter returns an empty list.
   /// Defaults to `const SizedBox.shrink()`.
@@ -592,8 +592,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         : Column(
             verticalDirection:
                 widget.searchTextPosition == SearchTextPosition.top
-                    ? VerticalDirection.down
-                    : VerticalDirection.up,
+                ? VerticalDirection.down
+                : VerticalDirection.up,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (widget.showSearchField)
@@ -609,8 +609,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                 child: widget.isExpansionList
                     ? renderExpandableListView()
                     : (widget.asyncListCallback != null
-                        ? renderAsyncListView()
-                        : renderSearchableListView()),
+                          ? renderAsyncListView()
+                          : renderSearchableListView()),
               ),
             ],
           );
@@ -630,9 +630,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     List<T> renderedList = widget.asyncListCallback != null
         ? filtredAsyncListResult
         : filtredListResult;
-    return buildSearchableListView(
-      list: renderedList,
-    );
+    return buildSearchableListView(list: renderedList);
   }
 
   /// Creates listview based on the items passed to the widget
@@ -640,9 +638,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   /// if [widget.displayDividder] is true
   /// function will runder [ListView.separated]
   /// else the function will render a normal listview [ListView.builder]
-  Widget buildSearchableListView({
-    required List<T> list,
-  }) {
+  Widget buildSearchableListView({required List<T> list}) {
     if (list.isEmpty) {
       return widget.emptyWidget ?? const SizedBox.shrink();
     } else {
@@ -713,11 +709,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
             title: widget.expansionTitleBuilder.call(entryKey),
             enabled: widget.expansionTileEnabled,
             controller: expansionTileControllers[index],
-            children: entryValueList?.map(
-                  (listItem) {
-                    return widget.expansionListBuilder!(index, listItem);
-                  },
-                ).toList() ??
+            children:
+                entryValueList?.map((listItem) {
+                  return widget.expansionListBuilder!(index, listItem);
+                }).toList() ??
                 [],
           );
         },
@@ -735,8 +730,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
             crossAxisAlignment: CrossAxisAlignment.start,
             verticalDirection:
                 widget.searchTextPosition == SearchTextPosition.top
-                    ? VerticalDirection.down
-                    : VerticalDirection.up,
+                ? VerticalDirection.down
+                : VerticalDirection.up,
             children: [
               if (widget.showSearchField)
                 Padding(
@@ -751,9 +746,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
                   scrollDirection: widget.scrollDirection,
                   physics: widget.physics,
                   controller: scrollController,
-                  slivers: [
-                    renderSliverListView(),
-                  ],
+                  slivers: [renderSliverListView()],
                 ),
               ),
             ],
@@ -781,9 +774,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
               childCount: 1,
             )
           : SliverChildBuilderDelegate(
-              (context, index) => widget.itemBuilder!(
-                filtredListResult[index],
-              ),
+              (context, index) => widget.itemBuilder!(filtredListResult[index]),
               childCount: filtredListResult.length,
             ),
     );
@@ -878,10 +869,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     }
 
     final operation = CancelableOperation.fromFuture(
-      widget.asyncListFilter!(
-        value,
-        asyncListResult,
-      ),
+      widget.asyncListFilter!(value, asyncListResult),
     );
     _activeOperation = operation;
     try {

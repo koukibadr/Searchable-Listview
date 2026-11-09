@@ -5,204 +5,209 @@ import 'package:searchable_listview/searchable_listview.dart';
 import 'dummies/dummy_list_item.dart';
 
 void main() {
-  group('''
+  group(
+    '''
       Checking default async searchable listview display
-    ''', () {
-    testWidgets('''
+    ''',
+    () {
+      testWidgets(
+        '''
         Should display a searchable listview with dummy list items.
         checking default appearance.
-      ''', (test) async {
-      final intList = List.generate(10, (index) => index);
-      var basicSearchableList = SearchableList<int>.async(
-        asyncListCallback: () async => intList,
-        itemBuilder: (item) => DummyListItem(index: item),
-        asyncListFilter: (query, _) async =>
-            intList.where((item) => item.toString().contains(query)).toList(),
-        displayClearIcon: true,
-        displaySearchIcon: true,
-      );
+      ''',
+        (test) async {
+          final intList = List.generate(10, (index) => index);
+          var basicSearchableList = SearchableList<int>.async(
+            asyncListCallback: () async => intList,
+            itemBuilder: (item) => DummyListItem(index: item),
+            asyncListFilter: (query, _) async => intList
+                .where((item) => item.toString().contains(query))
+                .toList(),
+            displayClearIcon: true,
+            displaySearchIcon: true,
+          );
 
-      await test.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: basicSearchableList,
+          await test.pumpWidget(
+            MaterialApp(
+              home: Scaffold(body: Center(child: basicSearchableList)),
             ),
-          ),
-        ),
+          );
+          await test.pumpAndSettle();
+
+          // Initial assertions
+          // Check that some items and the search field are present
+          expect(find.byType(DummyListItem), findsNWidgets(10));
+          expect(find.byType(TextField), findsOneWidget);
+
+          final searchField = find.byType(TextField);
+          await test.enterText(searchField, '1');
+          await test.pumpAndSettle();
+        },
       );
-      await test.pumpAndSettle();
 
-      // Initial assertions
-      // Check that some items and the search field are present
-      expect(find.byType(DummyListItem), findsNWidgets(10));
-      expect(find.byType(TextField), findsOneWidget);
-
-      final searchField = find.byType(TextField);
-      await test.enterText(searchField, '1');
-      await test.pumpAndSettle();
-    });
-
-    testWidgets('''
+      testWidgets(
+        '''
         Checking search field customization.
-      ''', (test) async {
-      final intList = List.generate(10, (index) => index);
-      var basicSearchableList = SearchableList<int>.async(
-        asyncListCallback: () async => intList,
-        itemBuilder: (item) => DummyListItem(index: item),
-        inputDecoration: InputDecoration(
-          labelText: 'Search Items',
-          border: OutlineInputBorder(),
-        ),
-        asyncListFilter: (query, _) async =>
-            intList.where((item) => item.toString().contains(query)).toList(),
-      );
-
-      await test.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: basicSearchableList,
+      ''',
+        (test) async {
+          final intList = List.generate(10, (index) => index);
+          var basicSearchableList = SearchableList<int>.async(
+            asyncListCallback: () async => intList,
+            itemBuilder: (item) => DummyListItem(index: item),
+            inputDecoration: InputDecoration(
+              labelText: 'Search Items',
+              border: OutlineInputBorder(),
             ),
-          ),
-        ),
-      );
-      await test.pumpAndSettle();
+            asyncListFilter: (query, _) async => intList
+                .where((item) => item.toString().contains(query))
+                .toList(),
+          );
 
-      // Initial assertions
-      // Check that some items and the search field are present
-      expect(find.text('Search Items'), findsOneWidget);
-      final searchField = find.byType(TextField);
-      expect(
-        test.widget<TextField>(searchField).decoration!.border
-            is OutlineInputBorder,
-        isTrue,
-      );
-    });
-  });
+          await test.pumpWidget(
+            MaterialApp(
+              home: Scaffold(body: Center(child: basicSearchableList)),
+            ),
+          );
+          await test.pumpAndSettle();
 
-  group('''
+          // Initial assertions
+          // Check that some items and the search field are present
+          expect(find.text('Search Items'), findsOneWidget);
+          final searchField = find.byType(TextField);
+          expect(
+            test.widget<TextField>(searchField).decoration!.border
+                is OutlineInputBorder,
+            isTrue,
+          );
+        },
+      );
+    },
+  );
+
+  group(
+    '''
     Async Searchable Listview Tests
-  ''', () {
-    testWidgets('''
+  ''',
+    () {
+      testWidgets(
+        '''
         Should display a searchable listview with async data source.
-      ''', (test) async {
-      final intList = List.generate(10, (index) => index);
-      var basicSearchableList = SearchableList<int>.async(
-        asyncListCallback: () async => intList,
-        asyncDebounceTime: 0,
-        itemBuilder: (item) => DummyListItem(index: item),
-        asyncListFilter: (query, _) async =>
-            intList.where((item) => item.toString().contains(query)).toList(),
-      );
+      ''',
+        (test) async {
+          final intList = List.generate(10, (index) => index);
+          var basicSearchableList = SearchableList<int>.async(
+            asyncListCallback: () async => intList,
+            asyncDebounceTime: 0,
+            itemBuilder: (item) => DummyListItem(index: item),
+            asyncListFilter: (query, _) async => intList
+                .where((item) => item.toString().contains(query))
+                .toList(),
+          );
 
-      await test.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: basicSearchableList,
+          await test.pumpWidget(
+            MaterialApp(
+              home: Scaffold(body: Center(child: basicSearchableList)),
             ),
-          ),
-        ),
+          );
+          await test.pumpAndSettle();
+          expect(find.text('Item 0'), findsOneWidget);
+          expect(find.text('Item 5'), findsOneWidget);
+          expect(find.byType(TextField), findsOneWidget);
+
+          final searchField = find.byType(TextField);
+          await test.enterText(searchField, '1');
+          await test.pumpAndSettle();
+
+          expect(find.text('Item 1'), findsOneWidget);
+        },
       );
-      await test.pumpAndSettle();
-      expect(find.text('Item 0'), findsOneWidget);
-      expect(find.text('Item 5'), findsOneWidget);
-      expect(find.byType(TextField), findsOneWidget);
 
-      final searchField = find.byType(TextField);
-      await test.enterText(searchField, '1');
-      await test.pumpAndSettle();
-
-      expect(find.text('Item 1'), findsOneWidget);
-    });
-
-    testWidgets('''
+      testWidgets(
+        '''
         Checking filter when search yields no results.
-      ''', (test) async {
-      final intList = List.generate(10, (index) => index);
-      var basicSearchableList = SearchableList<int>.async(
-        asyncListCallback: () async => intList,
-        asyncDebounceTime: 0,
-        itemBuilder: (item) => DummyListItem(index: item),
-        asyncListFilter: (query, _) async =>
-            intList.where((item) => item.toString().contains(query)).toList(),
-      );
+      ''',
+        (test) async {
+          final intList = List.generate(10, (index) => index);
+          var basicSearchableList = SearchableList<int>.async(
+            asyncListCallback: () async => intList,
+            asyncDebounceTime: 0,
+            itemBuilder: (item) => DummyListItem(index: item),
+            asyncListFilter: (query, _) async => intList
+                .where((item) => item.toString().contains(query))
+                .toList(),
+          );
 
-      await test.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: basicSearchableList,
+          await test.pumpWidget(
+            MaterialApp(
+              home: Scaffold(body: Center(child: basicSearchableList)),
             ),
-          ),
-        ),
+          );
+          await test.pumpAndSettle();
+
+          final searchField = find.byType(TextField);
+          await test.enterText(searchField, '12');
+          await test.pumpAndSettle();
+          expect(find.byType(DummyListItem), findsNothing);
+        },
       );
-      await test.pumpAndSettle();
 
-      final searchField = find.byType(TextField);
-      await test.enterText(searchField, '12');
-      await test.pumpAndSettle();
-      expect(find.byType(DummyListItem), findsNothing);
-    });
-
-    testWidgets('''
+      testWidgets(
+        '''
         Checking filter with empty list.
-      ''', (test) async {
-      var basicSearchableList = SearchableList<int>.async(
-        asyncListCallback: () async => [],
-        itemBuilder: (item) => DummyListItem(index: item),
-        asyncListFilter: (query, _) async => [],
-      );
+      ''',
+        (test) async {
+          var basicSearchableList = SearchableList<int>.async(
+            asyncListCallback: () async => [],
+            itemBuilder: (item) => DummyListItem(index: item),
+            asyncListFilter: (query, _) async => [],
+          );
 
-      await test.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: basicSearchableList,
+          await test.pumpWidget(
+            MaterialApp(
+              home: Scaffold(body: Center(child: basicSearchableList)),
             ),
-          ),
-        ),
+          );
+          await test.pumpAndSettle();
+          expect(find.byType(DummyListItem), findsNothing);
+
+          final searchField = find.byType(TextField);
+          await test.enterText(searchField, '1');
+          await test.pumpAndSettle();
+          expect(find.byType(DummyListItem), findsNothing);
+        },
       );
-      await test.pumpAndSettle();
-      expect(find.byType(DummyListItem), findsNothing);
 
-      final searchField = find.byType(TextField);
-      await test.enterText(searchField, '1');
-      await test.pumpAndSettle();
-      expect(find.byType(DummyListItem), findsNothing);
-    });
-
-    testWidgets('''
+      testWidgets(
+        '''
         Checking custom empty widget when no results found.
-      ''', (test) async {
-      final intList = List.generate(10, (index) => index);
-      var basicSearchableList = SearchableList<int>.async(
-        asyncListCallback: () async => intList,
-        asyncDebounceTime: 0,
-        itemBuilder: (item) => DummyListItem(index: item),
-        emptyWidget: const Text('No items found'),
-        asyncListFilter: (query, _) async =>
-            intList.where((item) => item.toString().contains(query)).toList(),
-      );
+      ''',
+        (test) async {
+          final intList = List.generate(10, (index) => index);
+          var basicSearchableList = SearchableList<int>.async(
+            asyncListCallback: () async => intList,
+            asyncDebounceTime: 0,
+            itemBuilder: (item) => DummyListItem(index: item),
+            emptyWidget: const Text('No items found'),
+            asyncListFilter: (query, _) async => intList
+                .where((item) => item.toString().contains(query))
+                .toList(),
+          );
 
-      await test.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: basicSearchableList,
+          await test.pumpWidget(
+            MaterialApp(
+              home: Scaffold(body: Center(child: basicSearchableList)),
             ),
-          ),
-        ),
-      );
-      await test.pumpAndSettle();
-      expect(find.byType(DummyListItem), findsNWidgets(10));
+          );
+          await test.pumpAndSettle();
+          expect(find.byType(DummyListItem), findsNWidgets(10));
 
-      final searchField = find.byType(TextField);
-      await test.enterText(searchField, '99');
-      await test.pumpAndSettle();
-      expect(find.byType(DummyListItem), findsNothing);
-      expect(find.text('No items found'), findsOneWidget);
-    });
-  });
+          final searchField = find.byType(TextField);
+          await test.enterText(searchField, '99');
+          await test.pumpAndSettle();
+          expect(find.byType(DummyListItem), findsNothing);
+          expect(find.text('No items found'), findsOneWidget);
+        },
+      );
+    },
+  );
 }

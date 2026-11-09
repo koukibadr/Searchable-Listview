@@ -82,7 +82,7 @@ class SearchTextField extends StatelessWidget {
   final Key? formFieldKey;
 
   const SearchTextField({
-    Key? key,
+    super.key,
     required this.filterList,
     required this.focusNode,
     required this.inputDecoration,
@@ -110,15 +110,13 @@ class SearchTextField extends StatelessWidget {
     this.labelText,
     this.validator,
     this.formFieldKey,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(
-          child: _renderForm(context),
-        ),
+        Expanded(child: _renderForm(context)),
         if (secondaryWidget != null) secondaryWidget!,
       ],
     );
@@ -127,10 +125,7 @@ class SearchTextField extends StatelessWidget {
   /// Renders the search text field wrapped in a Form widget if a formFieldKey is provided, otherwise renders just the text field
   Widget _renderForm(BuildContext context) {
     if (formFieldKey != null) {
-      return Form(
-        key: formFieldKey,
-        child: _renderFieldWidget(context),
-      );
+      return Form(key: formFieldKey, child: _renderFieldWidget(context));
     } else {
       return _renderFieldWidget(context);
     }
@@ -155,12 +150,7 @@ class SearchTextField extends StatelessWidget {
         filterList(option.toString());
         FocusScope.of(context).requestFocus(FocusNode());
       },
-      fieldViewBuilder: (
-        context,
-        textController,
-        focusNode,
-        onFieldSubmitted,
-      ) {
+      fieldViewBuilder: (context, textController, focusNode, onFieldSubmitted) {
         return _renderFieldWidget(context);
       },
     );
@@ -176,7 +166,8 @@ class SearchTextField extends StatelessWidget {
       textAlign: textAlign,
       focusNode: focusNode,
       enabled: searchFieldEnabled,
-      decoration: inputDecoration ??
+      decoration:
+          inputDecoration ??
           InputDecoration(
             labelText: labelText,
             suffixIcon: _renderSuffixWidget(context),
@@ -205,26 +196,17 @@ class SearchTextField extends StatelessWidget {
   Widget _renderSuffixWidget(BuildContext context) {
     var clearIcon = _renderClearIcon();
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 5,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
         children: [
           if (displayClearIcon && clearIcon != null)
-            Padding(
-              padding: const EdgeInsets.only(
-                right: 5,
-              ),
-              child: clearIcon,
-            ),
+            Padding(padding: const EdgeInsets.only(right: 5), child: clearIcon),
           if (sortWidget != null)
             InkWell(
               onTap: () {
-                FocusScope.of(context).requestFocus(
-                  FocusNode(),
-                );
+                FocusScope.of(context).requestFocus(FocusNode());
                 onSortTap?.call();
               },
               child: sortWidget,

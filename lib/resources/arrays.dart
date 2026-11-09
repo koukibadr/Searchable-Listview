@@ -1,9 +1,3 @@
-enum SearchMode {
-  onEdit,
-  onSubmit,
-}
+enum SearchMode { onEdit, onSubmit }
 
-enum SearchTextPosition {
-  top,
-  bottom,
-}
+enum SearchTextPosition { top, bottom }
