@@ -134,6 +134,7 @@ class SearchableList<T> extends StatefulWidget {
     this.showSearchField = true,
     this.fieldValidator,
     this.formFieldKey,
+    this.controller,
   }) {
     assert(asyncListCallback != null);
     searchTextController ??= TextEditingController();
@@ -194,6 +195,7 @@ class SearchableList<T> extends StatefulWidget {
     this.showSearchField = true,
     this.fieldValidator,
     this.formFieldKey,
+    this.controller,
   }) {
     searchTextController ??= TextEditingController();
     separatorBuilder = null;
@@ -249,6 +251,7 @@ class SearchableList<T> extends StatefulWidget {
     this.showSearchField = true,
     this.fieldValidator,
     this.formFieldKey,
+    this.controller,
   }) {
     asyncListCallback = null;
     asyncListFilter = null;
@@ -495,13 +498,14 @@ class SearchableList<T> extends StatefulWidget {
   /// by default `showSearchField = true`
   final bool showSearchField;
 
+  /// Controller used to filter the list from outside the searchable listview
+  SearchableListController<T>? controller;
+
   final FormFieldValidator<String>? fieldValidator;
 
   final Key? formFieldKey;
 
   bool isExpansionList = false;
-
-  SearchableListController? controller;
 
   @override
   State<SearchableList> createState() => SearchableListState<T>();
