@@ -3,9 +3,5 @@ class Actor {
   String name;
   String lastName;
 
-  Actor({
-    required this.age,
-    required this.name,
-    required this.lastName,
-  });
+  Actor({required this.age, required this.name, required this.lastName});
 }

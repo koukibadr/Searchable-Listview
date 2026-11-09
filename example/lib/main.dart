@@ -17,9 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: const ExampleWidget(),
     );
   }
@@ -58,39 +56,24 @@ class _ExampleWidgetState extends State<ExampleWidget> {
           builder: (context) => Scaffold(
             appBar: AppBar(
               title: const Text('Searchable Listview Examples'),
-              bottom: const TabBar(
-                isScrollable: true,
-                tabs: _tabs,
-              ),
+              bottom: const TabBar(isScrollable: true, tabs: _tabs),
             ),
             body: const TabBarView(
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 5,
-                    horizontal: 10,
-                  ),
+                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   child: BasicSearchableListview(),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 5,
-                    horizontal: 10,
-                  ),
+                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   child: AsyncSearchableListview(),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 5,
-                    horizontal: 10,
-                  ),
+                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   child: SliverSearchableListview(),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 5,
-                    horizontal: 10,
-                  ),
+                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   child: ExpansionSearchableListview(),
                 ),
               ],

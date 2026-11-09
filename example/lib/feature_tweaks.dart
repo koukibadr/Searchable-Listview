@@ -40,8 +40,8 @@ class SearchableListTweaksScope
   }) : super(key: key, notifier: notifier, child: child);
 
   static SearchableListTweaks of(BuildContext context) {
-    final scope =
-        context.dependOnInheritedWidgetOfExactType<SearchableListTweaksScope>();
+    final scope = context
+        .dependOnInheritedWidgetOfExactType<SearchableListTweaksScope>();
     assert(
       scope != null,
       'SearchableListTweaksScope is missing from the tree.',
