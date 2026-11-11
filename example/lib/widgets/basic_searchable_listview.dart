@@ -35,96 +35,110 @@ class _BasicSearchableListviewState extends State<BasicSearchableListview> {
   @override
   Widget build(BuildContext context) {
     final tweaks = SearchableListTweaksScope.of(context);
-    return Column(
-      children: [
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: actors
-                .map(
-                  (actor) => Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ActionChip(
-                      onPressed: () {
-                        controller.filter(actor.name);
-                      },
-                      label: Text(actor.name),
+    return SafeArea(
+      child: Column(
+        children: [
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: actors
+                  .map(
+                    (actor) => Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ActionChip(
+                        onPressed: () {
+                          controller.filter(actor.name);
+                        },
+                        label: Text(actor.name),
+                      ),
                     ),
-                  ),
-                )
-                .toList(),
-          ),
-        ),
-        Expanded(
-          child: SearchableList<Actor>(
-            controller: controller,
-            searchTextController: _searchTextController,
-            textAlignVertical: TextAlignVertical.center,
-            searchFieldHeight: 40,
-            lazyLoadingEnabled: tweaks.value(
-              SearchableListFeature.lazyLoadingEnabled,
-              false,
-            ),
-            showSearchField: tweaks.value(
-              SearchableListFeature.showSearchField,
-              true,
-            ),
-            searchFieldEnabled: tweaks.value(
-              SearchableListFeature.searchFieldEnabled,
-              true,
-            ),
-            displaySearchIcon: tweaks.value(
-              SearchableListFeature.displaySearchIcon,
-              true,
-            ),
-            displayClearIcon: tweaks.value(
-              SearchableListFeature.displayClearIcon,
-              true,
-            ),
-            closeKeyboardWhenScrolling: tweaks.value(
-              SearchableListFeature.closeKeyboardWhenScrolling,
-              false,
-            ),
-            shrinkWrap: tweaks.value(SearchableListFeature.shrinkWrap, false),
-            reverse: tweaks.value(SearchableListFeature.reverse, false),
-            separatorBuilder: (context, index) {
-              return Container(height: 40);
-            },
-            sortPredicate: (a, b) => a.age.compareTo(b.age),
-            itemBuilder: (item) {
-              int index = filteredActors.indexOf(item);
-              if (index == 0) {
-                return Container(color: Colors.red, height: 10, width: 300);
-              } else {
-                return ActorItem(actor: filteredActors[index - 1]);
-              }
-            },
-            emptyWidget: Column(
-              children: [
-                Container(color: Colors.red, height: 10, width: 300),
-                const Column(
-                  children: [Icon(Icons.error), Text('No Data found')],
-                ),
-              ],
-            ),
-            filter: (query) {
-              filteredActors = actors
-                  .where(
-                    (element) =>
-                        element.name.toLowerCase().contains(
-                          query.toLowerCase(),
-                        ) ||
-                        element.lastName.toLowerCase().contains(
-                          query.toLowerCase(),
-                        ),
                   )
-                  .toList();
-              return filteredActors;
-            },
-            initialList: actors,
+                  .toList(),
+            ),
           ),
-        ),
-      ],
+          Expanded(
+            child: SearchableList<Actor>(
+              controller: controller,
+              searchTextController: _searchTextController,
+              textAlignVertical: TextAlignVertical.center,
+              searchFieldHeight: 40,
+              lazyLoadingEnabled: tweaks.value(
+                SearchableListFeature.lazyLoadingEnabled,
+                false,
+              ),
+              showSearchField: tweaks.value(
+                SearchableListFeature.showSearchField,
+                true,
+              ),
+              searchFieldEnabled: tweaks.value(
+                SearchableListFeature.searchFieldEnabled,
+                true,
+              ),
+              displaySearchIcon: tweaks.value(
+                SearchableListFeature.displaySearchIcon,
+                true,
+              ),
+              displayClearIcon: tweaks.value(
+                SearchableListFeature.displayClearIcon,
+                true,
+              ),
+              closeKeyboardWhenScrolling: tweaks.value(
+                SearchableListFeature.closeKeyboardWhenScrolling,
+                false,
+              ),
+              shrinkWrap: tweaks.value(SearchableListFeature.shrinkWrap, false),
+              reverse: tweaks.value(SearchableListFeature.reverse, false),
+              separatorBuilder: (context, index) {
+                return Container(height: 40);
+              },
+              sortPredicate: (a, b) => a.age.compareTo(b.age),
+              itemBuilder: (item) {
+                int index = filteredActors.indexOf(item);
+                if (index == 0) {
+                  return Container(color: Colors.red, height: 10, width: 300);
+                } else {
+                  return ActorItem(actor: filteredActors[index - 1]);
+                }
+              },
+              emptyWidget: Column(
+                children: [
+                  Container(color: Colors.red, height: 10, width: 300),
+                  const Column(
+                    children: [Icon(Icons.error), Text('No Data found')],
+                  ),
+                ],
+              ),
+              filter: (query) {
+                filteredActors = actors
+                    .where(
+                      (element) =>
+                          element.name.toLowerCase().contains(
+                            query.toLowerCase(),
+                          ) ||
+                          element.lastName.toLowerCase().contains(
+                            query.toLowerCase(),
+                          ),
+                    )
+                    .toList();
+                return filteredActors;
+              },
+              initialList: actors,
+            ),
+          ),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  controller.clear();
+                },
+                child: const Text('Clear Search'),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
