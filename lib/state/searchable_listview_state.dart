@@ -299,6 +299,8 @@ class SearchableListState<T> extends State<SearchableList<T>> {
 
   void filterList(String value) {
     searchText = value;
+    widget.controller?.updateQuery(value);
+
     if (widget.isExpansionList) {
       setState(() {
         widget.expansionListData =
