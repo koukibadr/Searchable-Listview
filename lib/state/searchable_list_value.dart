@@ -18,7 +18,6 @@ class SearchableListValue<T> {
 
   bool get isLoading => status == SearchableListStatus.loading;
   bool get hasError => status == SearchableListStatus.error;
-  double get scrollPosition => scrollController?.offset ?? 0.0;
 
   SearchableListValue<T> copyWith({
     String? query,
@@ -39,8 +38,16 @@ class SearchableListValue<T> {
       other is SearchableListValue<T> &&
       other.query == query &&
       other.status == status &&
+      other.scrollController == scrollController &&
       listEquals(other.results, results);
 
   @override
-  int get hashCode => Object.hash(query, status, Object.hashAll(results));
+  int get hashCode {
+    return Object.hash(
+      query,
+      status,
+      Object.hashAll(results),
+      scrollController,
+    );
+  }
 }

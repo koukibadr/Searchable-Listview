@@ -11,6 +11,12 @@ class SearchableListController<T>
   String get query => value.query;
   List<T> get results => value.results;
   SearchableListStatus get status => value.status;
+  double get scrollPosition {
+    if (_filterCallback != null) {
+      return value.scrollController?.offset ?? 0.0;
+    }
+    return 0.0;
+  }
 
   /// Whether a [SearchableList] is currently attached.
   bool get isAttached => _filterCallback != null;
@@ -47,6 +53,9 @@ class SearchableListController<T>
     bool animate = false,
     Curve curve = Curves.easeInOut,
   }) {
+    if (_filterCallback == null) {
+      return;
+    }
     if (animate) {
       value.scrollController?.animateTo(
         offset,
