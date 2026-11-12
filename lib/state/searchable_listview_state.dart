@@ -487,6 +487,7 @@ class SearchableListState<T> extends State<SearchableList<T>> {
         query: searchText,
         results: List<T>.unmodifiable(list),
         status: status,
+        scrollController: scrollController,
       ),
     );
   }

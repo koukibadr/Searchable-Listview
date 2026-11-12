@@ -1,10 +1,10 @@
-import 'package:flutter/foundation.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:searchable_listview/state/searchable_list_value.dart';
 
 class SearchableListController<T>
     extends ValueNotifier<SearchableListValue<T>> {
   SearchableListController({String initialQuery = ''})
-      : super(SearchableListValue<T>(query: initialQuery));
+    : super(SearchableListValue<T>(query: initialQuery));
 
   void Function(String query)? _filterCallback;
 
@@ -37,4 +37,16 @@ class SearchableListController<T>
 
   /// Internal: called by the list's state to publish a new snapshot.
   void update(SearchableListValue<T> newValue) => value = newValue;
+
+  void scrollToTop({bool animate = false, Curve curve = Curves.easeInOut}) {
+    if (animate) {
+      value.scrollController?.animateTo(
+        0.0,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      value.scrollController?.jumpTo(0.0);
+    }
+  }
 }
