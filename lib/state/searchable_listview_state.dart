@@ -6,6 +6,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:searchable_listview/resources/arrays.dart';
 import 'package:searchable_listview/resources/debouncer.dart';
 import 'package:searchable_listview/searchable_listview.dart';
+import 'package:searchable_listview/state/searchable_list_value.dart';
 import 'package:searchable_listview/widgets/default_error_widget.dart';
 import 'package:searchable_listview/widgets/default_loading_widget.dart';
 import 'package:searchable_listview/widgets/list_view_rendering.dart';
@@ -33,6 +34,7 @@ class SearchableListState<T> extends State<SearchableList<T>> {
 
     // Attach the filter callback to the controller if provided
     widget.controller?.attach(_filterFromController);
+    _publishAfterFrame();
 
     scrollController.addListener(() {
       if (widget.closeKeyboardWhenScrolling &&
@@ -99,6 +101,7 @@ class SearchableListState<T> extends State<SearchableList<T>> {
     if (oldWidget.controller != widget.controller) {
       oldWidget.controller?.detach(_filterFromController);
       widget.controller?.attach(_filterFromController);
+      _publishAfterFrame();
     }
   }
 
@@ -299,13 +302,14 @@ class SearchableListState<T> extends State<SearchableList<T>> {
 
   void filterList(String value) {
     searchText = value;
-    widget.controller?.updateQuery(value);
 
     if (widget.isExpansionList) {
       setState(() {
         widget.expansionListData =
             widget.filterExpansionData?.call(value) ?? {};
       });
+      _publishToController();
+
       for (var controller in expansionTileControllers) {
         try {
           controller.expand();
@@ -315,18 +319,25 @@ class SearchableListState<T> extends State<SearchableList<T>> {
         }
       }
     } else if (widget.asyncListCallback != null) {
-      // Debouncer always has a value in this case
+      _publishToController();
+
       _debouncer!.run(() async {
         if (mounted) setState(() {});
         _activeOperation?.cancel();
         log('Filtering list with value: $value');
+
         await _asyncFilter(value);
+        _publishToController();
+
         if (mounted) setState(() {});
+
+        _publishToController();
       });
     } else {
       setState(() {
         filtredListResult = widget.filter?.call(value) ?? [];
       });
+      _publishToController();
     }
   }
 
@@ -438,5 +449,45 @@ class SearchableListState<T> extends State<SearchableList<T>> {
       filtredAsyncListResult.clear();
       filtredAsyncListResult.addAll(asyncListResult);
     }
+  }
+
+  void _publishAfterFrame() {
+    WidgetsBinding.instance.addPostFrameCallback((_) => _publishToController());
+  }
+
+  void _publishToController() {
+    final controller = widget.controller;
+    if (controller == null || !mounted) return;
+
+    final isAsync = widget.asyncListCallback != null;
+
+    final List<T> list;
+    if (widget.isExpansionList) {
+      list = widget.expansionListData.values.expand((e) => e).toList();
+    } else if (isAsync) {
+      list = filtredAsyncListResult;
+    } else {
+      list = filtredListResult;
+    }
+
+    final SearchableListStatus status;
+    if (isAsync && asyncError) {
+      status = SearchableListStatus.error;
+    } else if (isAsync &&
+        (_activeOperation != null || isAsyncCallBackRunning)) {
+      status = SearchableListStatus.loading;
+    } else if (list.isEmpty) {
+      status = SearchableListStatus.empty;
+    } else {
+      status = SearchableListStatus.data;
+    }
+
+    controller.update(
+      SearchableListValue<T>(
+        query: searchText,
+        results: List<T>.unmodifiable(list),
+        status: status,
+      ),
+    );
   }
 }
