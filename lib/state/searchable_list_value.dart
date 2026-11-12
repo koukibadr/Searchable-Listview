@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:material_ui/material_ui.dart';
 
 enum SearchableListStatus { idle, loading, data, empty, error }
 
@@ -7,11 +8,13 @@ class SearchableListValue<T> {
     this.query = '',
     List<T>? results,
     this.status = SearchableListStatus.idle,
+    this.scrollController,
   }) : results = results ?? <T>[];
 
   final String query;
   final List<T> results;
   final SearchableListStatus status;
+  final ScrollController? scrollController;
 
   bool get isLoading => status == SearchableListStatus.loading;
   bool get hasError => status == SearchableListStatus.error;
@@ -20,11 +23,13 @@ class SearchableListValue<T> {
     String? query,
     List<T>? results,
     SearchableListStatus? status,
+    ScrollController? scrollController,
   }) {
     return SearchableListValue<T>(
       query: query ?? this.query,
       results: results ?? this.results,
       status: status ?? this.status,
+      scrollController: scrollController ?? this.scrollController,
     );
   }
 

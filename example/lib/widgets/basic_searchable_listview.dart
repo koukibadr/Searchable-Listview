@@ -39,7 +39,6 @@ class _BasicSearchableListviewState extends State<BasicSearchableListview> {
     return SafeArea(
       child: Column(
         children: [
-
           ValueListenableBuilder<SearchableListValue<Actor>>(
             valueListenable: controller,
             builder: (context, value, _) {
@@ -141,6 +140,14 @@ class _BasicSearchableListviewState extends State<BasicSearchableListview> {
                   controller.clear();
                 },
                 child: const Text('Clear Search'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  controller.scrollToTop(
+                    animate: true,
+                  );
+                },
+                child: const Text('Back to top'),
               ),
             ],
           ),
