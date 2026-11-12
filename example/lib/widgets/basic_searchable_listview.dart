@@ -143,9 +143,7 @@ class _BasicSearchableListviewState extends State<BasicSearchableListview> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  controller.scrollToTop(
-                    animate: true,
-                  );
+                  controller.scrollToTop(animate: true);
                 },
                 child: const Text('Back to top'),
               ),
