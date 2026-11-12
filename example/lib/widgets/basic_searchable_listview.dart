@@ -4,6 +4,7 @@ import 'package:example/feature_tweaks.dart';
 import 'package:example/widgets/actor_item_widget.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:searchable_listview/searchable_listview.dart';
+import 'package:searchable_listview/state/searchable_list_value.dart';
 
 class BasicSearchableListview extends StatefulWidget {
   const BasicSearchableListview({Key? key}) : super(key: key);
@@ -38,6 +39,17 @@ class _BasicSearchableListviewState extends State<BasicSearchableListview> {
     return SafeArea(
       child: Column(
         children: [
+
+          ValueListenableBuilder<SearchableListValue<Actor>>(
+            valueListenable: controller,
+            builder: (context, value, _) {
+              if (value.isLoading) return const Text('Searching...');
+              return Text(
+                '${value.results.length} results for "${value.query}"',
+              );
+            },
+          ),
+
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
@@ -93,12 +105,7 @@ class _BasicSearchableListviewState extends State<BasicSearchableListview> {
               },
               sortPredicate: (a, b) => a.age.compareTo(b.age),
               itemBuilder: (item) {
-                int index = filteredActors.indexOf(item);
-                if (index == 0) {
-                  return Container(color: Colors.red, height: 10, width: 300);
-                } else {
-                  return ActorItem(actor: filteredActors[index - 1]);
-                }
+                return ActorItem(actor: item);
               },
               emptyWidget: Column(
                 children: [
