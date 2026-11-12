@@ -39,14 +39,22 @@ class SearchableListController<T>
   void update(SearchableListValue<T> newValue) => value = newValue;
 
   void scrollToTop({bool animate = false, Curve curve = Curves.easeInOut}) {
+    scrollTo(0.0, animate: animate, curve: curve);
+  }
+
+  void scrollTo(
+    double offset, {
+    bool animate = false,
+    Curve curve = Curves.easeInOut,
+  }) {
     if (animate) {
       value.scrollController?.animateTo(
-        0.0,
+        offset,
         duration: const Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
+        curve: curve,
       );
     } else {
-      value.scrollController?.jumpTo(0.0);
+      value.scrollController?.jumpTo(offset);
     }
   }
 }

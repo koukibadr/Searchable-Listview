@@ -18,6 +18,7 @@ class SearchableListValue<T> {
 
   bool get isLoading => status == SearchableListStatus.loading;
   bool get hasError => status == SearchableListStatus.error;
+  double get scrollPosition => scrollController?.offset ?? 0.0;
 
   SearchableListValue<T> copyWith({
     String? query,
