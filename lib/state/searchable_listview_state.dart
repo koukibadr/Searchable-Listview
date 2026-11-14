@@ -301,6 +301,11 @@ class SearchableListState<T> extends State<SearchableList<T>> {
   }
 
   void filterList(String value) {
+    if (widget.searchableFields != null) {
+      _filterWithSearchStrategy(value);
+      return;
+    }
+
     searchText = value;
 
     if (widget.isExpansionList) {
@@ -319,26 +324,66 @@ class SearchableListState<T> extends State<SearchableList<T>> {
         }
       }
     } else if (widget.asyncListCallback != null) {
-      _publishToController();
-
-      _debouncer!.run(() async {
-        if (mounted) setState(() {});
-        _activeOperation?.cancel();
-        log('Filtering list with value: $value');
-
-        await _asyncFilter(value);
-        _publishToController();
-
-        if (mounted) setState(() {});
-
-        _publishToController();
-      });
+      _filterAsyncSeachableList(value);
     } else {
       setState(() {
         filtredListResult = widget.filter?.call(value) ?? [];
       });
       _publishToController();
     }
+  }
+
+  void _filterWithSearchStrategy(String value) {
+    if (widget.isExpansionList) {
+      setState(() {
+        widget.expansionListData =
+            widget.filterExpansionData?.call(value) ?? {};
+      });
+      _publishToController();
+
+      for (var controller in expansionTileControllers) {
+        try {
+          controller.expand();
+        } catch (e) {
+          // ignore: avoid_print
+          print('Error expanding tile: $e');
+        }
+      }
+    } else if (widget.asyncListCallback != null) {
+      _filterAsyncSeachableList(value);
+    } else {
+      setState(() {
+        final fitered = widget.initialList
+            .where(
+              (item) =>
+                  widget.searchableFields
+                      ?.call(item)
+                      .any((item) => item.toString().contains(value)) ==
+                  true,
+            )
+            .toList();
+        filtredListResult = fitered;
+      });
+
+      _publishToController();
+    }
+  }
+
+  void _filterAsyncSeachableList(String value) {
+    _publishToController();
+
+    _debouncer!.run(() async {
+      if (mounted) setState(() {});
+      _activeOperation?.cancel();
+      log('Filtering list with value: $value');
+
+      await _asyncFilter(value);
+      _publishToController();
+
+      if (mounted) setState(() {});
+
+      _publishToController();
+    });
   }
 
   void _filterFromController(String query) {
@@ -401,6 +446,19 @@ class SearchableListState<T> extends State<SearchableList<T>> {
   }
 
   Future<void> _asyncFilter(String value) async {
+    if (widget.searchableFields != null) {
+      final fitered = widget.initialList
+          .where(
+            (item) =>
+                widget.searchableFields
+                    ?.call(item)
+                    .any((item) => item.toString().contains(value)) ==
+                true,
+          )
+          .toList();
+      filtredAsyncListResult = fitered;
+    }
+
     if (isAsyncCallBackRunning) {
       // Wait for the initial list before filtering
       return;
@@ -410,6 +468,7 @@ class SearchableListState<T> extends State<SearchableList<T>> {
       widget.asyncListFilter!(value, asyncListResult),
     );
     _activeOperation = operation;
+
     try {
       final result = await operation.valueOrCancellation();
       if (result != null && !operation.isCanceled) {

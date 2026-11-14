@@ -97,6 +97,7 @@ class _BasicSearchableListviewState extends State<BasicSearchableListview> {
                 SearchableListFeature.closeKeyboardWhenScrolling,
                 false,
               ),
+              searchableFields: (p0) => [p0.name, p0.lastName],
               shrinkWrap: tweaks.value(SearchableListFeature.shrinkWrap, false),
               reverse: tweaks.value(SearchableListFeature.reverse, false),
               separatorBuilder: (context, index) {
