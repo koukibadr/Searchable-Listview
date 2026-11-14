@@ -11,6 +11,7 @@ class SearchableListController<T>
   String get query => value.query;
   List<T> get results => value.results;
   SearchableListStatus get status => value.status;
+  
   double get scrollPosition {
     if (_filterCallback != null) {
       return value.scrollController?.offset ?? 0.0;
