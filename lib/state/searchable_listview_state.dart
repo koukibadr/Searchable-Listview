@@ -5,6 +5,7 @@ import 'package:async/async.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:searchable_listview/resources/arrays.dart';
 import 'package:searchable_listview/resources/debouncer.dart';
+import 'package:searchable_listview/resources/extensions.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 import 'package:searchable_listview/state/searchable_list_value.dart';
 import 'package:searchable_listview/widgets/default_error_widget.dart';
@@ -346,7 +347,12 @@ class SearchableListState<T> extends State<SearchableList<T>> {
               (item) =>
                   widget.searchableFields
                       ?.call(item)
-                      .any((item) => item.toString().contains(value)) ==
+                      .any(
+                        (item) => item.toString().search(
+                          widget.searchStrategy,
+                          value,
+                        ),
+                      ) ==
                   true,
             )
             .toList();
@@ -377,7 +383,12 @@ class SearchableListState<T> extends State<SearchableList<T>> {
               (item) =>
                   widget.searchableFields
                       ?.call(item)
-                      .any((item) => item.toString().contains(value)) ==
+                      .any(
+                        (item) => item.toString().search(
+                          widget.searchStrategy,
+                          value,
+                        ),
+                      ) ==
                   true,
             )
             .toList();
@@ -471,7 +482,10 @@ class SearchableListState<T> extends State<SearchableList<T>> {
             (item) =>
                 widget.searchableFields
                     ?.call(item)
-                    .any((item) => item.toString().contains(value)) ==
+                    .any(
+                      (item) =>
+                          item.toString().search(widget.searchStrategy, value),
+                    ) ==
                 true,
           )
           .toList();
