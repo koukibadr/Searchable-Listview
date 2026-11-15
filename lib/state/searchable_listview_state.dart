@@ -345,7 +345,7 @@ class SearchableListState<T> extends State<SearchableList<T>> {
     SearchStrategy searchStrategy = widget.searchStrategy;
     if (controller != null) {
       searchStrategy =
-          controller.value.searchStrategy ?? SearchStrategy.contain;
+          controller.value.searchStrategy ?? widget.searchStrategy;
     }
 
     if (widget.isExpansionList) {
@@ -483,7 +483,7 @@ class SearchableListState<T> extends State<SearchableList<T>> {
     SearchStrategy searchStrategy = widget.searchStrategy;
     if (controller != null) {
       searchStrategy =
-          controller.value.searchStrategy ?? SearchStrategy.contain;
+          controller.value.searchStrategy ?? widget.searchStrategy;
     }
 
     if (widget.searchableFields != null) {
@@ -589,8 +589,9 @@ class SearchableListState<T> extends State<SearchableList<T>> {
         results: List<T>.unmodifiable(list),
         status: status,
         scrollController: scrollController,
-        searchStrategy:
-            controller.value.searchStrategy ?? widget.searchStrategy,
+        searchStrategy: controller.value.searchStrategy != widget.searchStrategy
+            ? widget.searchStrategy
+            : null,
       ),
     );
   }
