@@ -22,7 +22,7 @@ class _BigSearchableListviewState
               itemBuilder: (item) {
                 return Text(item);
               },
-              initialList: List.generate(200000, (t) => "Item ${t.toString()}"),
+              initialList: List.generate(11, (t) => "Item ${t.toString()}"),
               searchableFields: (p0) => [p0],
               searchStrategy: SearchStrategy.endsWith,
             ),
