@@ -17,16 +17,21 @@ class SearchableListState<T> extends State<SearchableList<T>> {
   /// attached to the listview widget
   late ScrollController scrollController =
       widget.scrollController ?? ScrollController();
+
   List<T> asyncListResult = [];
+
   late List<T> filtredListResult = widget.initialList;
   List<T> filtredAsyncListResult = [];
   String searchText = '';
   bool asyncError = false;
+
   // Current async task running, null otherwise
   CancelableOperation<List<T>?>? _activeOperation;
   Debouncer? _debouncer;
   List<ExpansionTileController> expansionTileControllers = [];
   bool isAsyncCallBackRunning = true;
+
+  late Map<dynamic, List<T>> expansionListData = widget.expansionListData;
 
   @override
   void initState() {
@@ -199,31 +204,31 @@ class SearchableListState<T> extends State<SearchableList<T>> {
   }
 
   Widget renderExpandableListView() {
-    if (widget.expansionListData.isEmpty ||
-        widget.expansionListData.values.every((element) => element.isEmpty)) {
+    if (expansionListData.isEmpty ||
+        expansionListData.values.every((element) => element.isEmpty)) {
       return widget.emptyWidget ?? const SizedBox.shrink();
     } else {
       expansionTileControllers.addAll(
         List.generate(
-          widget.expansionListData.length,
+          expansionListData.length,
           (e) => ExpansionTileController(),
         ),
       );
       if (widget.hideEmptyExpansionItems) {
-        widget.expansionListData.removeWhere((key, value) => value.isEmpty);
+        expansionListData.removeWhere((key, value) => value.isEmpty);
       }
       return ListView.builder(
         controller: scrollController,
         scrollDirection: widget.scrollDirection,
-        itemCount: widget.expansionListData.length,
+        itemCount: expansionListData.length,
         physics: widget.physics,
         shrinkWrap: widget.shrinkWrap,
         itemExtent: widget.itemExtent,
         padding: widget.listViewPadding,
         reverse: widget.reverse,
         itemBuilder: (context, index) {
-          var entryKey = widget.expansionListData.keys.toList()[index];
-          var entryValueList = widget.expansionListData[entryKey];
+          var entryKey = expansionListData.keys.toList()[index];
+          var entryValueList = expansionListData[entryKey];
           return ExpansionTile(
             initiallyExpanded: widget.initiallyExpanded,
             title: widget.expansionTitleBuilder.call(entryKey),
@@ -310,8 +315,7 @@ class SearchableListState<T> extends State<SearchableList<T>> {
 
     if (widget.isExpansionList) {
       setState(() {
-        widget.expansionListData =
-            widget.filterExpansionData?.call(value) ?? {};
+        expansionListData = widget.filterExpansionData?.call(value) ?? {};
       });
       _publishToController();
 
@@ -335,18 +339,33 @@ class SearchableListState<T> extends State<SearchableList<T>> {
 
   void _filterWithSearchStrategy(String value) {
     if (widget.isExpansionList) {
+      Map<dynamic, List<T>> filteredData = {};
+      for (MapEntry entry in widget.expansionListData.entries) {
+        final filteredList = (entry.value as List<T>)
+            .where(
+              (item) =>
+                  widget.searchableFields
+                      ?.call(item)
+                      .any((item) => item.toString().contains(value)) ==
+                  true,
+            )
+            .toList();
+        if (filteredList.isNotEmpty) {
+          filteredData[entry.key] = filteredList;
+        }
+      }
+
       setState(() {
-        widget.expansionListData =
-            widget.filterExpansionData?.call(value) ?? {};
+        expansionListData = filteredData;
       });
+
       _publishToController();
 
       for (var controller in expansionTileControllers) {
         try {
           controller.expand();
         } catch (e) {
-          // ignore: avoid_print
-          print('Error expanding tile: $e');
+          log('Error expanding tile: $e');
         }
       }
     } else if (widget.asyncListCallback != null) {
