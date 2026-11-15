@@ -23,7 +23,7 @@ class SearchableList<T> extends StatefulWidget {
     super.key,
     required this.initialList,
     required this.itemBuilder,
-    required this.filter,
+    this.filter,
     this.loadingWidget,
     this.errorWidget,
     this.searchTextController,
@@ -87,8 +87,8 @@ class SearchableList<T> extends StatefulWidget {
   SearchableList.async({
     super.key,
     required this.asyncListCallback,
-    required this.asyncListFilter,
     required this.itemBuilder,
+    this.asyncListFilter,
     this.asyncDebounceTime = 3000,
     this.loadingWidget,
     this.errorWidget,
@@ -154,8 +154,8 @@ class SearchableList<T> extends StatefulWidget {
     super.key,
     required this.expansionListData,
     required this.expansionTitleBuilder,
-    required this.filterExpansionData,
     required this.expansionListBuilder,
+    this.filterExpansionData,
     this.searchTextController,
     this.keyboardAction = TextInputAction.done,
     this.inputDecoration,
@@ -217,8 +217,8 @@ class SearchableList<T> extends StatefulWidget {
   SearchableList.sliver({
     super.key,
     required this.initialList,
-    this.filter,
     required this.itemBuilder,
+    this.filter,
     this.searchTextController,
     this.keyboardAction = TextInputAction.done,
     this.inputDecoration,
@@ -509,10 +509,11 @@ class SearchableList<T> extends StatefulWidget {
   /// Controller used to filter the list from outside the searchable listview
   SearchableListController<T>? controller;
 
-  // TODO add docs here
+  /// The search strategy to apply when the `searchableFields` is provided
   final SearchStrategy searchStrategy;
 
-  // TODO add docs here
+  /// Searchable fields you want the widget to apply the search strategy upon them,
+  /// it could be one or multiple fields from your `T` model
   final List<dynamic> Function(T)? searchableFields;
 
   final FormFieldValidator<String>? fieldValidator;

@@ -38,7 +38,6 @@ class _ExpansionSearchableListviewState
             child: Center(child: Text(p0.toString())),
           );
         },
-        searchableFields: (p0) => [p0.age, p0.lastName],
         filterExpansionData: (p0) {
           final filteredMap = {
             for (final entry in mapOfActors.entries)
