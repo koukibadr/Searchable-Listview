@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:searchable_listview/resources/arrays.dart';
 import 'package:searchable_listview/state/searchable_list_value.dart';
 
 class SearchableListController<T>
@@ -66,5 +67,10 @@ class SearchableListController<T>
     } else {
       value.scrollController?.jumpTo(offset);
     }
+  }
+
+  void updateSearchStrategy(SearchStrategy searchStrategy) {
+    value = value.copyWith(searchStrategy: searchStrategy);
+    _filterCallback?.call(value.query);
   }
 }

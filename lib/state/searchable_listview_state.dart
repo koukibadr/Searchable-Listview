@@ -339,6 +339,15 @@ class SearchableListState<T> extends State<SearchableList<T>> {
   }
 
   void _filterWithSearchStrategy(String value) {
+    searchText = value;
+
+    final controller = widget.controller;
+    SearchStrategy searchStrategy = widget.searchStrategy;
+    if (controller != null) {
+      searchStrategy =
+          controller.value.searchStrategy ?? SearchStrategy.contain;
+    }
+
     if (widget.isExpansionList) {
       Map<dynamic, List<T>> filteredData = {};
       for (MapEntry entry in widget.expansionListData.entries) {
@@ -348,10 +357,7 @@ class SearchableListState<T> extends State<SearchableList<T>> {
                   widget.searchableFields
                       ?.call(item)
                       .any(
-                        (item) => item.toString().search(
-                          widget.searchStrategy,
-                          value,
-                        ),
+                        (item) => item.toString().search(searchStrategy, value),
                       ) ==
                   true,
             )
@@ -384,10 +390,7 @@ class SearchableListState<T> extends State<SearchableList<T>> {
                   widget.searchableFields
                       ?.call(item)
                       .any(
-                        (item) => item.toString().search(
-                          widget.searchStrategy,
-                          value,
-                        ),
+                        (item) => item.toString().search(searchStrategy, value),
                       ) ==
                   true,
             )
@@ -476,6 +479,13 @@ class SearchableListState<T> extends State<SearchableList<T>> {
   }
 
   Future<void> _asyncFilter(String value) async {
+    final controller = widget.controller;
+    SearchStrategy searchStrategy = widget.searchStrategy;
+    if (controller != null) {
+      searchStrategy =
+          controller.value.searchStrategy ?? SearchStrategy.contain;
+    }
+
     if (widget.searchableFields != null) {
       final fitered = widget.initialList
           .where(
@@ -483,8 +493,7 @@ class SearchableListState<T> extends State<SearchableList<T>> {
                 widget.searchableFields
                     ?.call(item)
                     .any(
-                      (item) =>
-                          item.toString().search(widget.searchStrategy, value),
+                      (item) => item.toString().search(searchStrategy, value),
                     ) ==
                 true,
           )
@@ -580,6 +589,8 @@ class SearchableListState<T> extends State<SearchableList<T>> {
         results: List<T>.unmodifiable(list),
         status: status,
         scrollController: scrollController,
+        searchStrategy:
+            controller.value.searchStrategy ?? widget.searchStrategy,
       ),
     );
   }
