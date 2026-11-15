@@ -5,7 +5,7 @@ import 'package:searchable_listview/searchable_listview.dart';
 
 import 'dummies/dummy_list_item.dart';
 import 'dummies/dummy_student_item.dart';
-import 'mock/student.dart';
+import 'mock/student_class.dart';
 
 void main() {
   group("Check widget appearance", () {
