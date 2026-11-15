@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../mock/student.dart';
+import '../mock/student_class.dart';
 
 class DummyStudentItem extends StatelessWidget {
   final Student item;
