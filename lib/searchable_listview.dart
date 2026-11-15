@@ -78,7 +78,6 @@ class SearchableList<T> extends StatefulWidget {
     expansionListBuilder = null;
     asyncListCallback = null;
     asyncListFilter = null;
-    assert(filter != null);
     if (sortWidget != null) {
       assert(sortPredicate != null);
     }

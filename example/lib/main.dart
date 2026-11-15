@@ -1,5 +1,6 @@
 import 'package:example/feature_tweaks.dart';
 import 'package:example/widgets/async_searchable_listview.dart';
+import 'package:example/widgets/attribute_searchable_listview.dart';
 import 'package:example/widgets/basic_searchable_listview.dart';
 import 'package:example/widgets/expansion_searchable_listview.dart';
 import 'package:example/widgets/sliver_searchable_listview.dart';
@@ -44,6 +45,7 @@ class _ExampleWidgetState extends State<ExampleWidget> {
     Tab(text: 'Async'),
     Tab(text: 'Sliver'),
     Tab(text: 'Expansion'),
+    Tab(text: 'Attribute Search'),
   ];
 
   @override
@@ -75,6 +77,10 @@ class _ExampleWidgetState extends State<ExampleWidget> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   child: ExpansionSearchableListview(),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  child: AttributeSearchableListview(),
                 ),
               ],
             ),
