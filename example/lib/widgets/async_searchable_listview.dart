@@ -46,6 +46,7 @@ class _AsyncSearchableListviewState extends State<AsyncSearchableListview> {
             .toList();
         return result;
       },
+      searchableFields: (p0) => [p0.name, p0.lastName],
       asyncDebounceTime: 200,
       lazyLoadingEnabled: tweaks.value(
         SearchableListFeature.lazyLoadingEnabled,
