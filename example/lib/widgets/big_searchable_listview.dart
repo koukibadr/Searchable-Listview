@@ -6,12 +6,10 @@ class BigSearchableListview extends StatefulWidget {
   const BigSearchableListview({Key? key}) : super(key: key);
 
   @override
-  State<BigSearchableListview> createState() =>
-      _BigSearchableListviewState();
+  State<BigSearchableListview> createState() => _BigSearchableListviewState();
 }
 
-class _BigSearchableListviewState
-    extends State<BigSearchableListview> {
+class _BigSearchableListviewState extends State<BigSearchableListview> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
