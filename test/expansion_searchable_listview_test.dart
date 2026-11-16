@@ -1,12 +1,12 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 
 void main() {
   group('ExpansionSearchableListView Display', () {
     testWidgets(
       '''
-        Veryfing expansion searchable listview default display
+        Verifying expansion searchable listview default display
       ''',
       (test) async {
         final dataMap = {
@@ -49,7 +49,7 @@ void main() {
 
     testWidgets(
       '''
-        Veryfing expansion searchable listview display when not expanded
+        Verifying expansion searchable listview display when not expanded
       ''',
       (test) async {
         final dataMap = {
@@ -85,7 +85,7 @@ void main() {
 
     testWidgets(
       '''
-        Veryfing expansion searchable listview display and tap to expand
+        Verifying expansion searchable listview display and tap to expand
       ''',
       (test) async {
         final dataMap = {
