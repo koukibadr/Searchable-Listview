@@ -117,7 +117,7 @@ class SearchTextField extends StatelessWidget {
     return Row(
       children: [
         Expanded(child: _renderForm(context)),
-        if (secondaryWidget != null) secondaryWidget!,
+        secondaryWidget ?? SizedBox.shrink(),
       ],
     );
   }
