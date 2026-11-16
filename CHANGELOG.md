@@ -1,3 +1,24 @@
+## 2.20.0 - 16/11/2026
+
+- **Feature**
+  - Add `SearchableListController` to control the list from outside the widget: pass it with the new `controller` attribute and call `filter(query)` [Issue#188](https://github.com/koukibadr/Searchable-Listview/issues/188) [PR#191](https://github.com/koukibadr/Searchable-Listview/pull/191)
+  - Add `clear()` to the controller to remove the current filter without triggering extra rebuilds when the query is already empty [PR#192](https://github.com/koukibadr/Searchable-Listview/pull/192)
+  - The controller is now a `ValueNotifier`: listen to the current `query`, the filtered `results` and the list `status` (`idle`, `loading`, `data`, `empty`, `error`) [PR#193](https://github.com/koukibadr/Searchable-Listview/pull/193)
+  - Add scroll actions `scrollToTop()` and `scrollTo(offset)` (with optional animation) and the `scrollPosition` getter to the controller [PR#194](https://github.com/koukibadr/Searchable-Listview/pull/194)
+  - Add built-in search with the `searchableFields` attribute: choose the model fields to search in and the widget filters for you [Issue#187](https://github.com/koukibadr/Searchable-Listview/issues/187) [PR#196](https://github.com/koukibadr/Searchable-Listview/pull/196)
+  - `filter` callback is now optional, it's no longer required when using `searchableFields` [PR#197](https://github.com/koukibadr/Searchable-Listview/pull/197)
+  - Add `searchStrategy` attribute with `SearchStrategy.startsWith` (default), `SearchStrategy.endsWith` and `SearchStrategy.contain` [PR#198](https://github.com/koukibadr/Searchable-Listview/pull/198)
+  - Add `updateSearchStrategy()` to the controller to change the search strategy at runtime, the list is filtered again immediately [PR#199](https://github.com/koukibadr/Searchable-Listview/pull/199)
+
+- **Bug Fix**
+  - Fix `InputDecoration` type error after the Flutter 3.47 split into `material_ui` and `cupertino_ui` [Issue#183](https://github.com/koukibadr/Searchable-Listview/issues/183) [PR#184](https://github.com/koukibadr/Searchable-Listview/pull/184)
+
+- **Changes**
+  - Minimum supported versions are now Dart `3.10.0` and Flutter `3.38.0`, projects on older SDKs keep resolving `2.19.5` [PR#190](https://github.com/koukibadr/Searchable-Listview/pull/190)
+  - Package now relies on the standalone `material_ui` package [PR#184](https://github.com/koukibadr/Searchable-Listview/pull/184)
+  - Update the example app to the new Flutter version and add examples for the controller and the built-in search [PR#185](https://github.com/koukibadr/Searchable-Listview/pull/185)
+  - Add widget tests for the searchable list controller [PR#203](https://github.com/koukibadr/Searchable-Listview/pull/203)
+
 ## 2.19.5 - 30/05/2026
 
 - **Feature**
