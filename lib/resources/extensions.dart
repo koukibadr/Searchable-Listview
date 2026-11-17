@@ -9,8 +9,6 @@ extension StringExtension on String {
         return toLowerCase().endsWith(query.toLowerCase());
       case SearchStrategy.startsWith:
         return toLowerCase().startsWith(query.toLowerCase());
-      default:
-        return false;
     }
   }
 }
