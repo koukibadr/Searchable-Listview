@@ -1,5 +1,5 @@
 
-## 2.20.1 - 17/05/2026
+## 2.20.1 - 17/11/2026
 
 - **Bug Fix**
   - Remove unused fuzzy search strategy for later algorithm implementation
